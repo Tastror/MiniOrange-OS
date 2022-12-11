@@ -9,16 +9,18 @@
 #define _PROTO_H_
 
 /* klib.asm */
-void disp_str(char *info);
-void disp_int(int input);
-void disp_color_str(char *info, int color);
-void write_char(char ch);  // added by mingxuan 2019-5-19
+// void disp_str(char *info);                   // deleted by tastror 2022-12
+// void disp_color_str(char *info, int color);  // deleted by tastror 2022-12
+void kern_set_color(int color);        // added by tastror 2022-12
+void kern_display_string(char *info);  // added by tastror 2022-12
+void kern_display_integer(int input);  // modified by tastror 2022-12
+void kern_display_char(char ch);       // added by mingxuan 2019-5-19, modified by tastror 2022-12
 
 // added by zcr
 void disable_irq(int irq);
 void enable_irq(int irq);
 void init_8259A();
-//~zcr
+// ~zcr
 
 /* protect.c */
 void init_prot();
@@ -71,8 +73,8 @@ void clock_handler(int irq);
 /**
  * 以下是系统调用相关函数的声明
  */
-/* syscall.asm */
-void  sys_call(); /* int_handler */
+// syscall user interface
+void  sys_call();  // int_handler
 int   get_ticks();
 int   get_pid();                // add by visual 2016.4.6
 void *kmalloc(int size);        // edit by visual 2016.5.9
@@ -83,16 +85,17 @@ int   free(void *arg);          // edit by visual 2016.5.9
 int   free_4k(void *AdddrLin);  // edit by visual 2016.5.9
 int   fork();                   // add by visual 2016.4.8
 int   pthread(void *arg);       // add by visual 2016.4.11
-void  udisp_int(int arg);       // add by visual 2016.5.16
-void  udisp_str(char *arg);     // add by visual 2016.5.16
+void  display_int(int arg);     // add by visual 2016.5.16, modified by tastror 2022-12
+void  display_str(char *arg);   // add by visual 2016.5.16, modified by tastror 2022-12
+void  set_color(int c);         // added by tastror 2022-12
 u32   exec(char *path);         // add by visual 2016.5.16
 void  yield();                  // added by xw, 18/4/19
 void  sleep(int n);             // added by xw, 18/4/19
 void  print_E();
 void  print_F();
 
-/* syscallc.c */                    // edit by visual 2016.4.6
-int   sys_get_ticks();              /* sys_call */
+// syscall system interface
+int   sys_get_ticks();
 int   sys_get_pid();                // add by visual 2016.4.6
 void *sys_kmalloc(int size);        // edit by visual 2016.5.9
 void *sys_kmalloc_4k();             // edit by visual 2016.5.9
@@ -101,8 +104,10 @@ void *sys_malloc_4k();              // edit by visual 2016.5.9
 int   sys_free(void *arg);          // edit by visual 2016.5.9
 int   sys_free_4k(void *AdddrLin);  // edit by visual 2016.5.9
 int   sys_pthread(void *arg);       // add by visual 2016.4.11
-void  sys_udisp_int(int arg);       // add by visual 2016.5.16
-void  sys_udisp_str(char *arg);     // add by visual 2016.5.16
+void  sys_display_int(int arg);     // add by visual 2016.5.16
+void  sys_display_str(char *arg);   // add by visual 2016.5.16
+void  sys_set_color(int color);     // add by tastror 2020.12
+
 
 /* proc.c */
 PROCESS *alloc_PCB();
@@ -117,9 +122,9 @@ void    *va2la(int pid, void *va);
 void sys_print_E();
 void sys_print_F();
 
-/*exec.c*/
+/* exec.c */
 u32 sys_exec(char *path);  // add by visual 2016.5.23
-/*fork.c*/
+/* fork.c */
 int sys_fork();  // add by visual 2016.5.25
 
 /**

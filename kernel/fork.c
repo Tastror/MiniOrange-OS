@@ -27,7 +27,9 @@ int sys_fork()
     /*****************申请空白PCB表**********************/
     p_child = alloc_PCB();
     if (0 == p_child) {
-        disp_color_str("PCB NULL,fork faild!", 0x74);
+        kern_set_color(0x74);
+        kern_display_string("PCB NULL,fork faild!");
+        kern_set_color(0x0F);
         return -1;
     } else {
         /****************初始化子进程高端地址页表（内核部分）***********************/  // 这个页表可以复制父进程的！
@@ -53,9 +55,11 @@ int sys_fork()
         /****************用户进程数+1****************************/
         u_proc_sum += 1;
 
-        disp_color_str("[fork success:", 0x72);
-        disp_color_str(p_proc_current->task.p_name, 0x72);
-        disp_color_str("]", 0x72);
+        kern_set_color(0x72);
+        kern_display_string("[fork success:");
+        kern_display_string(p_proc_current->task.p_name);
+        kern_display_string("]");
+        kern_set_color(0x0F);
 
         // anything child need is prepared now, set its state to ready. added by xw, 17/12/11
         p_child->task.stat = READY;

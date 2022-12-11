@@ -88,14 +88,14 @@ void out_char(CONSOLE *con, char ch)
             //*(pch - 2) = ' ';
             //*(pch - 1) = DEFAULT_CHAR_COLOR;
             disp_pos = con->cursor * 2;
-            write_char(' ');
+            kern_display_char(' ');
         }
         break;
     default:
         //*pch++ = ch;
         //*pch++ = DEFAULT_CHAR_COLOR;
         disp_pos = con->cursor * 2;
-        write_char(ch);
+        kern_display_char(ch);
         con->cursor++;
 
         break;

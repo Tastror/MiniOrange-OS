@@ -70,11 +70,10 @@
 #define FLOPPY_IRQ    6 /* floppy disk */
 #define PRINTER_IRQ   7
 #define AT_WINI_IRQ   14  /* at winchester */
-#define MOUSE_IRQ     12  //  added by mingxuan 2019-5-19
+#define MOUSE_IRQ     12  // added by mingxuan 2019-5-19
 
 /* system call */
-// #define     NR_SYS_CALL     23      // last modified by xw, 18/6/19
-#define NR_SYS_CALL 28  // modified by mingxuan 2019-5-17
+#define NR_SYS_CALL 64  // modified by tastror 2022-12
 
 /* TTY */
 // added by mingxuan 2019-5-19

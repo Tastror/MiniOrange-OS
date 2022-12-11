@@ -16,8 +16,11 @@ int main(int arg, char *argv[])
     char buf[1024];
     int  pid;
     int  times = 0;
-    while (1) {
-        printf("\nminiOS:/ $ ");
+    while (true) {
+        set_color(0x02);
+        printf("miniOS");
+        set_color(0x0F);
+        printf(" $ ");
         if (gets(buf) && strlen(buf) != 0) {
             if (exec(buf) != 0) {
                 printf("exec failed: file not found!\n");

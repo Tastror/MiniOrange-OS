@@ -50,13 +50,13 @@ char *itoa(char *str, int num) /* 数字前面的 0 不被显示出来, 比如 0
 
 
 /*======================================================================*
-                               disp_int
+                               kern_display_integer
  *======================================================================*/
-void disp_int(int input)
+void kern_display_integer(int input)
 {
     char output[16];
     itoa(output, input);
-    disp_str(output);
+    kern_display_string(output);
 }
 
 /*======================================================================*

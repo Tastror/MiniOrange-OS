@@ -1,18 +1,24 @@
 
-/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-                            global.c
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-                                                    Forrest Yu, 2005
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+/**
+ * @file global.c
+ * @author Forrest Yu, 
+ * @brief 
+ * @version
+ * @date 2005
+ * 
+ * @copyright
+ * 
+ */
+
 /*
  * To make things more direct. In the headers below,
  * the variable will be defined here.
  * added by xw, 18/6/17
  */
-// #define GLOBAL_VARIABLES_HERE
+
 #include "global.h"
 #include "const.h"
-#include "fat32.h"  //added by mingxuan 2019-5-17
+#include "fat32.h"  // added by mingxuan 2019-5-17
 #include "fs.h"
 #include "fs_const.h"
 #include "hd.h"
@@ -20,11 +26,12 @@
 #include "protect.h"
 #include "proto.h"
 #include "type.h"
-#include "vfs.h"  //added by mingxuan 2019-5-17
+#include "vfs.h"  // added by mingxuan 2019-5-17
 
 int        kernel_initial;
 int        ticks;
 int        disp_pos;
+int        saved_color = 0x0F;  // 初始化为黑底白字
 u8         gdt_ptr[6];
 DESCRIPTOR gdt[GDT_SIZE];
 u8         idt_ptr[6];
@@ -61,8 +68,8 @@ system_call sys_call_table[NR_SYS_CALL] = {
     sys_free_4k,     // add by visual 2016.4.7
     sys_fork,        // add by visual 2016.4.8
     sys_pthread,     // add by visual 2016.4.11	//10th
-    sys_udisp_int,   // add by visual 2016.5.16
-    sys_udisp_str,   // add by visual 2016.5.16
+    sys_display_int,   // add by visual 2016.5.16
+    sys_display_str,   // add by visual 2016.5.16
     sys_exec,        // add by visual 2016.5.16
     sys_yield,       // added by xw
     sys_sleep,       // added by xw				//15th
@@ -78,7 +85,8 @@ system_call sys_call_table[NR_SYS_CALL] = {
     sys_delete,      // added by mingxuan 2019-5-17
     sys_opendir,     // added by mingxuan 2019-5-17
     sys_createdir,   // added by mingxuan 2019-5-17
-    sys_deletedir    // added by mingxuan 2019-5-17
+    sys_deletedir,   // added by mingxuan 2019-5-17
+    sys_set_color    // added by tastror 2019-5-17
 };
 
 TTY     tty_table[NR_CONSOLES];      // added by mingxuan 2019-5-19

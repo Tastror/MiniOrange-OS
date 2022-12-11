@@ -25,17 +25,21 @@ int sys_pthread(void *entry)
 
     char *p_reg;  // point to a register in the new kernel stack, added by xw, 17/12/11
 
-    /*if(p_proc_current->task.info.type == TYPE_THREAD )
-    {//线程不能创建线程
-            disp_color_str("[pthread failed:",0x74);
-            disp_color_str(p_proc_current->task.p_name,0x74);
-            disp_color_str("]",0x74);
-            return -1;
-    }*/
-    /*****************申请空白PCB表**********************/
+    // if (p_proc_current->task.info.type == TYPE_THREAD) {  // 线程不能创建线程
+    //     kern_set_color(0x74);
+    //     kern_display_string("[pthread failed:", 0x74);
+    //     kern_display_string(p_proc_current->task.p_name);
+    //     kern_display_string("]");
+    //     kern_set_color(0x0F);
+    //     return -1;
+    // }
+
+    // 申请空白 PCB 表
     p_child = alloc_PCB();
     if (0 == p_child) {
-        disp_color_str("PCB NULL,pthread faild!", 0x74);
+        kern_set_color(0x74);
+        kern_display_string("PCB NULL,pthread faild!");
+        kern_set_color(0x0F);
         return -1;
     } else {
         PROCESS *p_parent;
@@ -72,9 +76,11 @@ int sys_pthread(void *entry)
         /****************用户进程数+1****************************/
         u_proc_sum += 1;
 
-        disp_color_str("[pthread success:", 0x72);
-        disp_color_str(p_proc_current->task.p_name, 0x72);
-        disp_color_str("]", 0x72);
+        kern_set_color(0x72);
+        kern_display_string("[pthread success:");
+        kern_display_string(p_proc_current->task.p_name);
+        kern_display_string("]");
+        kern_set_color(0x0F);
 
         // anything child need is prepared now, set its state to ready. added by xw, 17/12/11
         p_child->task.stat = READY;

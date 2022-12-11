@@ -21,7 +21,7 @@ void sys_print_E()
 {
     int i, j;
 
-    disp_str("E( ");
+    kern_display_string("E( ");
 
     i = 100;
     while (--i) {
@@ -29,7 +29,7 @@ void sys_print_E()
         while (--j) {}
     }
 
-    disp_str(") ");
+    kern_display_string(") ");
 }
 
 /*
@@ -41,7 +41,7 @@ void sys_print_F()
 {
     int i, j;
 
-    disp_str("F( ");
+    kern_display_string("F( ");
 
     i = 100;
     while (--i) {
@@ -49,5 +49,5 @@ void sys_print_F()
         while (--j) {}
     }
 
-    disp_str(") ");
+    kern_display_string(") ");
 }

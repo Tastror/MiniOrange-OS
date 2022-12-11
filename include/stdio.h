@@ -21,8 +21,9 @@ int   free(void *arg);
 int   free_4k(void *AdddrLin);
 int   fork();
 int   pthread(void *arg);
-void  udisp_int(int arg);
-void  udisp_str(char *arg);
+void  display_int(int arg);
+void  display_str(char *arg);
+void  set_color(int c);      // added by tastror 2022-12
 
 // added by xw
 /* file system */

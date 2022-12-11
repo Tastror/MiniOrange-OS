@@ -323,22 +323,22 @@ void memman_test()
 
     p1 = (u32 *)do_malloc(4);
     if (-1 != (u32)p1) {  // 打印p1，当前空闲内存信息，p1所指内存的内容
-        disp_str("START");
-        disp_int((u32)p1);
+        kprintf("START");
+        kern_display_integer((u32)p1);
         // disp_free();
         *p1 = TEST;
-        disp_int(*p1);
-        disp_str("END");
+        kern_display_integer(*p1);
+        kprintf("END");
     }
 
     p2 = (u32 *)do_kmalloc(4);
     if (-1 != (u32)p2) {
-        disp_str("START");
-        disp_int((u32)p2);
+        kprintf("START");
+        kern_display_integer((u32)p2);
         // disp_free();
         *p2 = TEST;
-        disp_int(*p2);
-        disp_str("END");
+        kern_display_integer(*p2);
+        kprintf("END");
     }
 
     do_free((u32)p1, 4);
@@ -346,42 +346,42 @@ void memman_test()
 
     p3 = (u32 *)do_malloc_4k();
     if (-1 != (u32)p3) {
-        disp_str("START");
-        disp_int((u32)p3);
+        kprintf("START");
+        kern_display_integer((u32)p3);
         // disp_free();
         *p3 = TEST;
-        disp_int(*p3);
+        kern_display_integer(*p3);
         p = p3 + 2044;
         *p = 0x22334455;
-        disp_int(*p);
+        kern_display_integer(*p);
         p += 2048;
         *p = 0x33445566;
-        disp_int(*p);
-        disp_str("END");
+        kern_display_integer(*p);
+        kprintf("END");
     }
 
     p4 = (u32 *)do_kmalloc_4k(4);
     if (-1 != (u32)p4) {
-        disp_str("START");
-        disp_int((u32)p4);
+        kprintf("START");
+        kern_display_integer((u32)p4);
         // disp_free();
         *p4 = TEST;
-        disp_int(*p4);
+        kern_display_integer(*p4);
         p = p4 + 2044;
         *p = 0x22334455;
-        disp_int(*p);
+        kern_display_integer(*p);
         p += 2048;
         *p = 0x33445566;
-        disp_int(*p);
-        disp_str("END");
+        kern_display_integer(*p);
+        kprintf("END");
     }
 
     do_free_4k((u32)p3);
     do_free_4k((u32)p4);
 
-    disp_str("START");
+    kprintf("START");
     disp_free();
-    disp_str("END");
+    kprintf("END");
 
     return;
 }

@@ -109,21 +109,28 @@ int sys_free_4k(void *AddrLin)
 
 
 /*======================================================================*
-                           sys_udisp_int		add by visual 2016.5.16
+                           sys_display_int		add by visual 2016.5.16
 用户用的打印函数
  *======================================================================*/
-void sys_udisp_int(int arg)
+void sys_display_int(int arg)
 {
-    disp_int(arg);
+    kern_display_integer(arg);
     return;
 }
 
 /*======================================================================*
-                           sys_udisp_str		add by visual 2016.5.16
+                           sys_display_str		add by visual 2016.5.16
 用户用的打印函数
  *======================================================================*/
-void sys_udisp_str(char *arg)
+void sys_display_str(char *arg)
 {
-    disp_str(arg);
+    kern_display_string(arg);
+    return;
+}
+
+
+void sys_set_color(int color)
+{
+    kern_set_color(color);
     return;
 }

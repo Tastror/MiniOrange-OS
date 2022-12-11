@@ -8,7 +8,7 @@ static void
 kprintfputch(int ch, void *b)
 {
     char buf[2] = {(char)ch, '\0'};
-    disp_str(buf);
+    kern_display_string(buf);
 }
 
 int vkprintf(const char *fmt, va_list ap)

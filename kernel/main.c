@@ -57,7 +57,7 @@ int kernel_main()
 
     k_reenter = 0;  // record nest level of only interruption! it's different from Orange's.
                     // usage modified by xw
-    ticks = 0;  // initialize system-wide ticks
+    ticks = 0;      // initialize system-wide ticks
     p_proc_current = cpu_table;
 
     /************************************************************************
@@ -96,7 +96,7 @@ int kernel_main()
     init_vfs();  // added by mingxuan 2020-10-30
     init_fs();
     init_fs_fat();  // added by mingxuan 2019-5-17
-    // init_vfs();	//added by mingxuan 2019-5-17	//deleted by mingxuan 2020-10-30
+    // init_vfs();    //added by mingxuan 2019-5-17    //deleted by mingxuan 2020-10-30
 
     /*************************************************************************
      *第一个进程开始启动执行
@@ -145,7 +145,7 @@ static int initialize_processes()
     char    *p_regs;       // point to registers in the new kernel stack, added by xw, 17/12/11
     task_f   eip_context;  // a funtion pointer, added by xw, 18/4/18
     /*************************************************************************
-     *进程初始化部分 	edit by visual 2016.5.4
+     *进程初始化部分     edit by visual 2016.5.4
      ***************************************************************************/
     int pid;
     u32 AddrLin, err_temp;  // edit by visual 2016.5.9
@@ -182,7 +182,7 @@ static int initialize_processes()
         // p_proc->task.cr3 在页表初始化中处理
 
 
-        /**************线性地址布局初始化**********************************/  //	add by visual 2016.5.4
+        /**************线性地址布局初始化**********************************/  // add by visual 2016.5.4
         /**************task的代码数据大小及位置暂时是不会用到的，所以没有初始化************************************/
         p_proc->task.memmap.heap_lin_base = HeapLinBase;
         p_proc->task.memmap.heap_lin_limit = HeapLinBase;  // 堆的界限将会一直动态变化
@@ -192,34 +192,39 @@ static int initialize_processes()
         p_proc->task.memmap.stack_lin_limit = StackLinBase - 0x4000;  // 栈的界限将会一直动态变化，目前赋值为16k，这个值会根据esp的位置进行调整，目前初始化为16K大小
 
         p_proc->task.memmap.kernel_lin_base = KernelLinBase;
-        p_proc->task.memmap.kernel_lin_limit = KernelLinBase + KernelSize;  // 内核大小初始化为8M		//add  by visual 2016.5.10
+        p_proc->task.memmap.kernel_lin_limit = KernelLinBase + KernelSize;  // 内核大小初始化为8M        //add  by visual 2016.5.10
 
         /***************初始化PID进程页表*****************************/
         if (0 != init_page_pte(pid)) {
-            disp_color_str("kernel_main Error:init_page_pte", 0x74);
+            kern_set_color(0x74);
+            kern_display_string("kernel_main Error:init_page_pte");
+            kern_set_color(0x0F);
             return -1;
         }
-        //	pde_addr_phy_temp = get_pde_phy_addr(pid);//获取该进程页目录物理地址			//delete by visual 2016.5.19
+        // pde_addr_phy_temp = get_pde_phy_addr(pid);//获取该进程页目录物理地址            //delete by visual 2016.5.19
 
         /****************代码数据*****************************/
-        p_proc->task.regs.eip = (u32)p_task->initial_eip;  // 进程入口线性地址		edit by visual 2016.5.4
+        p_proc->task.regs.eip = (u32)p_task->initial_eip;  // 进程入口线性地址        edit by visual 2016.5.4
 
         /****************栈（此时堆、栈已经区分，以后实验会重新规划堆的位置）*****************************/
         p_proc->task.regs.esp = (u32)StackLinBase;                                                        // 栈地址最高处
         for (AddrLin = StackLinBase; AddrLin > p_proc->task.memmap.stack_lin_limit; AddrLin -= num_4K) {  // 栈
-            // addr_phy_temp = (u32)do_kmalloc_4k();//为栈申请一个物理页,Task的栈是在内核里面	//delete by visual 2016.5.19
-            // if( addr_phy_temp<0 || (addr_phy_temp&0x3FF)!=0  )
-            //{
-            //	disp_color_str("kernel_main Error:addr_phy_temp",0x74);
-            //	return -1;
+            // addr_phy_temp = (u32)do_kmalloc_4k();                                                         // 为栈申请一个物理页,Task的栈是在内核里面    // delete by visual 2016.5.19
+            // if (addr_phy_temp < 0 || (addr_phy_temp & 0x3FF) != 0) {
+            //     kern_set_color(0x74);
+            //     kern_display_string("kernel_main Error:addr_phy_temp");
+            //     kern_set_color(0x0F);
+            //     return -1;
             // }
-            err_temp = lin_mapping_phy(AddrLin,                  // 线性地址						//add by visual 2016.5.9
-                                       MAX_UNSIGNED_INT,         // 物理地址					//edit by visual 2016.5.19
-                                       pid,                      // 进程pid							//edit by visual 2016.5.19
+            err_temp = lin_mapping_phy(AddrLin,                  // 线性地址                        //add by visual 2016.5.9
+                                       MAX_UNSIGNED_INT,         // 物理地址                    //edit by visual 2016.5.19
+                                       pid,                      // 进程pid                            //edit by visual 2016.5.19
                                        PG_P | PG_USU | PG_RWW,   // 页目录的属性位
                                        PG_P | PG_USU | PG_RWW);  // 页表的属性位
             if (err_temp != 0) {
-                disp_color_str("kernel_main Error:lin_mapping_phy", 0x74);
+                kern_set_color(0x74);
+                kern_display_string("kernel_main Error:lin_mapping_phy");
+                kern_set_color(0x0F);
                 return -1;
             }
         }
@@ -239,7 +244,7 @@ static int initialize_processes()
         eip_context = restart_restore;
         *(u32 *)(p_regs - 4) = (u32)eip_context;  // initialize EIP in the context, so the process can
                                                   // start run. added by xw, 18/4/18
-        *(u32 *)(p_regs - 8) = 0x1202;  // initialize EFLAGS in the context, IF=1, IOPL=1. xw, 18/4/20
+        *(u32 *)(p_regs - 8) = 0x1202;            // initialize EFLAGS in the context, IF=1, IOPL=1. xw, 18/4/20
 
         /***************变量调整****************************/
         p_proc++;
@@ -286,13 +291,13 @@ static int initialize_processes()
         eip_context = restart_restore;
         *(u32 *)(p_regs - 4) = (u32)eip_context;  // initialize EIP in the context, so the process can
                                                   // start run. added by xw, 18/4/18
-        *(u32 *)(p_regs - 8) = 0x1202;  // initialize EFLAGS in the context, IF=1, IOPL=1. xw, 18/4/20
+        *(u32 *)(p_regs - 8) = 0x1202;            // initialize EFLAGS in the context, IF=1, IOPL=1. xw, 18/4/20
 
         /***************变量调整****************************/
         p_proc++;
         selector_ldt += 1 << 3;
     }
-    for (; pid < NR_K_PCBS + 1; pid++) {  // initial 进程的初始化				//add by visual 2016.5.17
+    for (; pid < NR_K_PCBS + 1; pid++) {  // initial 进程的初始化                //add by visual 2016.5.17
         /*************基本信息*********************************/
         strcpy(p_proc->task.p_name, "initial");  // 名称
         p_proc->task.pid = pid;                  // pid
@@ -346,30 +351,37 @@ static int initialize_processes()
 
         /***************初始化PID进程页表*****************************/
         if (0 != init_page_pte(pid)) {
-            disp_color_str("kernel_main Error:init_page_pte", 0x74);
+            kern_set_color(0x74);
+            kern_display_string("kernel_main Error:init_page_pte");
+            kern_set_color(0x0F);
             return -1;
         }
-        // pde_addr_phy_temp = get_pde_phy_addr(pid);//获取该进程页目录物理地址	//edit by visual 2016.5.19
+        // pde_addr_phy_temp = get_pde_phy_addr(pid);//获取该进程页目录物理地址    //edit by visual 2016.5.19
 
         /****************代码数据*****************************/
-        p_proc->task.regs.eip = (u32)initial;  // 进程入口线性地址		edit by visual 2016.5.17
+        p_proc->task.regs.eip = (u32)initial;  // 进程入口线性地址        edit by visual 2016.5.17
 
         /****************栈（此时堆、栈已经区分，以后实验会重新规划堆的位置）*****************************/
         p_proc->task.regs.esp = (u32)StackLinBase;                                                        // 栈地址最高处
         for (AddrLin = StackLinBase; AddrLin > p_proc->task.memmap.stack_lin_limit; AddrLin -= num_4K) {  // 栈
-            // addr_phy_temp = (u32)do_kmalloc_4k();//为栈申请一个物理页,Task的栈是在内核里面 //delete by visual 2016.5.19
-            // if( addr_phy_temp<0 || (addr_phy_temp&0x3FF)!=0  )
-            //{
-            //	disp_color_str("kernel_main Error:addr_phy_temp",0x74);
-            //	return -1;
+            // addr_phy_temp = (u32)do_kmalloc_4k();  // 为栈申请一个物理页,Task的栈是在内核里面  // delete by visual 2016.5.19
+            // if (addr_phy_temp < 0 || (addr_phy_temp & 0x3FF) != 0) {
+            //     kern_set_color(0x74);
+            //     kern_display_string("kernel_main Error:addr_phy_temp");
+            //     kern_set_color(0x0F);
+            //     return -1;
             // }
-            err_temp = lin_mapping_phy(AddrLin,                  // 线性地址
-                                       MAX_UNSIGNED_INT,         // 物理地址		//edit by visual 2016.5.19
-                                       pid,                      // 进程pid	//edit by visual 2016.5.19
-                                       PG_P | PG_USU | PG_RWW,   // 页目录的属性位
-                                       PG_P | PG_USU | PG_RWW);  // 页表的属性位
+            err_temp = lin_mapping_phy(
+                AddrLin,                 // 线性地址
+                MAX_UNSIGNED_INT,        // 物理地址, edit by visual 2016.5.19
+                pid,                     // 进程 pid, edit by visual 2016.5.19
+                PG_P | PG_USU | PG_RWW,  // 页目录的属性位
+                PG_P | PG_USU | PG_RWW   // 页表的属性位
+            );
             if (err_temp != 0) {
-                disp_color_str("kernel_main Error:lin_mapping_phy", 0x74);
+                kern_set_color(0x74);
+                kern_display_string("kernel_main Error:lin_mapping_phy");
+                kern_set_color(0x0F);
                 return -1;
             }
         }
@@ -389,7 +401,7 @@ static int initialize_processes()
         eip_context = restart_restore;
         *(u32 *)(p_regs - 4) = (u32)eip_context;  // initialize EIP in the context, so the process can
                                                   // start run. added by xw, 18/4/18
-        *(u32 *)(p_regs - 8) = 0x1202;  // initialize EFLAGS in the context, IF=1, IOPL=1. xw, 18/4/20
+        *(u32 *)(p_regs - 8) = 0x1202;            // initialize EFLAGS in the context, IF=1, IOPL=1. xw, 18/4/20
 
         /***************变量调整****************************/
         p_proc++;
@@ -435,7 +447,7 @@ static int initialize_processes()
         eip_context = restart_restore;
         *(u32 *)(p_regs - 4) = (u32)eip_context;  // initialize EIP in the context, so the process can
                                                   // start run. added by xw, 18/4/18
-        *(u32 *)(p_regs - 8) = 0x1202;  // initialize EFLAGS in the context, IF=1, IOPL=1. xw, 18/4/20
+        *(u32 *)(p_regs - 8) = 0x1202;            // initialize EFLAGS in the context, IF=1, IOPL=1. xw, 18/4/20
 
         /***************变量调整****************************/
         p_proc++;

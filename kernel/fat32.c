@@ -166,7 +166,7 @@ STATE ReadFile(int fd, void *buf, int length)
         return ACCESSDENIED;
     }
 
-    disp_str("read:");
+    kprintf("read:");
     if (pfile->off >= pfile->size) {
         return 0;
     }
@@ -327,8 +327,8 @@ STATE OpenFile(const char *filename, int mode)
     GetNameFromPath(fullpath, name);
 
     state = PathToCluster(parent, &parentCluster);
-    disp_str("\nstate=");
-    disp_int(state);
+    kprintf("\nstate=");
+    kern_display_integer(state);
     if (state != OK) {
         return -1;
     }
@@ -339,7 +339,7 @@ STATE OpenFile(const char *filename, int mode)
     {
         if (state == NAMEEXIST)  // 文件存在，使用O_CREAT是多余的，继续执行OpenFile即可
         {
-            disp_str("file exists, O_CREAT is no use!");
+            kprintf("file exists, O_CREAT is no use!");
         } else  // 文件不存在，需要使用O_CREAT，先创建文件，再执行OpenFile
         {
             CreateRecord(name, 0x20, 0, 0, &record);
@@ -349,7 +349,7 @@ STATE OpenFile(const char *filename, int mode)
     {
         if (state != NAMEEXIST)  // 文件不存在，需要使用O_CREAT，用户没有使用，则报错并返回-1，表示路径有误
         {
-            disp_str("no file, use O_CREAT!");
+            kprintf("no file, use O_CREAT!");
             return -1;
         } else {
         }  // 文件存在，使用O_CREAT是多余的，继续执行OpenFile即可
@@ -357,10 +357,10 @@ STATE OpenFile(const char *filename, int mode)
     //~mingxuan 2019-5-19
 
     state = ReadRecord(parentCluster, name, &record, NULL, NULL);
-    disp_str("state=");
-    disp_int(state);
+    kprintf("state=");
+    kern_display_integer(state);
     if (state != OK) {
-        disp_str("ReadRecord Fail!");
+        kprintf("ReadRecord Fail!");
         return -1;
     }
 
@@ -375,9 +375,9 @@ STATE OpenFile(const char *filename, int mode)
 
     if ((fd < 0) || (fd >= NR_FILES)) {
         // panic("filp[] is full (PID:%d)", proc2pid(p_proc_current));
-        disp_str("filp[] is full (PID:");
-        disp_int(proc2pid(p_proc_current));
-        disp_str(")\n");
+        kprintf("filp[] is full (PID:");
+        kern_display_integer(proc2pid(p_proc_current));
+        kprintf(")\n");
         return -1;
     }
 
@@ -386,9 +386,9 @@ STATE OpenFile(const char *filename, int mode)
         if ((f_desc_table[i].flag == 0))
             break;
     if (i >= NR_FILE_DESC) {
-        disp_str("f_desc_table[] is full (PID:");
-        disp_int(proc2pid(p_proc_current));
-        disp_str(")\n");
+        kprintf("f_desc_table[] is full (PID:");
+        kern_display_integer(proc2pid(p_proc_current));
+        kprintf(")\n");
         return -1;
     }
 
@@ -400,9 +400,9 @@ STATE OpenFile(const char *filename, int mode)
         if (f_desc_table_fat[i].flag == 0)
             break;
     if (i >= NR_FILE_DESC) {
-        disp_str("f_desc_table[] is full (PID:");
-        disp_int(proc2pid(p_proc_current));
-        disp_str(")\n");
+        kprintf("f_desc_table[] is full (PID:");
+        kern_display_integer(proc2pid(p_proc_current));
+        kprintf(")\n");
     }
 
     // 以下是给File结构体赋值
@@ -414,9 +414,9 @@ STATE OpenFile(const char *filename, int mode)
     f_desc_table_fat[i].off = 0;
     f_desc_table_fat[i].size = record.filelength;
     f_desc_table_fat[i].flag = mode;
-    // disp_str("flag:");
+    // kprintf("flag:");
     // deint(f_desc_table_fat[i].flag);
-    // disp_str("index:");
+    // kprintf("index:");
     // deint(i);
     p_proc_current->task.filp[fd]->fd_node.fd_file = &f_desc_table_fat[i];
 
@@ -515,7 +515,7 @@ STATE IsFile(PCHAR path, PUINT tag)
 
 void init_fs_fat()
 {
-    disp_str("Initializing fat32 file system...  \n");
+    kprintf("Initializing fat32 file system...  \n");
 
     buf = (u8 *)K_PHY2LIN(sys_kmalloc(FSBUF_SIZE));
 
@@ -576,9 +576,9 @@ static void mkfs_fat()
     driver_msg.PROC_NR = proc2pid(p_proc_current);
     hd_ioctl(&driver_msg);
 
-    disp_str("dev size: ");
-    disp_int(geo.size);
-    disp_str(" sectors\n");
+    kprintf("dev size: ");
+    kern_display_integer(geo.size);
+    kprintf(" sectors\n");
 
     TotalSectors = geo.size;
 
@@ -826,7 +826,7 @@ int sys_ListDir(void *uesp)
     // 	DirCheckup(array);
     // }else {
     // 	DisErrorInfo(state);
-    // 	disp_str("\n");
+    // 	kprintf("\n");
     // }
     // DestroyDArray(array);
     return 0;
@@ -835,18 +835,18 @@ int sys_ListDir(void *uesp)
 void DisErrorInfo(STATE state)
 {
     if (state == SYSERROR) {
-        disp_str("          system error\n");
+        kprintf("          system error\n");
     } else if (state == VDISKERROR) {
-        disp_str("          disk error\n");
+        kprintf("          disk error\n");
     } else if (state == INSUFFICIENTSPACE) {
-        disp_str("          no much space\n");
+        kprintf("          no much space\n");
     } else if (state == WRONGPATH) {
-        disp_str("          path error\n");
+        kprintf("          path error\n");
     } else if (state == NAMEEXIST) {
-        disp_str("          name exists\n");
+        kprintf("          name exists\n");
     } else if (state == ACCESSDENIED) {
-        disp_str("          deny access\n");
+        kprintf("          deny access\n");
     } else {
-        disp_str("          unknown error\n");
+        kprintf("          unknown error\n");
     }
 }

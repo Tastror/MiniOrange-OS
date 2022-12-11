@@ -32,7 +32,9 @@ u32 sys_exec(char *path)
     char *p_reg;  // point to a register in the new kernel stack, added by xw, 17/12/11
 
     if (0 == path) {
-        disp_color_str("exec: path ERROR!", 0x74);
+        kern_set_color(0x74);
+        kern_display_string("exec: path ERROR!");
+        kern_set_color(0x0F);
         return -1;
     }
 
@@ -80,7 +82,9 @@ u32 sys_exec(char *path)
                                    PG_P | PG_USU | PG_RWW);   // 页表的属性位
 
         if (err_temp != 0) {
-            disp_color_str("kernel_main Error:lin_mapping_phy", 0x74);
+            kern_set_color(0x74);
+            kern_display_string("kernel_main Error:lin_mapping_phy");
+            kern_set_color(0x0F);
             return -1;
         }
     }
@@ -92,9 +96,11 @@ u32 sys_exec(char *path)
     if (Echo_Phdr != NULL)
         sys_free(Echo_Phdr);
 
-    // disp_color_str("\n[exec success:",0x72);//灰底绿字
-    // disp_color_str(path,0x72);//灰底绿字
-    // disp_color_str("]",0x72);//灰底绿字
+    // kern_set_color(0x72);  // 灰底绿字
+    // kern_display_string("\n[exec success:");
+    // kern_display_string(path);
+    // kern_display_string("]");
+    // kern_set_color(0x0F);
     return 0;
 }
 
@@ -146,7 +152,9 @@ static u32 exec_load(u32 fd, const Elf32_Ehdr *Echo_Ehdr, const Elf32_Phdr Echo_
     u32 ph_num;
 
     if (0 == Echo_Ehdr->e_phnum) {
-        disp_color_str("exec_load: elf ERROR!", 0x74);
+        kern_set_color(0x74);
+        kern_display_string("exec_load: elf ERROR!");
+        kern_set_color(0x0F);
         return -1;
     }
 
@@ -166,7 +174,9 @@ static u32 exec_load(u32 fd, const Elf32_Ehdr *Echo_Ehdr, const Elf32_Phdr Echo_
             p_proc_current->task.memmap.data_lin_base = Echo_Phdr[ph_num].p_vaddr;
             p_proc_current->task.memmap.data_lin_limit = Echo_Phdr[ph_num].p_vaddr + Echo_Phdr[ph_num].p_memsz;
         } else {
-            disp_color_str("exec_load: unKnown elf'program!", 0x74);
+            kern_set_color(0x74);
+            kern_display_string("exec_load: unKnown elf'program!");
+            kern_set_color(0x0F);
             return -1;
         }
     }

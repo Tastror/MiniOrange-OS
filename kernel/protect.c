@@ -204,33 +204,34 @@ static void init_descriptor(DESCRIPTOR *p_desc, u32 base, u32 limit, u16 attribu
 void exception_handler(int vec_no, int err_code, int eip, int cs, int eflags)
 {
     int  i;
-    int  text_color = 0x74; /* 灰底红字 */
     char err_description[][64] = {"#DE Divide Error", "#DB RESERVED", "—  NMI Interrupt", "#BP Breakpoint", "#OF Overflow", "#BR BOUND Range Exceeded", "#UD Invalid Opcode (Undefined Opcode)", "#NM Device Not Available (No Math Coprocessor)", "#DF Double Fault", "    Coprocessor Segment Overrun (reserved)", "#TS Invalid TSS", "#NP Segment Not Present", "#SS Stack-Segment Fault", "#GP General Protection", "#PF Page Fault", "—  (Intel reserved. Do not use.)", "#MF x87 FPU Floating-Point Error (Math Fault)", "#AC Alignment Check", "#MC Machine Check", "#XF SIMD Floating-Point Exception"};
 
     /* 通过打印空格的方式清空屏幕的前五行，并把 disp_pos 清零 */
     disp_pos = 0;
     for (i = 0; i < 80 * 5; i++) {
-        disp_str(" ");
+        kern_display_string(" ");
     }
     disp_pos = 0;
 
-    disp_color_str("Exception! --> ", text_color);
-    disp_color_str(err_description[vec_no], text_color);
-    disp_color_str("\n\n", text_color);
-    disp_color_str("EFLAGS:", text_color);
-    disp_int(eflags);
-    disp_color_str("CS:", text_color);
-    disp_int(cs);
-    disp_color_str("EIP:", text_color);
-    disp_int(eip);
+    kern_set_color(0x74);
+    kern_display_string("Exception! --> ");
+    kern_display_string(err_description[vec_no]);
+    kern_display_string("\n\n");
+    kern_display_string("EFLAGS:");
+    kern_display_integer(eflags);
+    kern_display_string("CS:");
+    kern_display_integer(cs);
+    kern_display_string("EIP:");
+    kern_display_integer(eip);
 
     if (err_code != 0xFFFFFFFF) {
-        disp_color_str("Error code:", text_color);
-        disp_int(err_code);
+        kern_display_string("Error code:");
+        kern_display_integer(err_code);
     }
 
     // added by xw, 18/12/19
-    disp_str("\n");
+    kern_display_string("\n");
+    kern_set_color(0x0F);
 
     // added by xw, 18/12/19
     p_proc_current->task.stat = KILLED;
@@ -257,7 +258,7 @@ void divide_error_handler()
     exception_handler(vec_no, err_code, eip, cs, eflags);
 
     while (1) {
-        disp_str("Loop in divide error handler...\n");
+        kern_display_string("Loop in divide error handler...\n");
 
         i = 100;
         while (--i) {
