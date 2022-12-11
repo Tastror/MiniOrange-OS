@@ -287,7 +287,7 @@ int do_vopen(const char *path, int flags)
     int fd = -1;
     index = get_index(pathname);
     if (index == -1) {
-        kprintf("pathname error! path: %s\n", path);
+        // kprintf("pathname error! path: %s\n", path);
         return -1;
     }
 
@@ -295,7 +295,7 @@ int do_vopen(const char *path, int flags)
     if (fd != -1) {
         p_proc_current->task.filp[fd]->dev_index = index;
     } else {
-        kprintf("          error!\n");
+        // kprintf("          error!\n");
     }
 
     return fd;

@@ -197,7 +197,7 @@ static int initialize_processes()
         /***************初始化PID进程页表*****************************/
         if (0 != init_page_pte(pid)) {
             kern_set_color(0x74);
-            kern_display_string("kernel_main Error:init_page_pte");
+            kern_display_string("kernel_main Error: init_page_pte");
             kern_set_color(0x0F);
             return -1;
         }
@@ -223,7 +223,7 @@ static int initialize_processes()
                                        PG_P | PG_USU | PG_RWW);  // 页表的属性位
             if (err_temp != 0) {
                 kern_set_color(0x74);
-                kern_display_string("kernel_main Error:lin_mapping_phy");
+                kern_display_string("kernel_main Error: lin_mapping_phy");
                 kern_set_color(0x0F);
                 return -1;
             }
@@ -352,7 +352,7 @@ static int initialize_processes()
         /***************初始化PID进程页表*****************************/
         if (0 != init_page_pte(pid)) {
             kern_set_color(0x74);
-            kern_display_string("kernel_main Error:init_page_pte");
+            kern_display_string("kernel_main Error: init_page_pte");
             kern_set_color(0x0F);
             return -1;
         }
@@ -380,7 +380,7 @@ static int initialize_processes()
             );
             if (err_temp != 0) {
                 kern_set_color(0x74);
-                kern_display_string("kernel_main Error:lin_mapping_phy");
+                kern_display_string("kernel_main Error: lin_mapping_phy");
                 kern_set_color(0x0F);
                 return -1;
             }

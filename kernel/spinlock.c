@@ -17,10 +17,12 @@ static inline uint
 cmpxchg(uint oldval, uint newval, volatile uint *lock_addr)
 {
     uint result;
-    asm volatile("lock; cmpxchg %0, %2"
-                 : "+m"(*lock_addr), "=a"(result)
-                 : "r"(newval), "1"(oldval)
-                 : "cc");
+    asm volatile(
+        "lock; cmpxchg %0, %2"
+        : "+m"(*lock_addr), "=a"(result)
+        : "r"(newval), "1"(oldval)
+        : "cc"
+    );
     return result;
 }
 

@@ -17,8 +17,8 @@ _NR_free                equ 6           ; add by visual 2016.4.7
 _NR_free_4k             equ 7           ; add by visual 2016.4.7
 _NR_fork                equ 8           ; add by visual 2016.4.8
 _NR_pthread             equ 9           ; add by visual 2016.4.11
-_NR_display_int           equ 10          ; add by visual 2016.5.16
-_NR_display_str           equ 11          ; add by visual 2016.5.16
+_NR_display_int         equ 10          ; add by visual 2016.5.16
+_NR_display_str         equ 11          ; add by visual 2016.5.16
 _NR_exec                equ 12          ; add by visual 2016.5.16
 _NR_yield               equ 13          ; added by xw, 17/12
 _NR_sleep               equ 14          ; added by xw, 17/12
@@ -38,7 +38,7 @@ _NR_opendir             equ 25          ; added by mingxuan 2019-5-17
 _NR_createdir           equ 26          ; added by mingxuan 2019-5-17
 _NR_deletedir           equ 27          ; added by mingxuan 2019-5-17
 
-_NR_set_color        equ 28          ; added by tastror 2022-12
+_NR_set_color           equ 28          ; added by tastror 2022-12
 
 INT_VECTOR_SYS_CALL    equ 0x90
 

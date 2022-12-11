@@ -23,7 +23,9 @@ int main(int arg, char *argv[])
         printf(" $ ");
         if (gets(buf) && strlen(buf) != 0) {
             if (exec(buf) != 0) {
+                set_color(0x04);
                 printf("exec failed: file not found!\n");
+                set_color(0x0F);
                 continue;
             }
         }

@@ -83,7 +83,7 @@ u32 sys_exec(char *path)
 
         if (err_temp != 0) {
             kern_set_color(0x74);
-            kern_display_string("kernel_main Error:lin_mapping_phy");
+            kern_display_string("kernel_main Error: lin_mapping_phy");
             kern_set_color(0x0F);
             return -1;
         }
