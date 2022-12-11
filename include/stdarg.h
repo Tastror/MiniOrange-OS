@@ -1,5 +1,5 @@
-#ifndef MINIOS_STDARG_H
-#define MINIOS_STDARG_H
+#ifndef _MINIOS_STDARG_H_
+#define _MINIOS_STDARG_H_
 
 typedef __builtin_va_list va_list;
 
@@ -9,4 +9,4 @@ typedef __builtin_va_list va_list;
 
 #define va_end(ap) __builtin_va_end(ap)
 
-#endif /* MINIOS_STDARG_H */
+#endif /* _MINIOS_STDARG_H_ */

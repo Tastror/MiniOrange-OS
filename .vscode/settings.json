@@ -2,6 +2,7 @@
 	"editor.detectIndentation": false,
 	"editor.tabSize": 4,
 	"editor.insertSpaces": true,
+    "C_Cpp.clang_format_style": "file",
 	"files.associations": {
 		"*.h": "c",
 		"*.c": "c",

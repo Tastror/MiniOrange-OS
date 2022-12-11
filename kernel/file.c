@@ -1,15 +1,15 @@
 ﻿/********************************************
-*    file.c 	//add by visual 2016.5.17
-*目前是虚拟的文件读写
-***********************************************/
+ *    file.c 	// add by visual 2016.5.17
+ *目前是虚拟的文件读写
+ ***********************************************/
 
-#include "type.h"
 #include "const.h"
-#include "protect.h"
-#include "string.h"
-#include "proc.h"
 #include "global.h"
+#include "proc.h"
+#include "protect.h"
 #include "proto.h"
+#include "string.h"
+#include "type.h"
 
 
 // #define	BaseOfEchoFilePhyAddr	(K_PHY2LIN(0x7e00))   //目前就这一个文件
@@ -48,4 +48,3 @@
 // 	position = pos;
 // 	return 0;
 // }
-

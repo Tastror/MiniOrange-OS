@@ -1,5 +1,5 @@
-#ifndef MINIOS_ASSERT_H
-#define MINIOS_ASSERT_H
+#ifndef _MINIOS_ASSERT_H_
+#define _MINIOS_ASSERT_H_
 
 void _warn(const char *, int, const char *, ...);
 void _panic(const char *, int, const char *, ...) __attribute__((__noreturn__));
@@ -13,4 +13,4 @@ void _panic(const char *, int, const char *, ...) __attribute__((__noreturn__));
 // 静态 assert，如果不符合条件就会直接在编译期报错
 #define static_assert(x) switch (x) case 0: case (x):;
 
-#endif /* MINIOS_ASSERT_H */
+#endif /* _MINIOS_ASSERT_H_ */

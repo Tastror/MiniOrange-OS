@@ -1,18 +1,11 @@
-﻿/*********************************************************
-*系统调用具体函数的实现
-*
-*
-*
-**********************************************************/
-
-#include "type.h"
-#include "const.h"
-#include "protect.h"
-#include "string.h"
-#include "proc.h"
+﻿#include "const.h"
 #include "global.h"
-#include "proto.h"
 #include "memman.h"
+#include "proc.h"
+#include "protect.h"
+#include "proto.h"
+#include "string.h"
+#include "type.h"
 
 struct memfree *memarg = 0;
 
@@ -21,7 +14,7 @@ struct memfree *memarg = 0;
  *======================================================================*/
 int sys_get_ticks()
 {
-	return ticks;
+    return ticks;
 }
 
 
@@ -30,62 +23,62 @@ int sys_get_ticks()
  *======================================================================*/
 int sys_get_pid()
 {
-	return p_proc_current->task.pid;
+    return p_proc_current->task.pid;
 }
 
 /*======================================================================*
                            sys_kmalloc		add by visual 2016.4.6
  *======================================================================*/
-void* sys_kmalloc(int size)
-{						//edit by visual 2015.5.9
-	return (void*)(do_kmalloc(size));
+void *sys_kmalloc(int size)
+{  // edit by visual 2015.5.9
+    return (void *)(do_kmalloc(size));
 }
 
 /*======================================================================*
                            sys_kmalloc_4k		add by visual 2016.4.7
  *======================================================================*/
-void* sys_kmalloc_4k()
-{						
-	return (void*)(do_kmalloc_4k());
+void *sys_kmalloc_4k()
+{
+    return (void *)(do_kmalloc_4k());
 }
- 
+
 /*======================================================================*
                            sys_malloc		edit by visual 2016.5.4
  *======================================================================*/
-void* sys_malloc(int size)		
-{	
-	int vir_addr,AddrLin;
-	vir_addr = vmalloc(size);
-	
-	for( AddrLin=vir_addr; AddrLin<vir_addr+size ; AddrLin += num_4B )//一个字节一个字节处理
-	{
-		lin_mapping_phy(AddrLin,//线性地址					//add by visual 2016.5.9
-				MAX_UNSIGNED_INT,//物理地址						//edit by visual 2016.5.19
-				p_proc_current->task.pid,//进程pid				//edit by visual 2016.5.19
-				PG_P  | PG_USU | PG_RWW,//页目录的属性位
-				PG_P  | PG_USU | PG_RWW);//页表的属性位		
-	}
-	return (void*)vir_addr;
+void *sys_malloc(int size)
+{
+    int vir_addr, AddrLin;
+    vir_addr = vmalloc(size);
+
+    for (AddrLin = vir_addr; AddrLin < vir_addr + size; AddrLin += num_4B)  // 一个字节一个字节处理
+    {
+        lin_mapping_phy(AddrLin,                   // 线性地址					//add by visual 2016.5.9
+                        MAX_UNSIGNED_INT,          // 物理地址						//edit by visual 2016.5.19
+                        p_proc_current->task.pid,  // 进程pid				//edit by visual 2016.5.19
+                        PG_P | PG_USU | PG_RWW,    // 页目录的属性位
+                        PG_P | PG_USU | PG_RWW);   // 页表的属性位
+    }
+    return (void *)vir_addr;
 }
 
 
 /*======================================================================*
                            sys_malloc_4k		edit by visual 2016.5.4
  *======================================================================*/
-void* sys_malloc_4k()
-{	
-	int vir_addr,AddrLin;
-	vir_addr = vmalloc(num_4K);
-	
-	for( AddrLin=vir_addr; AddrLin<vir_addr+num_4K ; AddrLin += num_4K )//一页一页处理(事实上只有一页，而且一定没有填写页表，页目录是否填写不确定)
-	{
-		lin_mapping_phy(	AddrLin,//线性地址					//add by visual 2016.5.9
-							MAX_UNSIGNED_INT,//物理地址	
-							p_proc_current->task.pid,//进程pid					//edit by visual 2016.5.19
-							PG_P  | PG_USU | PG_RWW,//页目录的属性位
-							PG_P  | PG_USU | PG_RWW);//页表的属性位				
-	}
-	return (void*)vir_addr;
+void *sys_malloc_4k()
+{
+    int vir_addr, AddrLin;
+    vir_addr = vmalloc(num_4K);
+
+    for (AddrLin = vir_addr; AddrLin < vir_addr + num_4K; AddrLin += num_4K)  // 一页一页处理(事实上只有一页，而且一定没有填写页表，页目录是否填写不确定)
+    {
+        lin_mapping_phy(AddrLin,                   // 线性地址					//add by visual 2016.5.9
+                        MAX_UNSIGNED_INT,          // 物理地址
+                        p_proc_current->task.pid,  // 进程pid					//edit by visual 2016.5.19
+                        PG_P | PG_USU | PG_RWW,    // 页目录的属性位
+                        PG_P | PG_USU | PG_RWW);   // 页表的属性位
+    }
+    return (void *)vir_addr;
 }
 
 
@@ -93,25 +86,25 @@ void* sys_malloc_4k()
                            sys_free		add by visual 2016.4.7
  *======================================================================*/
 int sys_free(void *arg)
-{	
-	memarg = (struct memfree *)arg;
-	return do_free(memarg->addr,memarg->size);
+{
+    memarg = (struct memfree *)arg;
+    return do_free(memarg->addr, memarg->size);
 }
 
 /*======================================================================*
                            sys_free_4k		edit by visual 2016.5.9
  *======================================================================*/
-int sys_free_4k(void* AddrLin)
-{//线性地址可以不释放，但是页表映射关系必须清除！
-	int phy_addr;				//add by visual 2016.5.9
-	
-	phy_addr = get_page_phy_addr(p_proc_current->task.pid,(int)AddrLin);//获取物理页的物理地址		//edit by visual 2016.5.19
-	lin_mapping_phy(	(int)AddrLin,//线性地址					
-						phy_addr,//物理地址
-						p_proc_current->task.pid,//进程pid			//edit by visual 2016.5.19
-						PG_P  | PG_USU | PG_RWW,//页目录的属性位
-						0  | PG_USU | PG_RWW);//页表的属性位	
-	return do_free_4k(phy_addr);
+int sys_free_4k(void *AddrLin)
+{                  // 线性地址可以不释放，但是页表映射关系必须清除！
+    int phy_addr;  // add by visual 2016.5.9
+
+    phy_addr = get_page_phy_addr(p_proc_current->task.pid, (int)AddrLin);  // 获取物理页的物理地址		//edit by visual 2016.5.19
+    lin_mapping_phy((int)AddrLin,                                          // 线性地址
+                    phy_addr,                                              // 物理地址
+                    p_proc_current->task.pid,                              // 进程pid			//edit by visual 2016.5.19
+                    PG_P | PG_USU | PG_RWW,                                // 页目录的属性位
+                    0 | PG_USU | PG_RWW);                                  // 页表的属性位
+    return do_free_4k(phy_addr);
 }
 
 
@@ -121,8 +114,8 @@ int sys_free_4k(void* AddrLin)
  *======================================================================*/
 void sys_udisp_int(int arg)
 {
-	disp_int(arg);
-	return ;
+    disp_int(arg);
+    return;
 }
 
 /*======================================================================*
@@ -131,6 +124,6 @@ void sys_udisp_int(int arg)
  *======================================================================*/
 void sys_udisp_str(char *arg)
 {
-	disp_str(arg);
-	return ;
+    disp_str(arg);
+    return;
 }
