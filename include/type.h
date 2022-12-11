@@ -14,8 +14,7 @@
 #endif
 
 typedef _Bool bool;
-enum { false,
-       true };
+enum { false, true };
 
 typedef long long          i64;
 typedef unsigned long long u64;

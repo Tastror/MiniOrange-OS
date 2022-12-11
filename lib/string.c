@@ -35,8 +35,7 @@ char *strcat(char *dst, const char *src)
     return dst;
 }
 
-char *
-strncpy(char *dst, const char *src, size_t size)
+char *strncpy(char *dst, const char *src, size_t size)
 {
     size_t i;
     char  *ret;
@@ -68,8 +67,7 @@ int strncmp(const char *p, const char *q, size_t n)
         return (int)((unsigned char)*p - (unsigned char)*q);
 }
 
-void *
-memset(void *v, int c, size_t n)
+void *memset(void *v, int c, size_t n)
 {
     char *p;
     int   m;
@@ -82,8 +80,7 @@ memset(void *v, int c, size_t n)
     return v;
 }
 
-void *
-memcpy(void *dst, const void *src, size_t n)
+void *memcpy(void *dst, const void *src, size_t n)
 {
     const char *s;
     char       *d;
