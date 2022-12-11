@@ -5,19 +5,19 @@
  * This file is added by xw. 18/6/17
  */
 
-#ifndef	FS_H
-#define	FS_H
+#ifndef    FS_H
+#define    FS_H
 
 /* APIs of file operation */
-#define	O_CREAT		1
-#define	O_RDWR		2
+#define    O_CREAT        1
+#define    O_RDWR        2
 
-#define SEEK_SET	1
-#define SEEK_CUR	2
-#define SEEK_END	3
+#define SEEK_SET    1
+#define SEEK_CUR    2
+#define SEEK_END    3
 
-#define	MAX_PATH	128
-#define	MAX_FILENAME_LEN	12
+#define    MAX_PATH    128
+#define    MAX_FILENAME_LEN    12
 
 void init_fs();
 

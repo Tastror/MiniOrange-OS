@@ -1,0 +1,11 @@
+{
+	"editor.detectIndentation": false,
+	"editor.tabSize": 4,
+	"editor.insertSpaces": true,
+	"files.associations": {
+		"*.h": "c",
+		"*.c": "c",
+		"*.asm": "nasm",
+		"Makefrag": "makefile"
+	}
+}

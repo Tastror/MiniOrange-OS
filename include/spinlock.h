@@ -1,5 +1,5 @@
 /**********************************************************
-*	spinlock.h       //added by mingxuan 2018-12-26
+*    spinlock.h       //added by mingxuan 2018-12-26
 ***********************************************************/
 
 // Mutual exclusion lock.
@@ -22,8 +22,3 @@ void initlock(struct spinlock *lock, char *name);
 void acquire(struct spinlock *lock);
 // Release the lock.
 void release(struct spinlock *lock);
-
-
-
-
-
