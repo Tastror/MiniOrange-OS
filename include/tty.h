@@ -12,6 +12,7 @@
 #ifndef _ORANGES_TTY_H_
 #define _ORANGES_TTY_H_
 
+#include <type.h>
 
 #define TTY_IN_BYTES    256 /* tty input queue size */
 #define TTY_OUT_BUF_LEN 2   /* tty output buffer size */

@@ -7,6 +7,12 @@
 #ifndef _GLOBAL_H_
 #define _GLOBAL_H_
 
+
+#include <const.h>
+#include <hd.h>
+
+extern struct hd_info hd_info[1];  // added by mingxuan 2020-10-27
+
 /**
  * equal to 1 if kernel is initializing, equal to 0 if done.
  * added by xw, 18/5/31
@@ -50,9 +56,5 @@ struct memfree {
     u32 addr;
     u32 size;
 };
-
-#include "fs_const.h"
-#include "hd.h"
-extern struct hd_info hd_info[1];  // added by mingxuan 2020-10-27
 
 #endif /* _GLOBAL_H_ */

@@ -6,6 +6,8 @@
 #ifndef _ELF_H_
 #define _ELF_H_
 
+#include <type.h>
+
 #define EI_NIDENT 16
 
 /**

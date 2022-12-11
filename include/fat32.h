@@ -6,6 +6,8 @@
 #ifndef _FAT32_H_
 #define _FAT32_H_
 
+#include <type.h>
+
 #define TRUE  1  // 是
 #define FALSE 0  // 否
 

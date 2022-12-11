@@ -7,7 +7,7 @@
 #ifndef _FS_MISC_H_
 #define _FS_MISC_H_
 
-#include "fat32.h"
+#include <fat32.h>
 
 /**
  * @struct dev_drv_map fs.h "include/sys/fs.h"

@@ -8,6 +8,9 @@
 #ifndef _ORANGES_HD_H_
 #define _ORANGES_HD_H_
 
+#include <proc.h>
+#include <fs_const.h>
+
 /**
  * @struct part_ent
  * @brief  Partition Entry struct.

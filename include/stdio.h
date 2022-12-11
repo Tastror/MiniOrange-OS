@@ -5,9 +5,9 @@
 #ifndef _STDIO_H_  // added by mingxuan 2019-5-19
 #define _STDIO_H_  // added by mingxuan 2019-5-19
 
-#include "const.h"  // added by mingxuan 2019-5-19
-#include "stdarg.h"
-#include "type.h"  // added by mingxuan 2019-5-19
+#include <const.h>  // added by mingxuan 2019-5-19
+#include <stdarg.h>
+#include <type.h>  // added by mingxuan 2019-5-19
 
 
 /* syscall.asm */

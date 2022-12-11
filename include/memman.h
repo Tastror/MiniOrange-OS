@@ -1,6 +1,8 @@
 #ifndef _ORANGES_MEMMAN_H_
 #define _ORANGES_MEMMAN_H_
 
+#include <type.h>
+
 #define MEMMAN_FREES 4090        // 32KB
 #define MEMMAN_ADDR  0x01ff0000  // 存 memman，31M 960K
 #define FMIBuff      0x007ff000  // loader 中 getFreeMemInfo 返回值存放起始地址（7M 1020K）

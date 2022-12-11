@@ -1,7 +1,7 @@
 #ifndef _MINIOS_STRING_H_
 #define _MINIOS_STRING_H_
 
-#include "type.h"
+#include <type.h>
 
 int   strlen(const char *s);
 int   strnlen(const char *s, size_t size);

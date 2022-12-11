@@ -8,6 +8,8 @@
 #ifndef _PROC_H_
 #define _PROC_H_
 
+#include <protect.h>
+
 /**
  * Used to find saved registers in the new kernel stack,
  * for there is no variable name you can use in C.
