@@ -131,10 +131,11 @@ $(IMAGE): 	$(OBJDIR)/boot/mbr.bin		\
 		$(BUILD_IMAGE_SCRIPT)		\
 		$(OBJDIR)/user/$(USER_TAR)	\
 		$(FS_FLAG_OBJFILES)
-	@./build_img.sh $@ $(OBJDIR) $(OSBOOT_START_OFFSET)
-	@dd if=$(OBJDIR)/user/$(USER_TAR) of=$@ bs=512 count=$(INSTALL_NR_SECTORS) seek=$(INSTALL_PHY_SECTOR) conv=notrunc
-	@dd if=$(OBJDIR)/fs_flags/orange_flag.bin of=$@ bs=1 count=1 seek=$(ORANGE_FS_START_OFFSET) conv=notrunc
-	@dd if=$(OBJDIR)/fs_flags/fat32_flag.bin of=$@ bs=1 count=11 seek=$(FAT32_FS_START_OFFSET) conv=notrunc
+	@sudo bash ./build_img.sh $@ $(OBJDIR) $(OSBOOT_START_OFFSET)
+	@sudo dd if=$(OBJDIR)/user/$(USER_TAR) of=$@ bs=512 count=$(INSTALL_NR_SECTORS) seek=$(INSTALL_PHY_SECTOR) conv=notrunc
+	@sudo dd if=$(OBJDIR)/fs_flags/orange_flag.bin of=$@ bs=1 count=1 seek=$(ORANGE_FS_START_OFFSET) conv=notrunc
+	@sudo dd if=$(OBJDIR)/fs_flags/fat32_flag.bin of=$@ bs=1 count=11 seek=$(FAT32_FS_START_OFFSET) conv=notrunc
+	@sudo chmod 777 $(IMAGE)
 
 all: $(IMAGE)
 

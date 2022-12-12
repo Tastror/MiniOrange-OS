@@ -19,7 +19,7 @@ $(OBJDIR)/lib/%.o: lib/%.c $(OBJDIR)/.vars.CFLAGS
 $(OBJDIR)/lib/%.o: lib/%.asm
 	@echo + as obj $<
 	@mkdir -p $(@D)
-	@$(AS) -I ./include -f elf -o $@ $<
+	@$(AS) -I ./include/ -f elf -o $@ $<
 
 $(LIB_A): $(LIB_OBJS)
 	@echo + ar $@
