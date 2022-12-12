@@ -117,7 +117,7 @@ void initial()
     // untar(INSTALL_FILENAME);
     // modified by mingxuan 2019-5-21
     char full_name[30] = "orange/";
-    ;
+
     printf("untar:%s\n", full_name);
     strcat(full_name, INSTALL_FILENAME);
     untar(full_name);
@@ -126,8 +126,7 @@ void initial()
     do_vclose(stdout);
     do_vclose(stderr);
 
-    exec("orange/shell_0.bin");
+    exec("orange/shell.bin");
 
-    while (1)
-        ;
+    while (1) {}
 }
