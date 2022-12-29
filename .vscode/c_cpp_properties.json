@@ -7,7 +7,7 @@
             ],
             "defines": [],
             "cStandard": "gnu99",
-	        "compilerArgs": ["-m32"]
+            "compilerArgs": ["-m32"]
         }
     ],
     "version": 4
