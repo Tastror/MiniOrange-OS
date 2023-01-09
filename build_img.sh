@@ -7,7 +7,8 @@ IMAGE=$1
 OBJDIR=$2
 OSBOOT_START_OFFSET=$3
 
-cp ./hd/test1.img ${IMAGE}
+gcc ./img_gen/generate_sparseness.c -o ./obj/generate_sparseness
+./obj/generate_sparseness ${IMAGE}
 dd if=${OBJDIR}/boot/mbr.bin of=${IMAGE} bs=1 count=446 conv=notrunc
 
 loop_device=`losetup -f`
