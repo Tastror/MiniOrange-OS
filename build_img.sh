@@ -15,10 +15,11 @@ sudo losetup -P ${loop_device} ${IMAGE}
 sudo mkfs.vfat -F 32 ${loop_device}p1
 dd if=${OBJDIR}/boot/boot.bin of=${IMAGE} bs=1 count=420 seek=${OSBOOT_START_OFFSET} conv=notrunc
 
-mkdir -p iso
+mkdir iso
 sudo mount ${loop_device}p1 iso/
 sudo cp ${OBJDIR}/boot/loader.bin iso/ -v
 sudo cp ${OBJDIR}/kernel/kernel.bin iso/ -v
 sudo umount iso/
+rm -r iso
 
 sudo losetup -d ${loop_device}

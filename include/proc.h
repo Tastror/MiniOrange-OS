@@ -1,8 +1,8 @@
-
 /**
  * proc.h
  *
- * Forrest Yu, 2005
+ * Forrest Yu
+ * 2005
  */
 
 #ifndef _PROC_H_

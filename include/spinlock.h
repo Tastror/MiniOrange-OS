@@ -1,5 +1,8 @@
 /**
- *    spinlock.h       // added by mingxuan 2018-12-26
+ * spinlock.h
+ * 
+ * mingxuan
+ * 2018-12-26
  */
 
 #ifndef _SPINLOCK_H_

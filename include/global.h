@@ -1,7 +1,8 @@
 /**
  * global.h
  *
- * Forrest Yu, 2005
+ * Forrest Yu
+ * 2005
  */
 
 #ifndef _GLOBAL_H_

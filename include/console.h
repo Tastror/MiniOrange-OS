@@ -1,8 +1,8 @@
 /**
- * @file   console.h
+ * @file console.h
  * @brief
  * @author Forrest Y. Yu
- * @date   2005
+ * @date 2005
  */
 
 /**

@@ -1,8 +1,8 @@
-
 /**
  * protect.h
  *
- * Forrest Yu, 2005
+ * Forrest Yu
+ * 2005
  */
 
 #ifndef _ORANGES_PROTECT_H_

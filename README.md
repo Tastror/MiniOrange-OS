@@ -69,8 +69,8 @@ MiniOS 当前从软盘中启动，启动流程为：
 
 ```bash
 # 编译 MiniOS 所有内容
-make
-# 在 qume 中运行 MiniOS
+make all
+# 编译 MiniOS 所有内容，并在 qume 中运行 MiniOS
 make run
 # 清除所有编译文件
 make clean

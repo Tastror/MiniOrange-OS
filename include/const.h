@@ -1,7 +1,9 @@
 
 /**
  * const.h
- * Forrest Yu, 2005
+ * 
+ * Forrest Yu
+ * 2005
  */
 
 #ifndef _ORANGES_CONST_H_

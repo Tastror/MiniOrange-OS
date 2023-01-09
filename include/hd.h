@@ -1,8 +1,8 @@
 /**
- * @file   include/sys/hd.h
+ * @file hd.h
  * @brief
  * @author Forrest Y. Yu
- * @date   2008
+ * @date 2008
  */
 
 #ifndef _ORANGES_HD_H_

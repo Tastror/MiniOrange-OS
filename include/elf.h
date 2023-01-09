@@ -1,6 +1,8 @@
 /**
  * elf.h
- * add by visual 2016.5.16
+ * 
+ * visual
+ * 2016.5.16
  */
 
 #ifndef _ELF_H_

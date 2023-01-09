@@ -1,12 +1,10 @@
 /**
- * @file   tty.h
+ * @file tty.h
  * @brief
  * @author Forrest Y. Yu
- * @date   2005
- */
-
-/**
- * tty.h  // added by mingxuan 2019-5-17
+ * @date 2005
+ * @author mingxuan
+ * @date 2019-5-17
  */
 
 #ifndef _ORANGES_TTY_H_

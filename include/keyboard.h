@@ -1,8 +1,8 @@
 /**
- * @file   keyboard.h
+ * @file keyboard.h
  * @brief
  * @author Forrest Y. Yu
- * @date   2005
+ * @date 2005
  */
 
 #ifndef _ORANGES_KEYBOARD_H_

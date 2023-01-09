@@ -1,5 +1,8 @@
 ﻿/**
- * 用户库函数声明        add by visual 2016.5.16
+ * @file stdio.h
+ * @brief 用户库函数声明
+ * @author visual
+ * @date 2016.5.16
  */
 
 #ifndef _STDIO_H_  // added by mingxuan 2019-5-19

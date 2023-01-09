@@ -1,5 +1,8 @@
 /**
- *	vfs.h  // added by mingxuan 2019-5-17
+ * vfs.h
+ * 
+ * mingxuan
+ * 2019-5-17
  */
 
 #ifndef _VFS_H_
