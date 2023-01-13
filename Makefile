@@ -1,10 +1,12 @@
 # make 主文件
 
 
-# OBJ 用于存放编译出来的可重定位文件
+# OBJDIR 用于存放编译出来的可重定位文件
 OBJDIR := obj
-# INC 用于存放各种头文件 (*.h)
+# INCDIR 用于存放各种头文件 (*.h)
 INCDIR := include
+# IMGDIR 用于生成基本的 a.img 文件
+IMGDIR := img_gen
 
 # 编译以及日常工具
 CC := gcc
@@ -58,7 +60,10 @@ OBJDIRS :=
 
 # FAT32镜像文件
 IMAGE = $(OBJDIR)/a.img
-BUILD_IMAGE_SCRIPT = build_img.sh
+
+# 用来生成该镜像文件的脚本和 c 语言
+BUILD_IMAGE_SCRIPT = $(IMGDIR)/build_img.sh
+GENERATE_IMAGE_C = $(IMGDIR)/generate_sparseness.c
 
 # added by mingxuan 2020-9-12
 # Offset of os_boot in hd
@@ -131,10 +136,11 @@ $(IMAGE): $(OBJDIR)/boot/mbr.bin \
 		$(OBJDIR)/boot/boot.bin \
 		$(OBJDIR)/boot/loader.bin \
 		$(OBJDIR)/kernel/kernel.bin \
-		$(BUILD_IMAGE_SCRIPT) \
 		$(OBJDIR)/user/$(USER_TAR) \
+		$(BUILD_IMAGE_SCRIPT) \
+		$(GENERATE_IMAGE_C) \
 		$(FS_FLAG_OBJFILES)
-	@sudo bash ./build_img.sh $@ $(OBJDIR) $(OSBOOT_START_OFFSET)
+	@sudo bash $(BUILD_IMAGE_SCRIPT) $@ $(OBJDIR) $(GENERATE_IMAGE_C) $(OSBOOT_START_OFFSET)
 	@sudo dd if=$(OBJDIR)/user/$(USER_TAR) of=$@ bs=512 count=$(INSTALL_NR_SECTORS) seek=$(INSTALL_PHY_SECTOR) conv=notrunc
 	@sudo dd if=$(OBJDIR)/fs_flags/orange_flag.bin of=$@ bs=1 count=1 seek=$(ORANGE_FS_START_OFFSET) conv=notrunc
 	@sudo dd if=$(OBJDIR)/fs_flags/fat32_flag.bin of=$@ bs=1 count=11 seek=$(FAT32_FS_START_OFFSET) conv=notrunc

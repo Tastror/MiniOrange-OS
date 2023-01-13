@@ -1,14 +1,15 @@
-if [ $# -ne 3 ] ;then
-        echo "usage: $0 \$(IMAGE) \$(OBJDIR) \$(OSBOOT_START_OFFSET)"
+if [ $# -ne 4 ] ;then
+        echo "usage: $0 \$(OBJDIR) \$(GENERATE_IMAGE_C) \$(OSBOOT_START_OFFSET)"
         exit 1
 fi
 
 IMAGE=$1
 OBJDIR=$2
-OSBOOT_START_OFFSET=$3
+GENERATE_IMAGE_C=$3
+OSBOOT_START_OFFSET=$4
 
-gcc ./img_gen/generate_sparseness.c -o ./obj/generate_sparseness
-./obj/generate_sparseness ${IMAGE}
+gcc ${GENERATE_IMAGE_C} -o ${OBJDIR}/gen_img_executable
+${OBJDIR}/gen_img_executable ${IMAGE}
 dd if=${OBJDIR}/boot/mbr.bin of=${IMAGE} bs=1 count=446 conv=notrunc
 
 loop_device=`losetup -f`
