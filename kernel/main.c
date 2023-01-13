@@ -21,6 +21,7 @@
 #include "type.h"
 #include "vfs.h"
 #include "x86.h"
+#include <kern/pci.h>
 
 static int initialize_processes();  // added by xw, 18/5/26
 static int initialize_cpus();       // added by xw, 18/6/2
@@ -97,6 +98,8 @@ int kernel_main()
     init_fs();
     init_fs_fat();  // added by mingxuan 2019-5-17
     // init_vfs();    //added by mingxuan 2019-5-17    //deleted by mingxuan 2020-10-30
+
+    init_pci();
 
     /*************************************************************************
      *第一个进程开始启动执行

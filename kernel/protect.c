@@ -130,7 +130,7 @@ void init_prot()
 
     init_idt_desc(INT_VECTOR_SYS_CALL, DA_386IGate, sys_call, PRIVILEGE_USER);
 
-    /*修改显存描述符*/  // add by visual 2016.5.12
+    /* 修改显存描述符 */  // add by visual 2016.5.12
     init_descriptor(&gdt[INDEX_VIDEO], K_PHY2LIN(0x0B8000), 0x0ffff, DA_DRW | DA_DPL3);
 
     /* 填充 GDT 中 TSS 这个描述符 */

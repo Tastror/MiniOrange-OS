@@ -16,6 +16,22 @@
 typedef _Bool bool;
 enum { false, true };
 
+/* added by PCI: Start */
+
+// Explicitly-sized versions of integer types
+typedef __signed char int8_t;
+typedef unsigned char uint8_t;
+typedef short int16_t;
+typedef unsigned short uint16_t;
+typedef int int32_t;
+typedef unsigned int uint32_t;
+typedef long long int64_t;
+typedef unsigned long long uint64_t;
+
+#define ARRAY_SIZE(a)	(sizeof(a) / sizeof(a[0]))
+
+/* added by PCI: End */
+
 typedef long long          i64;
 typedef unsigned long long u64;
 typedef int                i32;

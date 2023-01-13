@@ -30,6 +30,7 @@ KERN_SRCFILES :=kernel/kernel.asm	\
 		kernel/i8259.c	\
 		kernel/testfunc.c	\
 		kernel/protect.c	\
+		kernel/pci.c \
 		lib/klib.c		\
 		lib/kliba.asm		\
 
