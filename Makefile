@@ -5,6 +5,8 @@
 OBJDIR := obj
 # INCDIR 用于存放各种头文件 (*.h)
 INCDIR := include
+# SRCDIR 用于存放 .c .asm 文件
+SRCDIR := source
 # IMGDIR 用于生成基本的 a.img 文件
 IMGDIR := img_gen
 
@@ -116,7 +118,7 @@ QEMUOPTS += -object filter-dump, id=myfile1, netdev=mynet0, file=dump.pcap
 # 第一个命令。如果你想要仅编译，换成 all 就好
 all:
 
-include source/Makefrag
+include $(SRCDIR)/Makefrag
 
 .DELETE_ON_ERROR:
 

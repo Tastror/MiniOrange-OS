@@ -14,12 +14,12 @@ USER_BASENAMES := $(patsubst $(OBJDIR)/user/%, %, $(USER_BINS))
 
 USER_TAR := app.tar
 
-$(OBJDIR)/user/%.o: source/user/%.c $(OBJDIR)/.vars.CFLAGS
+$(OBJDIR)/user/%.o: $(SRCDIR)/user/%.c $(OBJDIR)/.vars.CFLAGS
 	@echo + cc $<
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -c -o $@ $<
 
-$(OBJDIR)/user/%.o: source/user/%.asm
+$(OBJDIR)/user/%.o: $(SRCDIR)/user/%.asm
 	@echo + as obj $<
 	@mkdir -p $(@D)
 	@$(AS) -I ./include -f elf -o $@ $<

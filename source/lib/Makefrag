@@ -11,12 +11,12 @@ LIB_OBJS := $(patsubst %, $(OBJDIR)/%, $(LIB_OBJS))
 
 LIB_A =	$(OBJDIR)/lib/ulib.a	
 
-$(OBJDIR)/lib/%.o: source/lib/%.c $(OBJDIR)/.vars.CFLAGS
+$(OBJDIR)/lib/%.o: $(SRCDIR)/lib/%.c $(OBJDIR)/.vars.CFLAGS
 	@echo + cc $<
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -c -o $@ $<
 
-$(OBJDIR)/lib/%.o: source/lib/%.asm
+$(OBJDIR)/lib/%.o: $(SRCDIR)/lib/%.asm
 	@echo + as obj $<
 	@mkdir -p $(@D)
 	@$(AS) -I ./include/ -f elf -o $@ $<

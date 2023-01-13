@@ -5,7 +5,7 @@ FS_FLAG_SRCFILES:= fs_flags/orange_flag.asm	\
 
 FS_FLAG_OBJFILES:= $(patsubst %.asm, $(OBJDIR)/%.bin, $(FS_FLAG_SRCFILES))
 
-$(OBJDIR)/fs_flags/%.bin: source/fs_flags/%.asm
+$(OBJDIR)/fs_flags/%.bin: $(SRCDIR)/fs_flags/%.asm
 	@echo + as obj $<
 	@mkdir -p $(@D)
 	@$(AS) -o $@ $<

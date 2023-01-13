@@ -2,17 +2,17 @@ OBJDIRS += boot
 
 cur_makefile_path := patsubst$(%/, %, dir $(mkfile_path))
 
-$(OBJDIR)/boot/mbr.bin: source/boot/mbr/mbr.asm
+$(OBJDIR)/boot/mbr.bin: $(SRCDIR)/boot/mbr/mbr.asm
 	@echo + as bin $<
 	@mkdir -p $(@D)
-	@$(AS) -I ./source/boot/mbr/include/ -o $@ $<
+	@$(AS) -I ./$(SRCDIR)/boot/mbr/include/ -o $@ $<
 
-$(OBJDIR)/boot/boot.bin: source/boot/mbr/boot.asm
+$(OBJDIR)/boot/boot.bin: $(SRCDIR)/boot/mbr/boot.asm
 	@echo + as bin $<
 	@mkdir -p $(@D)
-	@$(AS) -I ./source/boot/mbr/include/ -o $@ $<
+	@$(AS) -I ./$(SRCDIR)/boot/mbr/include/ -o $@ $<
 
-$(OBJDIR)/boot/loader.bin: source/boot/mbr/loader.asm
+$(OBJDIR)/boot/loader.bin: $(SRCDIR)/boot/mbr/loader.asm
 	@echo + as bin $<
 	@mkdir -p $(@D)
-	@$(AS) -I ./source/boot/mbr/include/ -o $@ $<
+	@$(AS) -I ./$(SRCDIR)/boot/mbr/include/ -o $@ $<

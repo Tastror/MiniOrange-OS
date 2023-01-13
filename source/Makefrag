@@ -1,6 +1,6 @@
-include source/boot/Makefrag
-include source/fs_flags/Makefrag
-include source/lib/Makefrag
-include source/device/Makefrag
-include source/kernel/Makefrag
-include source/user/Makefrag
+include $(SRCDIR)/boot/Makefrag
+include $(SRCDIR)/fs_flags/Makefrag
+include $(SRCDIR)/lib/Makefrag
+include $(SRCDIR)/device/Makefrag
+include $(SRCDIR)/kernel/Makefrag
+include $(SRCDIR)/user/Makefrag
