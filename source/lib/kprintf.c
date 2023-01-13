@@ -1,0 +1,30 @@
+#include "kernel/global.h"
+#include "kernel/proc.h"
+#include "kernel/protect.h"
+#include "kernel/proto.h"
+#include "kernel/stdio.h"
+
+static void
+kprintfputch(int ch, void *b)
+{
+    char buf[2] = {(char)ch, '\0'};
+    kern_display_string(buf);
+}
+
+int vkprintf(const char *fmt, va_list ap)
+{
+    vprintfmt((void *)kprintfputch, NULL, fmt, ap);
+    return 0;
+}
+
+int kprintf(const char *fmt, ...)
+{
+    va_list ap;
+    int     rc;
+
+    va_start(ap, fmt);
+    rc = vkprintf(fmt, ap);
+    va_end(ap);
+
+    return rc;
+}

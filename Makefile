@@ -111,19 +111,18 @@ QEMUOPTS += -object filter-dump, id=myfile1, netdev=mynet0, file=dump.pcap
 # 第一个命令。如果你想要仅编译，换成 all 就好
 all:
 
-include boot/Makefrag
-include lib/Makefrag
-include kernel/Makefrag
-include user/Makefrag
-include fs_flags/Makefrag
+include source/Makefrag
 
 .DELETE_ON_ERROR:
 
 # xv6 黑科技，获取编译命令，如果命令较新则重新编译所有文件
 .PRECIOUS: $(OBJDIR)/.vars.% \
+		$(OBJDIR)/boot/%.o $(OBJDIR)/boot/%.d \
+		$(OBJDIR)/device/%.o $(OBJDIR)/device/%.d \
 		$(OBJDIR)/kernel/%.o $(OBJDIR)/kernel/%.d \
+		$(OBJDIR)/lib/%.o $(OBJDIR)/lib/%.d \
+		$(OBJDIR)/fs_flags/%.o $(OBJDIR)/fs_flags/%.d \
 		$(OBJDIR)/user/%.o $(OBJDIR)/user/%.d \
-		$(OBJDIR)/lib/%.o $(OBJDIR)/lib/%.d
 
 $(OBJDIR)/.vars.%: FORCE
 	@echo "$($*)" | cmp -s $@ || echo "$($*)" > $@
