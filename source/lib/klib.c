@@ -6,13 +6,12 @@
  */
 
 
-#include "kernel/const.h"
-#include "kernel/global.h"
-#include "kernel/proc.h"
-#include "kernel/protect.h"
-#include "kernel/proto.h"
-#include "kernel/string.h"
-#include "kernel/type.h"
+#include "lib/klib.h"
+#include "common/type.h"
+#include "lib/string.h"
+#include "software_define/kern_const.h"
+#include "software_define/proc_define.h"
+#include "software_define/protect_define.h"
 
 
 char *itoa(char *str, int num) /* 数字前面的 0 不被显示出来, 比如 0000B800 被显示成 B800 */

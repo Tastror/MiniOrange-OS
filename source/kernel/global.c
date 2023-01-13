@@ -14,16 +14,16 @@
  */
 
 #include "kernel/global.h"
-#include "kernel/const.h"
+#include "common/type.h"
 #include "kernel/fat32.h"  // added by mingxuan 2019-5-17
 #include "kernel/fs.h"
-#include "kernel/fs_const.h"
 #include "kernel/hd.h"
-#include "kernel/proc.h"
-#include "kernel/protect.h"
 #include "kernel/proto.h"
-#include "kernel/type.h"
 #include "kernel/vfs.h"  // added by mingxuan 2019-5-17
+#include "software_define/fs_const.h"
+#include "software_define/kern_const.h"
+#include "software_define/proc_define.h"
+#include "software_define/protect_define.h"
 
 int kernel_initial;
 int ticks;

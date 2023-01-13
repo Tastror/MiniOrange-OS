@@ -4,13 +4,13 @@
  * 目前是虚拟的文件读写
  */
 
-#include "kernel/const.h"
+#include "common/type.h"
 #include "kernel/global.h"
-#include "kernel/proc.h"
-#include "kernel/protect.h"
 #include "kernel/proto.h"
-#include "kernel/string.h"
-#include "kernel/type.h"
+#include "lib/string.h"
+#include "software_define/kern_const.h"
+#include "software_define/proc_define.h"
+#include "software_define/protect_define.h"
 
 
 // #define	BaseOfEchoFilePhyAddr	(K_PHY2LIN(0x7e00))   //目前就这一个文件

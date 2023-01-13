@@ -8,7 +8,8 @@
 #ifndef _PROC_H_
 #define _PROC_H_
 
-#include <kernel/protect.h>
+#include <software_define/kern_const.h>
+#include <software_define/protect_define.h>
 
 /**
  * Used to find saved registers in the new kernel stack,

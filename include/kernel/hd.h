@@ -8,8 +8,8 @@
 #ifndef _ORANGES_HD_H_
 #define _ORANGES_HD_H_
 
-#include <kernel/proc.h>
-#include <kernel/fs_const.h>
+#include <software_define/fs_const.h>
+#include <software_define/proc_define.h>
 
 /**
  * @struct part_ent

@@ -1,7 +1,7 @@
 #ifndef _MINIOS_X86_H_
 #define _MINIOS_X86_H_
 
-#include <kernel/type.h>
+#include <common/type.h>
 
 static inline u8 inb(int port)
 {

@@ -118,6 +118,7 @@ QEMUOPTS += -object filter-dump, id=myfile1, netdev=mynet0, file=dump.pcap
 # 第一个命令。如果你想要仅编译，换成 all 就好
 all:
 
+# 加载 $(SRCDIR) 中的所有编译命令
 include $(SRCDIR)/Makefrag
 
 .DELETE_ON_ERROR:

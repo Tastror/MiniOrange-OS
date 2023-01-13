@@ -2,14 +2,14 @@
  * 页式管理相关代码 add by visual 2016.4.19
  */
 
-#include "kernel/const.h"
+#include "common/type.h"
 #include "kernel/global.h"
 #include "kernel/memman.h"
-#include "kernel/proc.h"
-#include "kernel/protect.h"
 #include "kernel/proto.h"
-#include "kernel/string.h"
-#include "kernel/type.h"
+#include "lib/string.h"
+#include "software_define/kern_const.h"
+#include "software_define/proc_define.h"
+#include "software_define/protect_define.h"
 
 // to determine if a page fault is reparable. added by xw, 18/6/11
 u32 cr2_save;
@@ -333,7 +333,8 @@ int lin_mapping_phy(u32 AddrLin,        // 线性地址
 
     if (phy_addr < 0 || (phy_addr & 0x3FF) != 0) {
         kern_set_color(0x74);
-        kern_set_color(0x0F);("lin_mapping_phy:phy_addr ERROR");
+        kern_set_color(0x0F);
+        ("lin_mapping_phy:phy_addr ERROR");
         kern_set_color(0x0F);
         return -1;
     }

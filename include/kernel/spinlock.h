@@ -1,6 +1,6 @@
 /**
  * spinlock.h
- * 
+ *
  * mingxuan
  * 2018-12-26
  */

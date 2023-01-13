@@ -1,3 +1,6 @@
+# 由于 $() 符号的依赖性，请按照依赖顺序书写。
+# 不同库之间不要循环依赖。
+
 include $(SRCDIR)/boot/Makefrag
 include $(SRCDIR)/fs_flags/Makefrag
 include $(SRCDIR)/lib/Makefrag

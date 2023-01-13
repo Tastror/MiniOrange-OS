@@ -1,5 +1,5 @@
 /**
- * @file keyboard.h
+ * @file key.h
  * @brief
  * @author Forrest Y. Yu
  * @date 2005
@@ -8,7 +8,7 @@
 #ifndef _ORANGES_KEYBOARD_H_
 #define _ORANGES_KEYBOARD_H_
 
-#include <kernel/type.h>
+#include <common/type.h>
 
 /**
  * Macros Declaration

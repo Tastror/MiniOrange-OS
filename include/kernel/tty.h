@@ -10,7 +10,8 @@
 #ifndef _ORANGES_TTY_H_
 #define _ORANGES_TTY_H_
 
-#include <kernel/type.h>
+#include <common/type.h>
+#include <kernel/console.h>
 
 #define TTY_IN_BYTES    256 /* tty input queue size */
 #define TTY_OUT_BUF_LEN 2   /* tty output buffer size */
@@ -44,8 +45,6 @@ typedef struct s_tty {
 
     struct s_console *console;
 } TTY;
-
-#include "console.h"
 
 void select_console(int nr_console);
 void init_screen(TTY *tty);

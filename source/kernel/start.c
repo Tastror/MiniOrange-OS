@@ -5,13 +5,13 @@
  * @date 2005
  */
 
-#include "kernel/assert.h"
+#include "common/assert.h"
 #include "kernel/global.h"
-#include "kernel/proc.h"
-#include "kernel/protect.h"
 #include "kernel/proto.h"
-#include "kernel/stdio.h"
-#include "kernel/string.h"
+#include "lib/stdio.h"
+#include "lib/string.h"
+#include "software_define/proc_define.h"
+#include "software_define/protect_define.h"
 
 /*
  * 当发生不可挽回的错误时就打印错误信息并使CPU核休眠

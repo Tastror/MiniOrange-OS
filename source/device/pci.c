@@ -1,10 +1,10 @@
+#include <common/assert.h>
 #include <device/e1000.h>
 #include <device/pci.h>
 #include <device/pcireg.h>
-#include <kernel/assert.h>
-#include <kernel/stdio.h>
-#include <kernel/string.h>
-#include <kernel/x86.h>
+#include <hardware_define/x86.h>
+#include <lib/stdio.h>
+#include <lib/string.h>
 
 /* Parameters for PCI */
 // Flags to do "lspci" at bootup

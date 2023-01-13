@@ -8,6 +8,8 @@
 #ifndef _FS_H_
 #define _FS_H_
 
+#include <software_define/fs_const.h>
+
 /* APIs of file operation */
 #define O_CREAT 1
 #define O_RDWR  2

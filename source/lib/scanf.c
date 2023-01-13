@@ -1,4 +1,4 @@
-#include "kernel/stdio.h"
+#include "lib/stdio.h"
 
 char getchar()
 {

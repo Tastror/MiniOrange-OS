@@ -1,6 +1,6 @@
 /**
  * fat32.h
- * 
+ *
  * mingxuan
  * 2019-5-17
  */
@@ -8,10 +8,7 @@
 #ifndef _FAT32_H_
 #define _FAT32_H_
 
-#include <kernel/type.h>
-
-#define TRUE  1  // 是
-#define FALSE 0  // 否
+#include <common/type.h>
 
 #define OK                1  // 正常返回
 #define SYSERROR          2  // 系统错误

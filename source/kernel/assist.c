@@ -2,20 +2,20 @@
  * assist.c  // added by mingxuan 2019-5-17
  */
 
+#include "common/type.h"
 #include "kernel/console.h"
-#include "kernel/const.h"
 #include "kernel/fat32.h"
 #include "kernel/fs.h"
-#include "kernel/fs_const.h"
 #include "kernel/fs_misc.h"
 #include "kernel/global.h"
 #include "kernel/hd.h"
-#include "kernel/proc.h"
-#include "kernel/protect.h"
 #include "kernel/proto.h"
-#include "kernel/string.h"
 #include "kernel/tty.h"
-#include "kernel/type.h"
+#include "lib/string.h"
+#include "software_define/fs_const.h"
+#include "software_define/kern_const.h"
+#include "software_define/proc_define.h"
+#include "software_define/protect_define.h"
 
 extern CHAR cur_path[256];
 extern u8  *buf;

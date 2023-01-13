@@ -8,10 +8,10 @@
 #ifndef _STDIO_H_  // added by mingxuan 2019-5-19
 #define _STDIO_H_  // added by mingxuan 2019-5-19
 
-#include <kernel/const.h>  // added by mingxuan 2019-5-19
-#include <kernel/stdarg.h>
-#include <kernel/type.h>  // added by mingxuan 2019-5-19
-
+#include <common/stdarg.h>
+#include <common/type.h>                 // added by mingxuan 2019-5-19
+#include <software_define/kern_const.h>  // added by mingxuan 2019-5-19
+#include <software_define/fs_const.h>
 
 /* syscall.asm */
 int   get_ticks();
@@ -26,17 +26,7 @@ int   fork();
 int   pthread(void *arg);
 void  display_int(int arg);
 void  display_str(char *arg);
-void  set_color(int c);      // added by tastror 2022-12
-
-// added by xw
-/* file system */
-#define MAX_FILENAME_LEN 12
-#define MAX_PATH         128
-#define O_CREAT          1
-#define O_RDWR           2
-#define SEEK_SET         1
-#define SEEK_CUR         2
-#define SEEK_END         3
+void  set_color(int c);  // added by tastror 2022-12
 
 int open(const char *pathname, int flags);      // added by xw, 18/6/19
 int close(int fd);                              // added by xw, 18/6/19
@@ -50,12 +40,6 @@ int unlink(const char *pathname);               // added by xw, 18/6/19
 long strtol(const char *cp, char **endp, unsigned int base);
 
 /* printf.c */
-// added by mingxuan 2019-5-19
-#define EOF -1
-// #define _INTSIZEOF(n)   ( (sizeof(n) + sizeof(int) - 1) & ~(sizeof(int) - 1) )
-// #define va_start(ap,v) ( ap = (va_list)&v + _INTSIZEOF(v) )
-// #define va_arg(ap,t)    ( *(t *)((ap += _INTSIZEOF(t)) - _INTSIZEOF(t)) )
-// #define va_end(ap)      ( ap = (va_list)0 )
 #define isspace(s) (s == ' ')
 
 #define TOLOWER(x)  ((x) | 0x20)

@@ -1,18 +1,18 @@
 
 /**
  * @file protect.c
- * @author Forrest Yu, 
+ * @author Forrest Yu,
  * @date 2005
  */
 
 
-#include "kernel/protect.h"
-#include "kernel/const.h"
+#include "software_define/protect_define.h"
+#include "common/type.h"
 #include "kernel/global.h"
-#include "kernel/proc.h"
 #include "kernel/proto.h"
-#include "kernel/string.h"
-#include "kernel/type.h"
+#include "lib/string.h"
+#include "software_define/kern_const.h"
+#include "software_define/proc_define.h"
 
 
 /* 本文件内函数声明 */

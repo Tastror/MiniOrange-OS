@@ -8,8 +8,10 @@
 #ifndef _GLOBAL_H_
 #define _GLOBAL_H_
 
-#include <kernel/const.h>
+#include <kernel/console.h>
 #include <kernel/hd.h>
+#include <kernel/tty.h>
+#include <software_define/kern_const.h>
 
 extern struct hd_info hd_info[1];  // added by mingxuan 2020-10-27
 
@@ -42,14 +44,12 @@ extern irq_handler irq_table[];
 
 /* tty */
 // added by mingxuan 2019-5-19
-#include "console.h"
-#include "tty.h"
 
 extern TTY     tty_table[];
 extern CONSOLE console_table[];
 extern int     current_console;
 
-// u32 PageTblNum;        //页表数量        add by visual 2016.4.5
+// u32 PageTblNum;  //页表数量        add by visual 2016.4.5
 extern u32 cr3_ready;  // 当前进程的页目录        add by visual 2016.4.5
 
 struct memfree {

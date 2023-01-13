@@ -5,14 +5,14 @@
  * @date 2005
  */
 
-#include "kernel/const.h"
+#include "common/type.h"
+#include "hardware_define/x86.h"
 #include "kernel/global.h"
-#include "kernel/proc.h"
-#include "kernel/protect.h"
 #include "kernel/proto.h"
-#include "kernel/stdio.h"
-#include "kernel/type.h"
-#include "kernel/x86.h"
+#include "lib/stdio.h"
+#include "software_define/kern_const.h"
+#include "software_define/proc_define.h"
+#include "software_define/protect_define.h"
 
 
 /**

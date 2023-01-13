@@ -1,7 +1,7 @@
-#include <kernel/stdarg.h>
-#include <kernel/stdio.h>
-#include <kernel/string.h>
-#include <kernel/type.h>
+#include <common/stdarg.h>
+#include <common/type.h>
+#include <lib/stdio.h>
+#include <lib/string.h>
 
 /*
  * Print a number (base <= 16) in reverse order,
@@ -11,7 +11,8 @@ static void
 printnum(
     void (*putch)(int, void *), void *putdat,
     unsigned long long num, unsigned base, int width, int padc
-) {
+)
+{
     // first recursively print all preceding (more significant) digits
     if (num >= base) {
         printnum(putch, putdat, num / base, base, width - 1, padc);

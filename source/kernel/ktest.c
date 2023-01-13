@@ -4,15 +4,15 @@
  * added by xw, 18/4/27
  */
 
-#include "kernel/const.h"
+#include "common/type.h"
 #include "kernel/fs.h"
 #include "kernel/global.h"
-#include "kernel/proc.h"
-#include "kernel/protect.h"
 #include "kernel/proto.h"
-#include "kernel/string.h"
-#include "kernel/type.h"
 #include "kernel/vfs.h"
+#include "lib/string.h"
+#include "software_define/kern_const.h"
+#include "software_define/proc_define.h"
+#include "software_define/protect_define.h"
 
 /**
  * @struct posix_tar_header

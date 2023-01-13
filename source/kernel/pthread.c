@@ -4,13 +4,13 @@
  * 系统调用 pthread()
  */
 
-#include "kernel/const.h"
+#include "common/type.h"
 #include "kernel/global.h"
-#include "kernel/proc.h"
-#include "kernel/protect.h"
 #include "kernel/proto.h"
-#include "kernel/string.h"
-#include "kernel/type.h"
+#include "lib/string.h"
+#include "software_define/kern_const.h"
+#include "software_define/proc_define.h"
+#include "software_define/protect_define.h"
 
 static int pthread_pcb_cpy(PROCESS *p_child, PROCESS *p_parent);
 static int pthread_update_info(PROCESS *p_child, PROCESS *p_parent);

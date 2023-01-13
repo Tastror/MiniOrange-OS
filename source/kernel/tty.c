@@ -1,14 +1,14 @@
 #include "kernel/tty.h"
+#include "common/type.h"
+#include "hardware_define/key.h"
+#include "hardware_define/x86.h"
 #include "kernel/console.h"
-#include "kernel/const.h"
 #include "kernel/global.h"
-#include "kernel/keyboard.h"
-#include "kernel/proc.h"
-#include "kernel/protect.h"
 #include "kernel/proto.h"
-#include "kernel/string.h"
-#include "kernel/type.h"
-#include "kernel/x86.h"
+#include "lib/string.h"
+#include "software_define/kern_const.h"
+#include "software_define/proc_define.h"
+#include "software_define/protect_define.h"
 
 int  current_console;  // 当前显示在屏幕上的console
 void tty_write(TTY *tty, char *buf, int len);

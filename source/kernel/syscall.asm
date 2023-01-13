@@ -5,7 +5,7 @@
 ; 2005
 ;
 
-%include "kernel/sconst.inc"
+%include "lib/sconst.inc"
 
 _NR_get_ticks           equ 0           ; 要跟 global.c 中 sys_call_table 的定义相对应！
 _NR_get_pid             equ 1           ; add by visual 2016.4.6

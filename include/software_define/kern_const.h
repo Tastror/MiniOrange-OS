@@ -9,9 +9,13 @@
 #ifndef _ORANGES_CONST_H_
 #define _ORANGES_CONST_H_
 
-/* 最大整数定义 */
-#define MAX_UNSIGNED_INT 0xFFFFFFFF  // 最大的无符号整形
-#define MAX_INT          0x7FFFFFFF  // 最大的整形数
+#include <software_define/protect_define.h>
+
+typedef void (*int_handler)();
+typedef void (*task_f)();
+typedef void (*irq_handler)(int irq);
+
+typedef void *system_call;
 
 /* Color */
 /**
@@ -30,10 +34,6 @@
 
 #define MAKE_COLOR(x, y) ((x << 4) | y) /* MAKE_COLOR(Background,Foreground) */
 
-/* Boolean */
-#define TRUE  1
-#define FALSE 0
-
 /* GDT 和 IDT 中描述符的个数 */
 #define GDT_SIZE 128
 #define IDT_SIZE 256
@@ -42,6 +42,7 @@
 #define PRIVILEGE_KRNL 0
 #define PRIVILEGE_TASK 1
 #define PRIVILEGE_USER 3
+
 /* RPL */
 #define RPL_KRNL SA_RPL0
 #define RPL_TASK SA_RPL1
@@ -183,10 +184,5 @@
 #define STD_IN  0
 #define STD_OUT 1
 #define STD_ERR 2
-
-/* max() & min() */
-// added by mingxuan 2019-5-19
-#define max(a, b) ((a) > (b) ? (a) : (b))
-#define min(a, b) ((a) < (b) ? (a) : (b))
 
 #endif /* _ORANGES_CONST_H_ */

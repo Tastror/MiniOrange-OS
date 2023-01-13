@@ -6,23 +6,23 @@
  */
 
 
+#include "common/assert.h"
+#include "common/type.h"
 #include "device/pci.h"
-#include "kernel/assert.h"
-#include "kernel/const.h"
+#include "hardware_define/x86.h"
 #include "kernel/fat32.h"
 #include "kernel/fs.h"
-#include "kernel/fs_const.h"
 #include "kernel/global.h"
 #include "kernel/hd.h"
 #include "kernel/memman.h"
-#include "kernel/proc.h"
-#include "kernel/protect.h"
 #include "kernel/proto.h"
-#include "kernel/stdio.h"
-#include "kernel/string.h"
-#include "kernel/type.h"
 #include "kernel/vfs.h"
-#include "kernel/x86.h"
+#include "lib/stdio.h"
+#include "lib/string.h"
+#include "software_define/fs_const.h"
+#include "software_define/kern_const.h"
+#include "software_define/proc_define.h"
+#include "software_define/protect_define.h"
 
 
 static int initialize_processes();  // added by xw, 18/5/26

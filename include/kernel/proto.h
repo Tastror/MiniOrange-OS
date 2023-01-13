@@ -8,17 +8,11 @@
 #ifndef _PROTO_H_
 #define _PROTO_H_
 
-#include <kernel/type.h>
+#include <common/type.h>
 #include <kernel/tty.h>
-#include <kernel/proc.h>
-
-/* klib.asm */
-// void disp_str(char *info);                   // deleted by tastror 2022-12
-// void disp_color_str(char *info, int color);  // deleted by tastror 2022-12
-void kern_set_color(int color);        // added by tastror 2022-12
-void kern_display_string(char *info);  // added by tastror 2022-12
-void kern_display_integer(int input);  // modified by tastror 2022-12
-void kern_display_char(char ch);       // added by mingxuan 2019-5-19, modified by tastror 2022-12
+#include <lib/klib.h>
+#include <lib/stdio.h>
+#include <software_define/proc_define.h>
 
 // added by zcr
 void disable_irq(int irq);
@@ -58,14 +52,6 @@ void in_process(TTY *p_tty, u32 key);
 void task_tty();
 void tty_write(TTY *tty, char *buf, int len);
 int  tty_read(TTY *tty, char *buf, int len);
-
-/* printf.c */
-// added by mingxuan 2019-5-19
-int printf(const char *fmt, ...);
-
-/* vsprintf.c */
-// added by mingxuan 2019-5-19
-int vsprintf(char *buf, const char *fmt, va_list args);
 
 /* i8259.c */
 void put_irq_handler(int irq, irq_handler handler);

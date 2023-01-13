@@ -1,6 +1,6 @@
 /**
  * elf.h
- * 
+ *
  * visual
  * 2016.5.16
  */
@@ -8,7 +8,7 @@
 #ifndef _ELF_H_
 #define _ELF_H_
 
-#include <kernel/type.h>
+#include <common/type.h>
 
 #define EI_NIDENT 16
 

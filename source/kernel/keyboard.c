@@ -1,15 +1,15 @@
-#include "kernel/keyboard.h"
-#include "kernel/console.h"
-#include "kernel/const.h"
-#include "kernel/global.h"
-#include "kernel/keymap.h"
-#include "kernel/proc.h"
-#include "kernel/protect.h"
-#include "kernel/proto.h"
-#include "kernel/string.h"
-#include "kernel/tty.h"
-#include "kernel/type.h"
-#include "kernel/x86.h"
+#include <common/type.h>
+#include <hardware_define/key.h>
+#include <hardware_define/keymap.h>
+#include <hardware_define/x86.h>
+#include <kernel/console.h>
+#include <kernel/global.h>
+#include <kernel/proto.h>
+#include <kernel/tty.h>
+#include <lib/string.h>
+#include <software_define/kern_const.h>
+#include <software_define/proc_define.h>
+#include <software_define/protect_define.h>
 
 
 static KB_INPUT    kb_in;
@@ -139,7 +139,7 @@ void keyboard_read(TTY *p_tty)
     /**
      * We use a integer to record a key press.
      * For instance, if the key HOME is pressed, key will be evaluated to
-     * `HOME' defined in keyboard.h.
+     * `HOME' defined in key.h.
      */
     u32 key = 0;
 
