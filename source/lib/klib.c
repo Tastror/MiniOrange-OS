@@ -6,6 +6,7 @@
  */
 
 #include <lib/klib.h>
+
 #include <lib/string.h>
 
 int disp_pos;

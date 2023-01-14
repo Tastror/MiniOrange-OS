@@ -8,11 +8,11 @@
 #ifndef _STDIO_H_  // added by mingxuan 2019-5-19
 #define _STDIO_H_  // added by mingxuan 2019-5-19
 
-#include <lib/klib.h>  // easy for use
-
 #include <common/stdarg.h>
 #include <common/type.h>
 #include <define/define.h>
+
+#include <lib/klib.h>  // for easily use stdio.h
 
 // defined in klib.c
 extern int disp_pos;

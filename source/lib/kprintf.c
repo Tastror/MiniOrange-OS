@@ -1,4 +1,3 @@
-#include <lib/klib.h>
 #include <lib/stdio.h>
 
 static void
