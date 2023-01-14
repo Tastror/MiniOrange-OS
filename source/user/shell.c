@@ -1,8 +1,7 @@
-#include <kernlib/stdio.h>
-#include <kernlib/string.h>
-
-#include <device/pci.h>
-#include <kernel/syscall.h>
+#include <userlib/stdio.h>
+#include <userlib/string.h>
+#include <userlib/fcntl.h>
+#include <userlib/stdlib.h>
 
 int main(int arg, char *argv[])
 {

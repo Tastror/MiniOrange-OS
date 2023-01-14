@@ -1,4 +1,5 @@
-#include <kernlib/stdio.h>
+#include <userlib/stdio.h>
+#include <userlib/stdlib.h>
 
 int global = 0;
 

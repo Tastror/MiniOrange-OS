@@ -3,8 +3,7 @@ OBJDIRS += kernel
 KERN_ENTRY_ADDR := 0xC0030400
 
 # 在这里添加其他库的依赖项，便于最终链接的时候调用
-KERN_REQUIREMENT := $(KERNLIB_A) \
-		$(OBJDIR)/device/pci.o \
+KERN_REQUIREMENT := $(KERNLIB_A) $(DEVICE_A)
 
 KERN_SRCFILES := kernel/core.asm \
 		kernel/kernel.c \

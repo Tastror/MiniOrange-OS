@@ -1,5 +1,8 @@
 OBJDIRS += userlib
 
+# 在这里添加其他库的依赖项，便于最终链接的时候调用
+USERLIB_REQUIREMENT := $(KERNLIB_A)
+
 USERLIB_OBJS := userlib/syscall.o
 
 USERLIB_OBJS := $(patsubst %, $(OBJDIR)/%, $(USERLIB_OBJS))
@@ -16,6 +19,6 @@ $(OBJDIR)/userlib/%.o: $(SRCDIR)/userlib/%.asm
 	@mkdir -p $(@D)
 	@$(AS) -I ./include/ -f elf -o $@ $<
 
-$(USERLIB_A): $(USERLIB_OBJS) $(KERNLIB_OBJS)
+$(USERLIB_A): $(USERLIB_OBJS) $(USERLIB_REQUIREMENT)
 	@echo + ar $@
-	@$(AR) $(ARFLAGS) -o $@ $(KERNLIB_OBJS) $(USERLIB_OBJS)
+	@$(AR) $(ARFLAGS) -o $@ $(USERLIB_REQUIREMENT) $(USERLIB_OBJS)
