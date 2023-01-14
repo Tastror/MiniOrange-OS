@@ -6,7 +6,11 @@
 
 %include "define/sconst.inc"
 
-_NR_get_ticks           equ 0           ; 要跟 global.c 中 syscall_table 的定义相对应！
+;
+; 要跟 kernel/syscall.c 中 syscall_table 的定义相对应
+;
+
+_NR_get_ticks           equ 0           
 _NR_get_pid             equ 1           ; add by visual 2016.4.6
 _NR_kmalloc             equ 2           ; add by visual 2016.4.6
 _NR_kmalloc_4k          equ 3           ; add by visual 2016.4.7
