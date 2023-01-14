@@ -4,7 +4,7 @@ OBJDIRS += userlib
 USERLIB_REQUIREMENT = $(KERNLIB_A)
 
 USERLIB_SRCS = userlib/syscall.c \
-		userlib/syscall_imple.asm \
+		userlib/stdliba.asm \
 		userlib/stdlib.c \
 		userlib/printf.c \
 		userlib/scanf.c \
