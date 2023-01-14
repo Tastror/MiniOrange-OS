@@ -1,7 +1,7 @@
 #include <common/type.h>
 #include <hardware_define/key.h>
 #include <hardware_define/keymap.h>
-#include <hardware_define/x86.h>
+#include <device/x86.h>
 #include <kernel/console.h>
 #include <kernel/global.h>
 #include <kernel/proto.h>

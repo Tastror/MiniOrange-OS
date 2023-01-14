@@ -1,4 +1,5 @@
 #include <device/e1000.h>
+
 #include <device/pci.h>
 
 volatile uint32_t *e1000;

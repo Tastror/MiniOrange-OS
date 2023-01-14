@@ -5,8 +5,8 @@
  * 2005
  */
 
-#ifndef _ORANGES_PROTECT_H_
-#define _ORANGES_PROTECT_H_
+#ifndef _ORANGES_PROTECT_DEFINE_H_
+#define _ORANGES_PROTECT_DEFINE_H_
 
 #include <common/type.h>
 

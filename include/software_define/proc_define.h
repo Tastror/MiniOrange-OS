@@ -5,8 +5,8 @@
  * 2005
  */
 
-#ifndef _PROC_H_
-#define _PROC_H_
+#ifndef _PROC_DEFINE_H_
+#define _PROC_DEFINE_H_
 
 #include <software_define/kern_const.h>
 #include <software_define/protect_define.h>

@@ -11,7 +11,7 @@
 #include "kernel/hd.h"
 #include "common/assert.h"
 #include "common/type.h"
-#include "hardware_define/x86.h"
+#include "device/x86.h"
 #include "kernel/fs.h"
 #include "kernel/fs_misc.h"
 #include "kernel/global.h"

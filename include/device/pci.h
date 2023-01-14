@@ -2,6 +2,8 @@
 #define _ORANGES_PCI_H
 
 #include <common/type.h>
+#include <software_define/define.h>
+#include <hardware_define/define.h>
 
 // PCI subsystem interface
 enum { pci_res_bus, pci_res_mem, pci_res_io, pci_res_max };

@@ -2,6 +2,8 @@
 #define _ORANGES_E1000_H
 
 #include <common/type.h>
+#include <software_define/define.h>
+#include <hardware_define/define.h>
 
 #define PCI_E1000_VENDER_ID 0x8086
 #define PCI_E1000_DEVICE_ID 0x100E

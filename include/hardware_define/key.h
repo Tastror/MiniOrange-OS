@@ -5,8 +5,8 @@
  * @date 2005
  */
 
-#ifndef _ORANGES_KEYBOARD_H_
-#define _ORANGES_KEYBOARD_H_
+#ifndef _ORANGES_KEY_H_
+#define _ORANGES_KEY_H_
 
 #include <common/type.h>
 

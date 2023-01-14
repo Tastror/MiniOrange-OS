@@ -41,6 +41,8 @@
  */
 
 #include <common/type.h>
+#include <software_define/define.h>
+#include <hardware_define/define.h>
 
 /*
  * Device identification register; contains a vendor ID and a device ID.

@@ -6,8 +6,8 @@
  * 2005
  */
 
-#ifndef _ORANGES_CONST_H_
-#define _ORANGES_CONST_H_
+#ifndef _ORANGES_KERN_CONST_H_
+#define _ORANGES_KERN_CONST_H_
 
 #include <software_define/protect_define.h>
 
