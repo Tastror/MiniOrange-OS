@@ -6,30 +6,6 @@
 
 extern int ticks;  // in clock.c
 
-/**
- * 以下是系统调用相关函数的声明
- */
-// syscall user interface
-void  sys_call();  // int_handler
-int   get_ticks();
-int   get_pid();                // add by visual 2016.4.6
-void *kmalloc(int size);        // edit by visual 2016.5.9
-void *kmalloc_4k();             // edit by visual 2016.5.9
-void *malloc(int size);         // edit by visual 2016.5.9
-void *malloc_4k();              // edit by visual 2016.5.9
-int   free(void *arg);          // edit by visual 2016.5.9
-int   free_4k(void *AdddrLin);  // edit by visual 2016.5.9
-int   fork();                   // add by visual 2016.4.8
-int   pthread(void *arg);       // add by visual 2016.4.11
-void  display_int(int arg);     // add by visual 2016.5.16, modified by tastror 2022-12
-void  display_str(char *arg);   // add by visual 2016.5.16, modified by tastror 2022-12
-void  set_color(int c);         // added by tastror 2022-12
-u32   exec(char *path);         // add by visual 2016.5.16
-void  yield();                  // added by xw, 18/4/19
-void  sleep(int n);             // added by xw, 18/4/19
-void  print_E();
-void  print_F();
-
 // syscall system interface
 int   sys_get_ticks();
 int   sys_get_pid();                // add by visual 2016.4.6

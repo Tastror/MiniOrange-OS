@@ -18,6 +18,7 @@
 #include <kernlib/assert.h>
 #include <kernlib/stdio.h>
 #include <kernlib/string.h>
+#include <userlib/stdlib.h>
 
 struct part_ent PARTITION_ENTRY;
 

@@ -10,6 +10,7 @@
 #include <kernlib/string.h>
 
 #include <userlib/stdio.h>
+#include <userlib/stdlib.h>
 
 /**
  * @struct posix_tar_header

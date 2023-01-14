@@ -29,7 +29,7 @@ extern    p_proc_current
 extern    tss
 extern    disp_pos
 extern    k_reenter
-extern    sys_call_table
+extern    syscall_table
 extern     cr3_ready            ;add by visual 2016.4.5
 extern  p_proc_current
 extern    p_proc_next            ;added by xw, 18/4/26
@@ -54,7 +54,7 @@ global _start    ; 导出 _start
 global restart_initial    ; Added by xw, 18/4/21
 global restart_restore    ; Added by xw, 18/4/21
 global sched              ; Added by xw, 18/4/21
-global sys_call
+global syscall_handler
 global read_cr2           ; add by visual 2016.5.9
 global refresh_page_cache ; add by visual 2016.5.12
 global halt               ; added by xw, 18/6/11
@@ -505,16 +505,16 @@ renew_env:
     ret
 
 ; ====================================================================================
-;                                 sys_call
+;                                 syscall_handler
 ; ====================================================================================
-sys_call:
+syscall_handler:
 ; get syscall number from eax
 ; syscall that's called gets its argument from pushed ebx
 ; so we can't modify eax and ebx in save_syscall
     call    save_syscall                    ; save registers and some other things. modified by xw, 17/12/11
     sti
     push    ebx                             ; push the argument the syscall need
-    call    [sys_call_table + eax * 4]      ; 将参数压入堆栈后再调用函数  add by visual 2016.4.6
+    call    [syscall_table + eax * 4]      ; 将参数压入堆栈后再调用函数  add by visual 2016.4.6
     add     esp, 4                          ; clear the argument in the stack, modified by xw, 17/12/11
     cli                                    
     mov     edx, [p_proc_current]

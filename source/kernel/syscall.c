@@ -8,7 +8,7 @@
 #include <kernlib/stdio.h>
 #include <kernlib/string.h>
 
-system_call sys_call_table[NR_SYS_CALL] = {
+system_call syscall_table[NR_SYS_CALL] = {
     sys_get_ticks,    // add by visual 2016.4.6  // 0th
     sys_get_pid,      // add by visual 2016.4.6  // 1st
     sys_kmalloc,      // add by visual 2016.4.6
