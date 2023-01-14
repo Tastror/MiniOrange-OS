@@ -5,20 +5,11 @@
 
 // Mutual exclusion spin locks.
 
-// #include "types.h"
-// #include "defs.h"
-// #include "x86.h"
-// #include "mmu.h"
-// #include "param.h"
-// #include "proc.h"
-#include "kernel/spinlock.h"
+#include <kernel/spinlock.h>
 
-// extern int use_console_lock;
-
-static inline uint
-cmpxchg(uint oldval, uint newval, volatile uint *lock_addr)
+static inline u32 cmpxchg(u32 oldval, u32 newval, volatile u32 *lock_addr)
 {
-    uint result;
+    u32 result;
     asm volatile(
         "lock; cmpxchg %0, %2"
         : "+m"(*lock_addr), "=a"(result)

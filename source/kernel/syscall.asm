@@ -1,4 +1,3 @@
-
 ;
 ; syscall.asm
 ; Forrest Yu

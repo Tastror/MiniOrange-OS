@@ -1,6 +1,6 @@
-#include <common/stdarg.h>
-#include <common/type.h>
 #include <lib/stdio.h>
+
+#include <common/stdarg.h>
 #include <lib/string.h>
 
 /*

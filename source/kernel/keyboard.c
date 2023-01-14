@@ -1,16 +1,11 @@
-#include <common/type.h>
-#include <hardware_define/key.h>
-#include <hardware_define/keymap.h>
-#include <hardware_define/x86.h>
-#include <kernel/console.h>
-#include <kernel/global.h>
-#include <kernel/proto.h>
-#include <kernel/tty.h>
-#include <lib/string.h>
-#include <software_define/kern_const.h>
-#include <software_define/proc_define.h>
-#include <software_define/protect_define.h>
+#include <kernel/keyboard.h>
 
+#include <kernel/interrupt.h>
+#include <kernel/console.h>
+#include <kernel/tty.h>
+#include <device/x86.h>
+#include <device/keymap.h>
+#include <lib/string.h>
 
 static KB_INPUT    kb_in;
 static MOUSE_INPUT mouse_in;

@@ -5,15 +5,12 @@
  * @date 2005
  */
 
-#include "common/type.h"
-#include "hardware_define/x86.h"
-#include "kernel/global.h"
-#include "kernel/proto.h"
-#include "lib/stdio.h"
-#include "software_define/kern_const.h"
-#include "software_define/proc_define.h"
-#include "software_define/protect_define.h"
+#include <kernel/interrupt.h>
 
+#include <device/x86.h>
+#include <lib/stdio.h>
+
+irq_handler irq_table[NR_IRQ];
 
 /**
  * init_8259A

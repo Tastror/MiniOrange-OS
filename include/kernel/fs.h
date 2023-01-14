@@ -8,18 +8,10 @@
 #ifndef _FS_H_
 #define _FS_H_
 
-#include <software_define/fs_const.h>
+#include <common/type.h>
+#include <define/define.h>
 
-/* APIs of file operation */
-#define O_CREAT 1
-#define O_RDWR  2
-
-#define SEEK_SET 1
-#define SEEK_CUR 2
-#define SEEK_END 3
-
-#define MAX_PATH         128
-#define MAX_FILENAME_LEN 12
+extern struct file_desc f_desc_table[NR_FILE_DESC];  // in fs.c
 
 void init_fs();
 

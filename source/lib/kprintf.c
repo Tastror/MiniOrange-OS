@@ -1,7 +1,5 @@
-#include "software_define/proc_define.h"
-#include "software_define/protect_define.h"
-#include "lib/klib.h"
-#include "lib/stdio.h"
+#include <lib/klib.h>
+#include <lib/stdio.h>
 
 static void
 kprintfputch(int ch, void *b)

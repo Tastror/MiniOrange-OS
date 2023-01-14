@@ -2,6 +2,7 @@ OBJDIRS += lib
 
 LIB_OBJS :=	lib/string.o \
 		kernel/syscall.o \
+		lib/assert.o \
 		lib/printf.o \
 		lib/kprintf.o \
 		lib/scanf.o \

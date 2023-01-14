@@ -11,6 +11,8 @@
 #define _ORANGES_TTY_H_
 
 #include <common/type.h>
+#include <define/define.h>
+
 #include <kernel/console.h>
 
 #define TTY_IN_BYTES    256 /* tty input queue size */
@@ -46,9 +48,19 @@ typedef struct s_tty {
     struct s_console *console;
 } TTY;
 
+extern TTY tty_table[NR_CONSOLES];  // in tty.c
+
 void select_console(int nr_console);
 void init_screen(TTY *tty);
 void out_char(CONSOLE *con, char ch);
 int  is_current_console(CONSOLE *con);
+
+extern int current_console;  // in tty.c
+
+/* tty.c */
+void in_process(TTY *p_tty, u32 key);
+void task_tty();
+void tty_write(TTY *tty, char *buf, int len);
+int  tty_read(TTY *tty, char *buf, int len);
 
 #endif /* _ORANGES_TTY_H_ */

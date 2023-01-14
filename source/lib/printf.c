@@ -1,4 +1,4 @@
-#include "lib/stdio.h"
+#include <lib/stdio.h>
 
 static void printfputch(int ch, int *cnt)
 {

@@ -3,25 +3,20 @@
  * added by mingxuan 2019-5-17
  */
 
-#include "kernel/vfs.h"
-#include "common/type.h"
-#include "kernel/fat32.h"
-#include "kernel/fs.h"
-#include "kernel/fs_misc.h"
-#include "kernel/global.h"
-#include "kernel/hd.h"
-#include "kernel/proto.h"
-#include "lib/stdio.h"
-#include "lib/string.h"
-#include "software_define/fs_const.h"
-#include "software_define/kern_const.h"
-#include "software_define/proc_define.h"
-#include "software_define/protect_define.h"
+#include <kernel/vfs.h>
+
+#include <kernel/fat32.h>
+#include <kernel/fs.h>
+#include <kernel/hd.h>
+#include <kernel/kernel.h>
+#include <kernel/proc.h>
+#include <kernel/syscall.h>
+#include <lib/stdio.h>
+#include <lib/string.h>
 
 // static struct device  device_table[NR_DEV];  //deleted by mingxuan 2020-10-18
 static struct vfs vfs_table[NR_FS];  // modified by mingxuan 2020-10-18
 
-struct file_desc   f_desc_table[NR_FILE_DESC];
 struct super_block super_block[NR_SUPER_BLOCK];  // added by mingxuan 2020-10-30
 
 // static struct file_op f_op_table[NR_fs]; //文件系统操作表

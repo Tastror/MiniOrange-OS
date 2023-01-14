@@ -4,13 +4,8 @@
  * Added by xw, 18/6/17
  */
 
-#include "common/type.h"
-#include "kernel/global.h"
-#include "kernel/proto.h"
-#include "lib/string.h"
-#include "software_define/kern_const.h"
-#include "software_define/proc_define.h"
-#include "software_define/protect_define.h"
+#include <lib/string.h>
+#include <lib/stdio.h>
 
 /*
  * This syscall needs long time to finish, so we can use it

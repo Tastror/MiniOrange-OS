@@ -5,10 +5,11 @@
  * @date 2005
  */
 
-#ifndef _ORANGES_KEYBOARD_H_
-#define _ORANGES_KEYBOARD_H_
+#ifndef _ORANGES_KEY_H_
+#define _ORANGES_KEY_H_
 
 #include <common/type.h>
+#include <define/define.h>
 
 /**
  * Macros Declaration
@@ -145,4 +146,4 @@ typedef struct mouse_inbuf {
     u8  buf[MOUSE_IN_BYTES];
 } MOUSE_INPUT;
 
-#endif /* _ORANGES_KEYBOARD_H_ */
+#endif /* _ORANGES_KEY_H_ */

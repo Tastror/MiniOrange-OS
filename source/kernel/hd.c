@@ -1,27 +1,23 @@
-/// zcr copy whole file from Orange's and the file was modified.
-
 /**
  * @file   hd.c
  * @brief  Hard disk (winchester) driver.
  * The `device nr' in this file means minor device nr.
  * @author Forrest Y. Yu
  * @date   2005~2008
+ * 
+ * zcr copy whole file from Orange's and the file was modified.
  */
 
-#include "kernel/hd.h"
-#include "common/assert.h"
-#include "common/type.h"
-#include "hardware_define/x86.h"
-#include "kernel/fs.h"
-#include "kernel/fs_misc.h"
-#include "kernel/global.h"
-#include "kernel/proto.h"
-#include "lib/stdio.h"
-#include "lib/string.h"
-#include "software_define/fs_const.h"
-#include "software_define/kern_const.h"
-#include "software_define/proc_define.h"
-#include "software_define/protect_define.h"
+#include <kernel/hd.h>
+
+#include <kernel/interrupt.h>
+#include <kernel/kernel.h>
+#include <kernel/proc.h>
+#include <kernel/syscall.h>
+#include <device/x86.h>
+#include <lib/assert.h>
+#include <lib/stdio.h>
+#include <lib/string.h>
 
 struct part_ent PARTITION_ENTRY;
 
@@ -30,8 +26,7 @@ static HDQueue      hdque;
 static volatile int hd_int_waiting_flag;
 static u8           hd_status;
 static u8           hdbuf[SECTOR_SIZE * 2];
-// static	struct hd_info hd_info[1];
-struct hd_info hd_info[1];  // modified by mingxuan 2020-10-27
+struct hd_info      hd_info[1];  // modified by mingxuan 2020-10-27
 
 static void init_hd_queue(HDQueue *hdq);
 static void in_hd_queue(HDQueue *hdq, RWInfo *p);

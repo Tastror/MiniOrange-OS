@@ -2,6 +2,7 @@
 #define _MINIOS_STRING_H_
 
 #include <common/type.h>
+#include <define/define.h>
 
 int   strlen(const char *s);
 int   strnlen(const char *s, size_t size);

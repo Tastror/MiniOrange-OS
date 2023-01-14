@@ -1,16 +1,12 @@
-#include "kernel/console.h"
-#include "common/type.h"
-#include "hardware_define/key.h"
-#include "hardware_define/x86.h"
-#include "kernel/fs.h"
-#include "kernel/global.h"
-#include "kernel/proto.h"
-#include "kernel/tty.h"
-#include "lib/stdio.h"
-#include "lib/string.h"
-#include "software_define/kern_const.h"
-#include "software_define/proc_define.h"
-#include "software_define/protect_define.h"
+#include <kernel/console.h>
+
+#include <kernel/fs.h>
+#include <kernel/tty.h>
+#include <device/x86.h>
+#include <lib/stdio.h>
+#include <lib/string.h>
+
+CONSOLE console_table[NR_CONSOLES];
 
 /* local routines */
 static void set_cursor(unsigned int position);

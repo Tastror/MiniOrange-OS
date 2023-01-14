@@ -4,13 +4,13 @@
  * @date 2005
  */
 
-#include "common/type.h"
-#include "kernel/global.h"
-#include "kernel/proto.h"
-#include "lib/string.h"
-#include "software_define/kern_const.h"
-#include "software_define/proc_define.h"
-#include "software_define/protect_define.h"
+#include <kernel/syscall.h>
+
+#include <kernel/kernel.h>
+#include <kernel/proc.h>
+#include <lib/string.h>
+
+int ticks;
 
 /**
  * clock_handler

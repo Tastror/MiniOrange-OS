@@ -8,15 +8,16 @@
 #ifndef _SPINLOCK_H_
 #define _SPINLOCK_H_
 
-// Mutual exclusion lock.
-#define uint unsigned
+#include <common/type.h>
+#include <define/define.h>
+
 struct spinlock {
-    uint locked;  // Is the lock held?
+    u32 locked;  // Is the lock held?
 
     // For debugging:
     char *name;     // Name of lock.
     int   cpu;      // The number of the cpu holding the lock.
-    uint  pcs[10];  // The call stack (an array of program counters)
+    u32  pcs[10];  // The call stack (an array of program counters)
                     // that locked the lock.
 };
 

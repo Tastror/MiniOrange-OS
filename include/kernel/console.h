@@ -3,15 +3,14 @@
  * @brief
  * @author Forrest Y. Yu
  * @date 2005
- */
-
-/**
- * console.h  // added by mingxuan 2019-5-17
+ * @editor added by mingxuan 2019-5-17
  */
 
 #ifndef _ORANGES_CONSOLE_H_
 #define _ORANGES_CONSOLE_H_
 
+#include <common/type.h>
+#include <define/define.h>
 
 /* CONSOLE */
 typedef struct s_console {
@@ -23,6 +22,7 @@ typedef struct s_console {
     unsigned int current_line;
 } CONSOLE;
 
+extern CONSOLE console_table[NR_CONSOLES];  // in console.c
 
 #define SCR_UP 1  /* scroll upward */
 #define SCR_DN -1 /* scroll downward */

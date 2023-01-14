@@ -1,5 +1,5 @@
 
-; kernel.asm
+; core.asm
 ; Forrest Yu
 ; 2005
 ;
@@ -19,8 +19,8 @@ extern    irq_table
 extern    page_fault_handler
 extern    divide_error_handler    ;added by xw, 18/12/22
 extern    disp_int
-extern  schedule
-extern  switch_pde
+extern    schedule
+extern    switch_pde
 
 ; 导入全局变量
 extern    gdt_ptr
@@ -51,14 +51,14 @@ KernelStackTop:    ; used as stack of kernel itself
 global _start    ; 导出 _start
 
 ;global restart
-global restart_initial    ;Added by xw, 18/4/21
-global restart_restore    ;Added by xw, 18/4/21
-global sched            ;Added by xw, 18/4/21
+global restart_initial    ; Added by xw, 18/4/21
+global restart_restore    ; Added by xw, 18/4/21
+global sched              ; Added by xw, 18/4/21
 global sys_call
-global read_cr2   ;//add by visual 2016.5.9
-global refresh_page_cache ; // add by visual 2016.5.12
-global halt              ;added by xw, 18/6/11
-global get_arg            ;added by xw, 18/6/18
+global read_cr2           ; add by visual 2016.5.9
+global refresh_page_cache ; add by visual 2016.5.12
+global halt               ; added by xw, 18/6/11
+global get_arg            ; added by xw, 18/6/18
 
 global    divide_error
 global    single_step_exception

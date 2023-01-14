@@ -1,12 +1,7 @@
-#include "kernel/memman.h"
-#include "common/type.h"
-#include "kernel/global.h"
-#include "kernel/proto.h"
-#include "lib/stdio.h"
-#include "lib/string.h"
-#include "software_define/kern_const.h"
-#include "software_define/proc_define.h"
-#include "software_define/protect_define.h"
+#include <kernel/memman.h>
+
+#include <lib/stdio.h>
+#include <lib/string.h>
 
 u32            MemInfo[256] = {0};  // 存放FMIBuff后1k内容
 struct MEMMAN  s_memman;

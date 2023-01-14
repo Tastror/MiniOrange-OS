@@ -5,22 +5,10 @@
  * 2005
  */
 
-#ifndef _ORANGES_PROTECT_H_
-#define _ORANGES_PROTECT_H_
+#ifndef _ORANGES_PROTECT_DEFINE_H_
+#define _ORANGES_PROTECT_DEFINE_H_
 
 #include <common/type.h>
-
-/* 存储段描述符/系统段描述符 */
-typedef struct s_descriptor /* 共 8 个字节 */
-{
-    u16 limit_low;        /* Limit */
-    u16 base_low;         /* Base */
-    u8  base_mid;         /* Base */
-    u8  attr1;            /* P(1) DPL(2) DT(1) TYPE(4) */
-    u8  limit_high_attr2; /* G(1) D(1) 0(1) AVL(1) LimitHigh(4) */
-    u8  base_high;        /* Base */
-} DESCRIPTOR;
-
 
 /* 门描述符 */
 typedef struct s_gate {
@@ -88,8 +76,6 @@ typedef struct s_tss {
 #define SELECTOR_KERNEL_DS SELECTOR_FLAT_RW
 #define SELECTOR_KERNEL_GS SELECTOR_VIDEO
 
-/* 每个任务有一个单独的 LDT, 每个 LDT 中的描述符个数: */
-#define LDT_SIZE 2
 // added by zcr
 /* descriptor indices in LDT */
 #define INDEX_LDT_C  0
@@ -131,6 +117,11 @@ typedef struct s_tss {
 #define SA_TIG     0
 #define SA_TIL     4
 
+/* RPL */
+#define RPL_KRNL SA_RPL0
+#define RPL_TASK SA_RPL1
+#define RPL_USER SA_RPL3
+
 /* 中断向量 */
 #define INT_VECTOR_DIVIDE       0x0
 #define INT_VECTOR_DEBUG        0x1
@@ -161,4 +152,4 @@ typedef struct s_tss {
 #define vir2phys(seg_base, vir) (u32)(((u32)seg_base) + (u32)(vir))
 
 
-#endif /* _ORANGES_PROTECT_H_ */
+#endif /* _ORANGES_PROTECT_DEFINE_H_ */

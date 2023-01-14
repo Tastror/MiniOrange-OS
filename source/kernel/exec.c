@@ -3,16 +3,15 @@
  * add by visual 2016.5.23
  */
 
-#include "common/type.h"
-#include "kernel/elf.h"
-#include "kernel/fs.h"  // added by mingxuan 2019-5-19
-#include "kernel/global.h"
-#include "kernel/proto.h"
-#include "kernel/vfs.h"
-#include "lib/string.h"
-#include "software_define/kern_const.h"
-#include "software_define/proc_define.h"
-#include "software_define/protect_define.h"
+#include <kernel/syscall.h>
+
+#include <kernel/proc.h>
+#include <kernel/pagepte.h>
+#include <kernel/fs.h>
+#include <kernel/vfs.h>
+#include <kernel/elf.h>
+#include <lib/stdio.h>
+#include <lib/string.h>
 
 static u32 exec_elfcpy(u32 fd, Elf32_Phdr Echo_Phdr, u32 attribute);
 static u32 exec_load(u32 fd, const Elf32_Ehdr *Echo_Ehdr, const Elf32_Phdr Echo_Phdr[]);

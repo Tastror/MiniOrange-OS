@@ -8,10 +8,15 @@
 #ifndef _STDIO_H_  // added by mingxuan 2019-5-19
 #define _STDIO_H_  // added by mingxuan 2019-5-19
 
+#include <lib/klib.h>  // easy for use
+
 #include <common/stdarg.h>
-#include <common/type.h>                 // added by mingxuan 2019-5-19
-#include <software_define/kern_const.h>  // added by mingxuan 2019-5-19
-#include <software_define/fs_const.h>
+#include <common/type.h>
+#include <define/define.h>
+
+// defined in klib.c
+extern int disp_pos;
+extern int saved_color;
 
 /* syscall.asm */
 int   get_ticks();

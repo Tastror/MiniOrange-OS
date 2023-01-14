@@ -8,6 +8,9 @@
 #ifndef _VFS_H_
 #define _VFS_H_
 
+#include <common/type.h>
+#include <define/define.h>
+
 // #define NR_DEV 10
 #define NR_FS        10  // modified by mingxuan 2020-10-18
 #define DEV_NAME_LEN 15
@@ -25,6 +28,7 @@
 //     struct file_op *op;        // 指向操作表的一项
 //     int             dev_num;   // 设备号
 // };
+
 
 // Replace struct device, added by mingxuan 2020-10-18
 struct vfs {

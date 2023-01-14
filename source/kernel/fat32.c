@@ -3,21 +3,15 @@
  * added by mingxuan 2019-5-17
  */
 
-#include "kernel/fat32.h"
-#include "common/type.h"
-#include "kernel/console.h"
-#include "kernel/fs.h"
-#include "kernel/fs_misc.h"
-#include "kernel/global.h"
-#include "kernel/hd.h"
-#include "kernel/proto.h"
-#include "kernel/tty.h"
-#include "lib/stdio.h"
-#include "lib/string.h"
-#include "software_define/fs_const.h"
-#include "software_define/kern_const.h"
-#include "software_define/proc_define.h"
-#include "software_define/protect_define.h"
+#include <kernel/fat32.h>
+
+#include <kernel/proc.h>
+#include <kernel/syscall.h>
+#include <kernel/kernel.h>
+#include <kernel/fs.h>
+#include <kernel/hd.h>
+#include <lib/stdio.h>
+#include <lib/string.h>
 
 extern DWORD FAT_END;
 extern DWORD TotalSectors;

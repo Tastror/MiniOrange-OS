@@ -8,8 +8,8 @@
 #ifndef _ORANGES_HD_H_
 #define _ORANGES_HD_H_
 
-#include <software_define/fs_const.h>
-#include <software_define/proc_define.h>
+#include <common/type.h>
+#include <define/define.h>
 
 /**
  * @struct part_ent
@@ -274,6 +274,7 @@ struct hd_info {
     struct part_info logical[NR_SUB_PER_DRIVE];   // NR_SUB_PER_DRIVE = 16 *4 =64
 };
 
+extern struct hd_info hd_info[1];  // in hd.c
 
 /**
  * DEFINITIONS

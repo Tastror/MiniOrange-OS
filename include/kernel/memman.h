@@ -2,6 +2,7 @@
 #define _ORANGES_MEMMAN_H_
 
 #include <common/type.h>
+#include <define/define.h>
 
 #define MEMMAN_FREES 4090        // 32KB
 #define MEMMAN_ADDR  0x01ff0000  // 存 memman，31M 960K

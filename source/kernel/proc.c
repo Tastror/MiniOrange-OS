@@ -5,14 +5,20 @@
  * @date 2005
  */
 
+#include <kernel/proc.h>
 
-#include "software_define/proc_define.h"
-#include "common/type.h"
-#include "kernel/global.h"
-#include "kernel/proto.h"
-#include "lib/string.h"
-#include "software_define/kern_const.h"
-#include "software_define/protect_define.h"
+#include <kernel/syscall.h>
+#include <kernel/kernel.h>
+#include <lib/string.h>
+
+PROCESS *p_proc_current;
+PROCESS *p_proc_next;
+PROCESS proc_table[NR_PCBS];
+u32 u_proc_sum;
+TASK task_table[NR_TASKS] = {
+    {hd_service, STACK_SIZE_TASK, "hd_service"},
+    {task_tty, STACK_SIZE_TASK, "task_tty"}
+};
 
 /**
  * schedule

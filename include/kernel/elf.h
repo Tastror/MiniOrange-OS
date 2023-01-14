@@ -9,6 +9,7 @@
 #define _ELF_H_
 
 #include <common/type.h>
+#include <define/define.h>
 
 #define EI_NIDENT 16
 

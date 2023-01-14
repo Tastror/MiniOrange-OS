@@ -4,13 +4,12 @@
  * 系统调用 fork() 功能实现部分 sys_fork()
  */
 
-#include "common/type.h"
-#include "kernel/global.h"
-#include "kernel/proto.h"
-#include "lib/string.h"
-#include "software_define/kern_const.h"
-#include "software_define/proc_define.h"
-#include "software_define/protect_define.h"
+#include <kernel/syscall.h>
+
+#include <kernel/proc.h>
+#include <kernel/pagepte.h>
+#include <lib/stdio.h>
+#include <lib/string.h>
 
 static int fork_mem_cpy(u32 ppid, u32 pid);
 static int fork_pcb_cpy(PROCESS *p_child);

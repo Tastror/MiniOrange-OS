@@ -5,15 +5,16 @@
  * @date 2005
  */
 
+#include <kernel/protect.h>
 
-#include "software_define/protect_define.h"
-#include "common/type.h"
-#include "kernel/global.h"
-#include "kernel/proto.h"
-#include "lib/string.h"
-#include "software_define/kern_const.h"
-#include "software_define/proc_define.h"
+#include <kernel/interrupt.h>
+#include <kernel/kernel.h>
+#include <kernel/proc.h>
+#include <kernel/syscall.h>
+#include <lib/stdio.h>
+#include <lib/string.h>
 
+TSS tss;
 
 /* 本文件内函数声明 */
 static void init_idt_desc(unsigned char vector, u8 desc_type, int_handler handler, unsigned char privilege);

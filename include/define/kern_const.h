@@ -1,4 +1,3 @@
-
 /**
  * const.h
  * 
@@ -6,16 +5,8 @@
  * 2005
  */
 
-#ifndef _ORANGES_CONST_H_
-#define _ORANGES_CONST_H_
-
-#include <software_define/protect_define.h>
-
-typedef void (*int_handler)();
-typedef void (*task_f)();
-typedef void (*irq_handler)(int irq);
-
-typedef void *system_call;
+#ifndef _ORANGES_KERN_CONST_H_
+#define _ORANGES_KERN_CONST_H_
 
 /* Color */
 /**
@@ -42,11 +33,6 @@ typedef void *system_call;
 #define PRIVILEGE_KRNL 0
 #define PRIVILEGE_TASK 1
 #define PRIVILEGE_USER 3
-
-/* RPL */
-#define RPL_KRNL SA_RPL0
-#define RPL_TASK SA_RPL1
-#define RPL_USER SA_RPL3
 
 /* 8259A interrupt controller ports. */
 #define INT_M_CTL     0x20 /* I/O port for interrupt controller         <Master> */
@@ -185,4 +171,4 @@ typedef void *system_call;
 #define STD_OUT 1
 #define STD_ERR 2
 
-#endif /* _ORANGES_CONST_H_ */
+#endif /* _ORANGES_KERN_CONST_H_ */

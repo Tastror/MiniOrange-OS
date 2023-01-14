@@ -2,16 +2,15 @@
  * 页式管理相关代码 add by visual 2016.4.19
  */
 
-#include "common/type.h"
-#include "kernel/global.h"
-#include "kernel/memman.h"
-#include "kernel/proto.h"
-#include "lib/string.h"
-#include "software_define/kern_const.h"
-#include "software_define/proc_define.h"
-#include "software_define/protect_define.h"
+#include <kernel/pagepte.h>
 
-// to determine if a page fault is reparable. added by xw, 18/6/11
+#include <kernel/memman.h>
+#include <kernel/proc.h>
+#include <kernel/kernel.h>
+#include <lib/stdio.h>
+#include <lib/string.h>
+
+u32 cr3_ready;
 u32 cr2_save;
 u32 cr2_count = 0;
 

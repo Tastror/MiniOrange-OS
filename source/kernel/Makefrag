@@ -6,22 +6,22 @@ KERN_ENTRY_ADDR := 0xC0030400
 KERN_REQUIREMENT := $(LIB_A) \
 		$(OBJDIR)/device/pci.o \
 
-KERN_SRCFILES := kernel/kernel.asm \
+KERN_SRCFILES := kernel/core.asm \
+		kernel/kernel.c \
+		kernel/vfs.c \
+		kernel/syscall_all.c \
 		kernel/hd.c \
 		kernel/fat32.c \
 		kernel/tty.c \
 		kernel/fs.c \
-		kernel/global.c \
 		kernel/clock.c \
 		kernel/elf.c \
 		kernel/spinlock.c \
 		kernel/keyboard.c \
 		kernel/assist.c \
 		kernel/fork.c \
-		kernel/file.c \
 		kernel/console.c \
 		kernel/syscallc.c \
-		kernel/vfs.c \
 		kernel/proc.c \
 		kernel/pagetbl.c \
 		kernel/pthread.c \

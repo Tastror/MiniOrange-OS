@@ -1,25 +1,19 @@
 // zcr copy from chapter9/d fs/main.c and modified it.
 
-#include "kernel/fs.h"
-#include "common/assert.h"
-#include "common/type.h"
-#include "kernel/fs_misc.h"
-#include "kernel/global.h"
-#include "kernel/hd.h"
-#include "kernel/proto.h"
-#include "lib/stdio.h"
-#include "lib/string.h"
-#include "software_define/fs_const.h"
-#include "software_define/kern_const.h"
-#include "software_define/proc_define.h"
-#include "software_define/protect_define.h"
+#include <kernel/fs.h>
+
+#include <kernel/hd.h>
+#include <kernel/proc.h>
+#include <kernel/tty.h>
+#include <lib/assert.h>
+#include <lib/stdio.h>
+#include <lib/string.h>
+
+struct file_desc f_desc_table[NR_FILE_DESC];
 
 // added by xw, 18/8/28
 /* data */
 static struct inode *root_inode;
-
-// static struct file_desc f_desc_table[NR_FILE_DESC];	//deleted by mingxuan 2020-10-30
-extern struct file_desc f_desc_table[NR_FILE_DESC];  // modified by mingxuan 2020-10-30
 
 static struct inode inode_table[NR_INODE];
 

@@ -1,8 +1,9 @@
-#include <common/assert.h>
-#include <device/e1000.h>
 #include <device/pci.h>
+
+#include <device/e1000.h>
 #include <device/pcireg.h>
-#include <hardware_define/x86.h>
+#include <device/x86.h>
+#include <lib/assert.h>
 #include <lib/stdio.h>
 #include <lib/string.h>
 

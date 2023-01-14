@@ -1,11 +1,10 @@
-﻿#include "common/type.h"
-#include "kernel/global.h"
-#include "kernel/memman.h"
-#include "kernel/proto.h"
-#include "lib/string.h"
-#include "software_define/kern_const.h"
-#include "software_define/proc_define.h"
-#include "software_define/protect_define.h"
+﻿#include <kernel/syscall.h>
+
+#include <kernel/memman.h>
+#include <kernel/proc.h>
+#include <kernel/pagepte.h>
+#include <lib/stdio.h>
+#include <lib/string.h>
 
 struct memfree *memarg = 0;
 
@@ -17,7 +16,6 @@ int sys_get_ticks()
 {
     return ticks;
 }
-
 
 /*======================================================================*
                            sys_get_pid		add by visual 2016.4.6
