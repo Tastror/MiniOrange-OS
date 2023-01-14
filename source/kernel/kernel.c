@@ -7,3 +7,5 @@ DESCRIPTOR gdt[GDT_SIZE];
 GATE       idt[IDT_SIZE];
 u8         gdt_ptr[6];
 u8         idt_ptr[6];
+
+int int_disable_time = 0;

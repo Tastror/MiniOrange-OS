@@ -207,4 +207,21 @@ static inline void enable_int()
     __asm__ __volatile__("sti");
 }
 
+// defined in kernel.c
+extern int int_disable_time;
+
+static inline void nested_disable_int()
+{
+    int_disable_time++;
+    if (int_disable_time > 0)
+        __asm__ __volatile__("cli");
+}
+
+static inline void nested_enable_int()
+{
+    int_disable_time--;
+    if (int_disable_time <= 0)
+        __asm__ __volatile__("sti");
+}
+
 #endif /* _MINIOS_X86_H_ */

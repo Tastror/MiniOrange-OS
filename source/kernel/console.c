@@ -1,8 +1,8 @@
 #include <kernel/console.h>
 
+#include <device/x86.h>
 #include <kernel/fs.h>
 #include <kernel/tty.h>
-#include <device/x86.h>
 #include <kernlib/stdio.h>
 #include <kernlib/string.h>
 
@@ -15,6 +15,17 @@ static void flush(CONSOLE *con);
 static void w_copy(unsigned int dst, const unsigned int src, int size);
 static void clear_screen(int pos, int len);
 void        scroll_screen(CONSOLE *con, int dir);
+
+
+// use after set
+static void update_the_disp_pos(CONSOLE *con) {
+    disp_pos = con->cursor * 2;
+}
+
+// use before get
+static void correspond_from_disp_pos(CONSOLE *con) {
+    con->cursor = disp_pos / 2;
+}
 
 /*****************************************************************************
  *                                init_screen
@@ -49,9 +60,11 @@ void init_screen(TTY *tty)
     const char prompt[] = "[TTY #?]\n";
 
     const char *p = prompt;
+    nested_disable_int();
     for (; *p; p++) {
         out_char(tty->console, *p == '?' ? nr_tty + '0' : *p);
     }
+    nested_enable_int();
 
     set_cursor(tty->console->cursor);
 }
@@ -69,31 +82,29 @@ void init_screen(TTY *tty)
 
 void out_char(CONSOLE *con, char ch)
 {
-    disable_int();
+    nested_disable_int();
 
+    correspond_from_disp_pos(con);
     int cursor_x = (con->cursor - con->orig) % SCR_WIDTH;
     int cursor_y = (con->cursor - con->orig) / SCR_WIDTH;
 
     switch (ch) {
     case '\n':
         con->cursor = con->orig + SCR_WIDTH * (cursor_y + 1);
+        update_the_disp_pos(con);
         break;
     case '\b':
         if (con->cursor > con->orig) {
             con->cursor--;
-            //*(pch - 2) = ' ';
-            //*(pch - 1) = DEFAULT_CHAR_COLOR;
-            disp_pos = con->cursor * 2;
+            update_the_disp_pos(con);
             kern_display_char(' ');
+            update_the_disp_pos(con);
         }
         break;
     default:
-        //*pch++ = ch;
-        //*pch++ = DEFAULT_CHAR_COLOR;
-        disp_pos = con->cursor * 2;
+        update_the_disp_pos(con);
         kern_display_char(ch);
-        con->cursor++;
-
+        correspond_from_disp_pos(con);
         break;
     }
 
@@ -112,16 +123,18 @@ void out_char(CONSOLE *con, char ch)
 
     // assert(con->cursor - con->orig < con->con_size);
 
-    while (con->cursor >= con->crtc_start + SCR_SIZE ||
-           con->cursor < con->crtc_start) {
+    while (
+        con->cursor >= con->crtc_start + SCR_SIZE ||
+        con->cursor < con->crtc_start
+    ) {
         scroll_screen(con, SCR_UP);
-
         clear_screen(con->cursor, SCR_WIDTH);
     }
 
     flush(con);
-
-    enable_int();
+    
+    nested_enable_int();
+    return;
 }
 
 
@@ -171,12 +184,12 @@ int is_current_console(CONSOLE *con)
  *****************************************************************************/
 static void set_cursor(unsigned int position)
 {
-    disable_int();
+    nested_disable_int();
     outb(CRTC_ADDR_REG, CURSOR_H);
     outb(CRTC_DATA_REG, (position >> 8) & 0xFF);
     outb(CRTC_ADDR_REG, CURSOR_L);
     outb(CRTC_DATA_REG, position & 0xFF);
-    enable_int();
+    nested_enable_int();
 }
 
 
@@ -190,12 +203,12 @@ static void set_cursor(unsigned int position)
  *****************************************************************************/
 static void set_video_start_addr(u32 addr)
 {
-    disable_int();
+    nested_disable_int();
     outb(CRTC_ADDR_REG, START_ADDR_H);
     outb(CRTC_DATA_REG, (addr >> 8) & 0xFF);
     outb(CRTC_ADDR_REG, START_ADDR_L);
     outb(CRTC_DATA_REG, addr & 0xFF);
-    enable_int();
+    nested_enable_int();
 }
 
 

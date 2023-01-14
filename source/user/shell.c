@@ -12,6 +12,9 @@ int main(int arg, char *argv[])
     char buf[1024];
     int  pid;
     int  times = 0;
+
+    printf("\n");
+
     while (true) {
         set_color(DARKGREEN);
         printf("MiniOS");
