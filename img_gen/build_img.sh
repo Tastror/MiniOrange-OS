@@ -1,3 +1,11 @@
+# if this get wrong, please change the CRLF to LF
+# or you can try 
+
+# 提交时转换为 LF，检出时不转换
+# git config --global core.autocrlf input
+# 提交包含混合换行符的文件时给出警告
+# git config --global core.safecrlf warn
+
 if [ $# -ne 4 ] ;then
         echo "usage: $0 \$(OBJDIR) \$(GENERATE_IMAGE_C) \$(OSBOOT_START_OFFSET)"
         exit 1
