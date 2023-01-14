@@ -161,7 +161,7 @@ static u32 exec_load(u32 fd, const Elf32_Ehdr *Echo_Ehdr, const Elf32_Phdr Echo_
 
     if (0 == Echo_Ehdr->e_phnum) {
         kern_set_color(MAKE_COLOR(GREY, RED));
-        kern_display_string("exec_load: elf ERROR!");
+        kern_display_string("exec_load: elf ERROR!\n");
         kern_set_color(WHITE);
         return -1;
     }

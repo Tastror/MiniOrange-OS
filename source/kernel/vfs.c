@@ -283,7 +283,9 @@ int do_vopen(const char *path, int flags)
     int fd = -1;
     index = get_index(pathname);
     if (index == -1) {
-        // kprintf("pathname error! path: %s\n", path);
+        kern_set_color(RED);
+        kprintf("pathname error! path: %s\n", path);
+        kern_set_color(WHITE);
         return -1;
     }
 
@@ -291,7 +293,9 @@ int do_vopen(const char *path, int flags)
     if (fd != -1) {
         p_proc_current->task.filp[fd]->dev_index = index;
     } else {
-        // kprintf("          error!\n");
+        kern_set_color(RED);
+        kprintf("pathname maybe right, but open error!\n");
+        kern_set_color(WHITE);
     }
 
     return fd;
@@ -346,7 +350,9 @@ int do_vunlink(const char *path)
     int index;
     index = get_index(pathname);
     if (index == -1) {
+        kern_set_color(RED);
         kprintf("pathname error!\n");
+        kern_set_color(WHITE);
         return -1;
     }
 
@@ -378,7 +384,9 @@ int do_vcreate(char *filepath)
     int index;
     index = get_index(pathname);
     if (index == -1) {
+        kern_set_color(RED);
         kprintf("pathname error! path: %s\n", path);
+        kern_set_color(WHITE);
         return -1;
     }
     state = vfs_table[index].op->create(pathname);  // modified by mingxuan 2020-10-18
@@ -402,7 +410,9 @@ int do_vdelete(char *path)
     int index;
     index = get_index(pathname);
     if (index == -1) {
+        kern_set_color(RED);
         kprintf("pathname error!\n");
+        kern_set_color(WHITE);
         return -1;
     }
     // return device_table[index].op->delete(pathname);

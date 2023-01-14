@@ -7,7 +7,7 @@
 #define PCI_E1000_VENDER_ID 0x8086
 #define PCI_E1000_DEVICE_ID 0x100E
 
-/* 循环队列的长度*/
+/* 循环队列的长度 */
 #define TX_DESC_SIZE     32
 #define TX_PACKET_SIZE   2048
 
