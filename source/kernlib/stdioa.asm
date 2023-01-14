@@ -112,18 +112,30 @@ global kern_display_char  ; added by mingxuan 2019-5-19
 ; ========================================================================
 kern_display_char:
     push ebp
-    mov ebp,esp
-    
-    mov esi, [ebp + 8] 
+    mov ebp, esp
+    pushad
+    mov eax, [ebp + 8] 
     mov edi, [disp_pos]
-    
-    push eax
-    mov eax, esi
-    mov ah, [saved_color]  ; use color now
+    cmp al, 0Ah  ; 如果是回车，要单独处理
+    jz kern_display_char_is_enter
+    mov ah, [saved_color]
     mov [gs:edi], ax
-    pop eax
+    add edi, 2
+kern_display_char_end:
+    mov [disp_pos], edi
+    popad
     pop ebp
     ret
+kern_display_char_is_enter:
+    mov eax, edi
+    mov bl, 160
+    div bl
+    and eax, 0FFh
+    inc eax
+    mov bl, 160
+    mul bl
+    mov edi, eax
+    jmp kern_display_char_end
 
 
 ; void kern_set_color(int);
