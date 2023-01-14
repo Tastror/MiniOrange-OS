@@ -37,9 +37,9 @@ u32 init_page_pte(u32 pid)
 
     if (pde_addr_phy_temp < 0 || (pde_addr_phy_temp & 0x3FF) != 0)  // add by visual 2016.5.9
     {
-        kern_set_color(0x74);
+        kern_set_color(MAKE_COLOR(GREY, RED));
         kern_display_string("init_page_pte Error:pde_addr_phy_temp");
-        kern_set_color(0x0F);
+        kern_set_color(WHITE);
         return -1;
     }
 
@@ -54,9 +54,9 @@ u32 init_page_pte(u32 pid)
                                    PG_P | PG_USU | PG_RWW,                                                                      // 页目录的属性位（用户权限）			//edit by visual 2016.5.26
                                    PG_P | PG_USS | PG_RWW);                                                                     // 页表的属性位（系统权限）				//edit by visual 2016.5.17
         if (err_temp != 0) {
-            kern_set_color(0x74);
+            kern_set_color(MAKE_COLOR(GREY, RED));
             kern_display_string("init_page_pte Error:lin_mapping_phy");
-            kern_set_color(0x0F);
+            kern_set_color(WHITE);
             return -1;
         }
     }
@@ -82,7 +82,7 @@ void page_fault_handler(u32 vec_no,    // 异常编号，此时应该是14，代
     // if page fault happens in kernel, it's an error.
     if (kernel_initial == 1) {
         kern_display_string("\n");
-        kern_set_color(0x74);
+        kern_set_color(MAKE_COLOR(GREY, RED));
         kern_display_string("Page Fault\n");
         kern_display_string("eip=");  // 灰底红字
         kern_display_integer(eip);
@@ -94,7 +94,7 @@ void page_fault_handler(u32 vec_no,    // 异常编号，此时应该是14，代
         kern_display_integer(err_code);
         kern_display_string("Cr2=");  // 灰底红字
         kern_display_integer(cr2);
-        kern_set_color(0x0F);
+        kern_set_color(WHITE);
         halt();
     }
 
@@ -107,7 +107,7 @@ void page_fault_handler(u32 vec_no,    // 异常编号，此时应该是14，代
         cr2_count++;
         if (cr2_count == 5) {
             kern_display_string("\n");
-            kern_set_color(0x74);
+            kern_set_color(MAKE_COLOR(GREY, RED));
             kern_display_string("Page Fault\n");
             kern_display_string("eip=");  // 灰底红字
             kern_display_integer(eip);
@@ -127,7 +127,7 @@ void page_fault_handler(u32 vec_no,    // 异常编号，此时应该是14，代
             // 获取页表中填写的内容
             kern_display_string("Pte=");
             kern_display_integer(*((u32 *)K_PHY2LIN(pte_addr_phy_temp) + get_pte_index(cr2)));
-            kern_set_color(0x0F);
+            kern_set_color(WHITE);
             halt();
         }
     } else {
@@ -136,17 +136,17 @@ void page_fault_handler(u32 vec_no,    // 异常编号，此时应该是14，代
     }
 
     if (0 == pte_exist(pde_addr_phy_temp, cr2)) {  // 页表不存在
-        // kern_set_color(0x74);  // 灰底红字
+        // kern_set_color(MAKE_COLOR(GREY, RED));  // 灰底红字
         // kern_display_string("[Pde Fault!]");
         (*((u32 *)K_PHY2LIN(pde_addr_phy_temp) + get_pde_index(cr2))) |= PG_P;
         // kern_display_string("[Solved]", 0x74);
-        // kern_set_color(0x0F);
+        // kern_set_color(WHITE);
     } else {  // 只是缺少物理页
-        // kern_set_color(0x74);  // 灰底红字
+        // kern_set_color(MAKE_COLOR(GREY, RED));  // 灰底红字
         // kern_display_string("[Pte Fault!]");
         (*((u32 *)K_PHY2LIN(pte_addr_phy_temp) + get_pte_index(cr2))) |= PG_P;
         // kern_display_string("[Solved]");
-        // kern_set_color(0x0F);
+        // kern_set_color(WHITE);
     }
     refresh_page_cache();
 }
@@ -298,9 +298,9 @@ int lin_mapping_phy(u32 AddrLin,        // 线性地址
 
         if (pte_addr_phy < 0 || (pte_addr_phy & 0x3FF) != 0)  // add by visual 2016.5.9
         {
-            kern_set_color(0x74);
+            kern_set_color(MAKE_COLOR(GREY, RED));
             kern_display_string("lin_mapping_phy Error:pte_addr_phy");
-            kern_set_color(0x0F);
+            kern_set_color(WHITE);
             return -1;
         }
 
@@ -331,10 +331,10 @@ int lin_mapping_phy(u32 AddrLin,        // 线性地址
     }
 
     if (phy_addr < 0 || (phy_addr & 0x3FF) != 0) {
-        kern_set_color(0x74);
-        kern_set_color(0x0F);
+        kern_set_color(MAKE_COLOR(GREY, RED));
+        kern_set_color(WHITE);
         ("lin_mapping_phy:phy_addr ERROR");
-        kern_set_color(0x0F);
+        kern_set_color(WHITE);
         return -1;
     }
 

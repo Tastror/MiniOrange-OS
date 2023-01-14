@@ -215,7 +215,7 @@ void exception_handler(int vec_no, int err_code, int eip, int cs, int eflags)
     }
     disp_pos = 0;
 
-    kern_set_color(0x74);
+    kern_set_color(MAKE_COLOR(GREY, RED));
     kern_display_string("Exception! --> ");
     kern_display_string(err_description[vec_no]);
     kern_display_string("\n\n");
@@ -233,7 +233,7 @@ void exception_handler(int vec_no, int err_code, int eip, int cs, int eflags)
 
     // added by xw, 18/12/19
     kern_display_string("\n");
-    kern_set_color(0x0F);
+    kern_set_color(WHITE);
 
     // added by xw, 18/12/19
     p_proc_current->task.stat = KILLED;

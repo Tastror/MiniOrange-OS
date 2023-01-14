@@ -1,6 +1,6 @@
 /**
  * const.h
- * 
+ *
  * Forrest Yu
  * 2005
  */
@@ -9,21 +9,26 @@
 #define _ORANGES_KERN_CONST_H_
 
 /* Color */
-/**
- * e.g. MAKE_COLOR(BLUE, RED)
- *      MAKE_COLOR(BLACK, RED) | BRIGHT
- *      MAKE_COLOR(BLACK, RED) | BRIGHT | FLASH
- * // added by mingxuan 2019-5-19
- */
-#define BLACK  0x0  /* 0000 */
-#define WHITE  0x7  /* 0111 */
-#define RED    0x4  /* 0100 */
-#define GREEN  0x2  /* 0010 */
-#define BLUE   0x1  /* 0001 */
-#define FLASH  0x80 /* 1000 0000 */
-#define BRIGHT 0x08 /* 0000 1000 */
+#define BLACK       0x0 /* 0000 */
+#define DARKBLUE    0x1 /* 0001 */
+#define DARKGREEN   0x2 /* 0010 */
+#define DARKRED     0x4 /* 0100 */
+#define DARKCYAN    0x3 /* 0011 */
+#define DARKMAGENTA 0x5 /* 0101 */
+#define DARKYELLOW  0x6 /* 0110 */
+#define GREY        0x7 /* 0111 */
 
-#define MAKE_COLOR(x, y) ((x << 4) | y) /* MAKE_COLOR(Background,Foreground) */
+#define DARKGREY (0x8 | BLACK)
+#define BLUE     (0x8 | DARKBLUE)
+#define GREEN    (0x8 | DARKGREEN)
+#define RED      (0x8 | DARKRED)
+#define CYAN     (0x8 | DARKCYAN)
+#define MAGENTA  (0x8 | DARKMAGENTA)
+#define YELLOW   (0x8 | DARKYELLOW)
+#define WHITE    (0x8 | GREY)
+
+// e.g. MAKE_COLOR(BLUE, RED)
+#define MAKE_COLOR(x, y) (((x) << 4) | (y)) /* MAKE_COLOR(Background, Foreground) */
 
 /* GDT 和 IDT 中描述符的个数 */
 #define GDT_SIZE 128

@@ -188,9 +188,9 @@ static int initialize_processes()
 
         /***************初始化PID进程页表*****************************/
         if (0 != init_page_pte(pid)) {
-            kern_set_color(0x74);
+            kern_set_color(MAKE_COLOR(GREY, RED));
             kern_display_string("kernel_main Error: init_page_pte");
-            kern_set_color(0x0F);
+            kern_set_color(WHITE);
             return -1;
         }
         // pde_addr_phy_temp = get_pde_phy_addr(pid);//获取该进程页目录物理地址            //delete by visual 2016.5.19
@@ -203,9 +203,9 @@ static int initialize_processes()
         for (AddrLin = StackLinBase; AddrLin > p_proc->task.memmap.stack_lin_limit; AddrLin -= num_4K) {  // 栈
             // addr_phy_temp = (u32)do_kmalloc_4k();                                                         // 为栈申请一个物理页,Task的栈是在内核里面    // delete by visual 2016.5.19
             // if (addr_phy_temp < 0 || (addr_phy_temp & 0x3FF) != 0) {
-            //     kern_set_color(0x74);
+            //     kern_set_color(MAKE_COLOR(GREY, RED));
             //     kern_display_string("kernel_main Error:addr_phy_temp");
-            //     kern_set_color(0x0F);
+            //     kern_set_color(WHITE);
             //     return -1;
             // }
             err_temp = lin_mapping_phy(AddrLin,                  // 线性地址                        //add by visual 2016.5.9
@@ -214,9 +214,9 @@ static int initialize_processes()
                                        PG_P | PG_USU | PG_RWW,   // 页目录的属性位
                                        PG_P | PG_USU | PG_RWW);  // 页表的属性位
             if (err_temp != 0) {
-                kern_set_color(0x74);
+                kern_set_color(MAKE_COLOR(GREY, RED));
                 kern_display_string("kernel_main Error: lin_mapping_phy");
-                kern_set_color(0x0F);
+                kern_set_color(WHITE);
                 return -1;
             }
         }
@@ -343,9 +343,9 @@ static int initialize_processes()
 
         /***************初始化PID进程页表*****************************/
         if (0 != init_page_pte(pid)) {
-            kern_set_color(0x74);
+            kern_set_color(MAKE_COLOR(GREY, RED));
             kern_display_string("kernel_main Error: init_page_pte");
-            kern_set_color(0x0F);
+            kern_set_color(WHITE);
             return -1;
         }
         // pde_addr_phy_temp = get_pde_phy_addr(pid);//获取该进程页目录物理地址    //edit by visual 2016.5.19
@@ -358,9 +358,9 @@ static int initialize_processes()
         for (AddrLin = StackLinBase; AddrLin > p_proc->task.memmap.stack_lin_limit; AddrLin -= num_4K) {  // 栈
             // addr_phy_temp = (u32)do_kmalloc_4k();  // 为栈申请一个物理页,Task的栈是在内核里面  // delete by visual 2016.5.19
             // if (addr_phy_temp < 0 || (addr_phy_temp & 0x3FF) != 0) {
-            //     kern_set_color(0x74);
+            //     kern_set_color(MAKE_COLOR(GREY, RED));
             //     kern_display_string("kernel_main Error:addr_phy_temp");
-            //     kern_set_color(0x0F);
+            //     kern_set_color(WHITE);
             //     return -1;
             // }
             err_temp = lin_mapping_phy(
@@ -371,9 +371,9 @@ static int initialize_processes()
                 PG_P | PG_USU | PG_RWW   // 页表的属性位
             );
             if (err_temp != 0) {
-                kern_set_color(0x74);
+                kern_set_color(MAKE_COLOR(GREY, RED));
                 kern_display_string("kernel_main Error: lin_mapping_phy");
-                kern_set_color(0x0F);
+                kern_set_color(WHITE);
                 return -1;
             }
         }
