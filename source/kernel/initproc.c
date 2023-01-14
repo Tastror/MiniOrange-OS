@@ -108,7 +108,6 @@ static void untar(const char *filename)
 
 void initial()
 {
-
     int stdin = do_vopen("dev_tty0", O_RDWR);
     int stdout = do_vopen("dev_tty0", O_RDWR);
     int stderr = do_vopen("dev_tty0", O_RDWR);
@@ -117,9 +116,15 @@ void initial()
     // modified by mingxuan 2019-5-21
     char full_name[30] = "orange/";
 
+    set_color(DARKGREEN);
+    printf("\ninitproc start...\n");
+    set_color(WHITE);
+
     printf("untar:%s\n", full_name);
     strcat(full_name, INSTALL_FILENAME);
     untar(full_name);
+
+    printf("\n");
 
     do_vclose(stdin);
     do_vclose(stdout);

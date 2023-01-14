@@ -29,7 +29,7 @@ KERN_SRCFILES := kernel/core.asm \
 		kernel/network.c \
 		kernel/main.c \
 		kernel/exec.c \
-		kernel/ktest.c \
+		kernel/initproc.c \
 		kernel/base.c \
 		kernel/start.c \
 		kernel/i8259.c \
@@ -40,7 +40,7 @@ KERN_SRCFILES := kernel/core.asm \
 KERN_OBJFILES := $(patsubst %.c, $(OBJDIR)/%.o, $(KERN_SRCFILES))
 KERN_OBJFILES := $(patsubst %.asm, $(OBJDIR)/%.o, $(KERN_OBJFILES))
 
-$(OBJDIR)/kernel/ktest.o: $(SRCDIR)/kernel/ktest.c $(OBJDIR)/.vars.CFLAGS
+$(OBJDIR)/kernel/initproc.o: $(SRCDIR)/kernel/initproc.c $(OBJDIR)/.vars.CFLAGS
 	@echo + cc $<
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -c -o $@ $< \
