@@ -9,6 +9,8 @@
 #include <kernlib/stdio.h>
 #include <kernlib/string.h>
 
+#include <userlib/stdio.h>
+
 /**
  * @struct posix_tar_header
  * Borrowed from GNU `tar'

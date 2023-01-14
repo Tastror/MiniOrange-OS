@@ -1,4 +1,5 @@
 #include <kernlib/stdio.h>
+#include <userlib/fcntl.h>
 
 static void printfputch(int ch, int *cnt)
 {

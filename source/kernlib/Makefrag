@@ -2,11 +2,10 @@ OBJDIRS += kernlib
 
 KERNLIB_SRCS :=	kernlib/string.c \
 		kernlib/assert.c \
-		kernlib/printf.c \
 		kernlib/kprintf.c \
-		kernlib/scanf.c \
 		kernlib/printfmt.c \
-		userlib/syscall_imple.asm \
+		kernlib/stdio.c \
+		kernlib/stdioa.asm \
 
 KERNLIB_OBJS := $(patsubst %.c, $(OBJDIR)/%.o, $(KERNLIB_SRCS))
 KERNLIB_OBJS := $(patsubst %.asm, $(OBJDIR)/%.o, $(KERNLIB_OBJS))

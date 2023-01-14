@@ -5,7 +5,6 @@ int global = 0;
 
 char *str2, *str3;
 
-
 void pthread_test1()
 {
     int i;

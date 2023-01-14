@@ -9,9 +9,8 @@ int   vprintf(const char *fmt, va_list ap);
 int   printf(const char *fmt, ...);
 char  getchar();
 char *gets(char *str);
-
-void display_int(int arg);
-void display_str(char *arg);
-void set_color(int c);
+void  display_int(int arg);
+void  display_str(char *arg);
+void  set_color(int c);  // added by tastror 2022-12
 
 #endif

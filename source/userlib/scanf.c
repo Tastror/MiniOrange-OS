@@ -1,4 +1,5 @@
 #include <kernlib/stdio.h>
+#include <userlib/fcntl.h>
 
 char getchar()
 {

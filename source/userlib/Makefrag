@@ -1,15 +1,19 @@
 OBJDIRS += userlib
 
 # 在这里添加其他库的依赖项，便于最终链接的时候调用
-USERLIB_REQUIREMENT := $(KERNLIB_A)
+USERLIB_REQUIREMENT = $(KERNLIB_A)
 
-USERLIB_SRCS := userlib/syscall.c \
-		userlib/syscall_imple.asm
+USERLIB_SRCS = userlib/syscall.c \
+		userlib/syscall_imple.asm \
+		userlib/stdlib.c \
+		userlib/printf.c \
+		userlib/scanf.c \
+		$(KERNLIB_OBJS) \
 
 USERLIB_OBJS := $(patsubst %.c, $(OBJDIR)/%.o, $(USERLIB_SRCS))
 USERLIB_OBJS := $(patsubst %.asm, $(OBJDIR)/%.o, $(USERLIB_OBJS))
 
-USERLIB_A =	$(OBJDIR)/userlib/ulib.a	
+USERLIB_A =	$(OBJDIR)/userlib/ulib.a
 
 $(OBJDIR)/userlib/%.o: $(SRCDIR)/userlib/%.c $(OBJDIR)/.vars.CFLAGS
 	@echo + cc $<

@@ -4,6 +4,8 @@
 #include <common/type.h>
 #include <define/define.h>
 
+void  delay(int time);
+
 int   get_ticks();
 int   get_pid();
 void *kmalloc(int size);
