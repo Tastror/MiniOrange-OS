@@ -18,7 +18,7 @@
 extern int disp_pos;
 extern int saved_color;
 
-/* syscall.asm */
+/* syscall_imple.asm */
 int   get_ticks();
 int   get_pid();
 void *kmalloc(int size);

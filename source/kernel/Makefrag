@@ -8,7 +8,6 @@ KERN_REQUIREMENT := $(KERNLIB_A) $(DEVICE_A)
 KERN_SRCFILES := kernel/core.asm \
 		kernel/kernel.c \
 		kernel/vfs.c \
-		kernel/syscall_all.c \
 		kernel/hd.c \
 		kernel/fat32.c \
 		kernel/tty.c \
@@ -20,7 +19,7 @@ KERN_SRCFILES := kernel/core.asm \
 		kernel/assist.c \
 		kernel/fork.c \
 		kernel/console.c \
-		kernel/syscallc.c \
+		kernel/syscall.c \
 		kernel/proc.c \
 		kernel/pagetbl.c \
 		kernel/pthread.c \

@@ -3,18 +3,18 @@ OBJDIRS += device
 # 在这里添加其他库的依赖项，便于最终链接的时候调用
 DEVICE_REQUIREMENT := $(KERNLIB_A)
 
-DEVICE_SRCFILES = device/pci.c \
+DEVICE_SRCS = device/pci.c \
 
 DEVICE_A = $(OBJDIR)/device/ulib.a
 
-DEVICE_OBJFILES := $(patsubst %.c, $(OBJDIR)/%.o, $(DEVICE_SRCFILES))
-DEVICE_OBJFILES := $(patsubst %.asm, $(OBJDIR)/%.o, $(DEVICE_OBJFILES))
+DEVICE_OBJS := $(patsubst %.c, $(OBJDIR)/%.o, $(DEVICE_SRCS))
+DEVICE_OBJS := $(patsubst %.asm, $(OBJDIR)/%.o, $(DEVICE_OBJS))
 
 $(OBJDIR)/device/%.o: $(SRCDIR)/device/%.c $(OBJDIR)/.vars.CFLAGS
 	@echo + cc $<
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -c -o $@ $<
 
-$(DEVICE_A): $(DEVICE_OBJFILES) $(DEVICE_REQUIREMENT)
+$(DEVICE_A): $(DEVICE_OBJS) $(DEVICE_REQUIREMENT)
 	@echo + ar $@
-	@$(AR) $(ARFLAGS) -o $@ $(DEVICE_REQUIREMENT) $(DEVICE_OBJFILES)
+	@$(AR) $(ARFLAGS) -o $@ $(DEVICE_REQUIREMENT) $(DEVICE_OBJS)
