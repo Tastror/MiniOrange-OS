@@ -110,11 +110,11 @@ INSTALL_FILENAME = app.tar
 # 网络相关内容
 QEMUOPTS :=
 # 使用 SLIRP 后端
-# QEMUOPTS += -netdev user,id=mynet0,hostfwd=tcp::5555-:22,net=127.0.0.1/24,dhcpstart=127.0.0.1
-# # 设置虚拟机使用的网卡 e1000
-# QEMUOPTS += -device ?,netdev=mynet0
-# # 设置网络通信监听文件存储
-# QEMUOPTS += -object filter-dump,id=myfile1,netdev=mynet0,file=dump.pcap
+QEMUOPTS += -netdev user,id=mynet0,hostfwd=tcp::5555-:22,
+# 设置虚拟机使用的网卡 e1000
+QEMUOPTS += -device e1000,netdev=mynet0
+# 设置网络通信监听文件存储
+QEMUOPTS += -object filter-dump,id=myfile1,netdev=mynet0,file=dump.pcap
 
 
 # 第一个命令。如果你想要仅编译，换成 all 就好
