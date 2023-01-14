@@ -8,7 +8,7 @@
 #include <kernel/interrupt.h>
 
 #include <device/x86.h>
-#include <lib/stdio.h>
+#include <kernlib/stdio.h>
 
 irq_handler irq_table[NR_IRQ];
 

@@ -10,7 +10,7 @@
 #include <kernel/proc.h>
 #include <kernel/syscall.h>
 #include <kernel/tty.h>
-#include <lib/string.h>
+#include <kernlib/string.h>
 
 DWORD FAT_END = 268435455;      // 文件簇号结束标记
 DWORD TotalSectors = 0;         // 总扇区数，当载入磁盘时，才从DBR中读取。

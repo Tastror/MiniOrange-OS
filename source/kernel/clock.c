@@ -8,7 +8,7 @@
 
 #include <kernel/kernel.h>
 #include <kernel/proc.h>
-#include <lib/string.h>
+#include <kernlib/string.h>
 
 int ticks;
 

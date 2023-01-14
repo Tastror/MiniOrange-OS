@@ -128,10 +128,11 @@ include $(SRCDIR)/Makefrag
 # xv6 黑科技，获取编译命令，如果命令较新则重新编译所有文件
 .PRECIOUS: $(OBJDIR)/.vars.% \
 		$(OBJDIR)/boot/%.o $(OBJDIR)/boot/%.d \
+		$(OBJDIR)/fs_flags/%.o $(OBJDIR)/fs_flags/%.d \
+		$(OBJDIR)/kernlib/%.o $(OBJDIR)/kernlib/%.d \
 		$(OBJDIR)/device/%.o $(OBJDIR)/device/%.d \
 		$(OBJDIR)/kernel/%.o $(OBJDIR)/kernel/%.d \
-		$(OBJDIR)/lib/%.o $(OBJDIR)/lib/%.d \
-		$(OBJDIR)/fs_flags/%.o $(OBJDIR)/fs_flags/%.d \
+		$(OBJDIR)/userlib/%.o $(OBJDIR)/userlib/%.d \
 		$(OBJDIR)/user/%.o $(OBJDIR)/user/%.d \
 
 $(OBJDIR)/.vars.%: FORCE

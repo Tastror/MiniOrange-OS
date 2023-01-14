@@ -2,7 +2,7 @@
 
 #include <kernel/fs.h>
 #include <kernel/vfs.h>
-#include <lib/string.h>
+#include <kernlib/string.h>
 
 void read_Ehdr(u32 fd, Elf32_Ehdr *File_Ehdr, u32 offset)
 {

@@ -1,0 +1,27 @@
+OBJDIRS += kernlib
+
+KERNLIB_OBJS :=	kernlib/string.o \
+		kernel/syscall.o \
+		kernlib/assert.o \
+		kernlib/printf.o \
+		kernlib/kprintf.o \
+		kernlib/scanf.o \
+		kernlib/printfmt.o \
+
+KERNLIB_OBJS := $(patsubst %, $(OBJDIR)/%, $(KERNLIB_OBJS))
+
+KERNLIB_A =	$(OBJDIR)/kernlib/ulib.a	
+
+$(OBJDIR)/kernlib/%.o: $(SRCDIR)/kernlib/%.c $(OBJDIR)/.vars.CFLAGS
+	@echo + cc $<
+	@mkdir -p $(@D)
+	@$(CC) $(CFLAGS) -c -o $@ $<
+
+$(OBJDIR)/kernlib/%.o: $(SRCDIR)/kernlib/%.asm
+	@echo + as obj $<
+	@mkdir -p $(@D)
+	@$(AS) -I ./include/ -f elf -o $@ $<
+
+$(KERNLIB_A): $(KERNLIB_OBJS)
+	@echo + ar $@
+	@$(AR) $(ARFLAGS) -o $@ $(KERNLIB_OBJS)

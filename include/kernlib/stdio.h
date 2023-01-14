@@ -12,7 +12,7 @@
 #include <common/type.h>
 #include <define/define.h>
 
-#include <lib/klib.h>  // for easily use stdio.h
+#include <kernlib/klib.h>  // for easily use stdio.h
 
 // defined in klib.c
 extern int disp_pos;

@@ -8,8 +8,8 @@
 
 #include <kernel/proc.h>
 #include <kernel/pagepte.h>
-#include <lib/stdio.h>
-#include <lib/string.h>
+#include <kernlib/stdio.h>
+#include <kernlib/string.h>
 
 static int pthread_pcb_cpy(PROCESS *p_child, PROCESS *p_parent);
 static int pthread_update_info(PROCESS *p_child, PROCESS *p_parent);

@@ -11,8 +11,8 @@
 #include <kernel/kernel.h>
 #include <kernel/proc.h>
 #include <kernel/syscall.h>
-#include <lib/stdio.h>
-#include <lib/string.h>
+#include <kernlib/stdio.h>
+#include <kernlib/string.h>
 
 TSS tss;
 

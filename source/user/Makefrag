@@ -1,9 +1,9 @@
 OBJDIRS += user
 
-USERLIB_SRCS :=	user/initstart.asm
+USER_SRCS := user/initstart.asm
 
-USERLIB_OBJS := $(patsubst %.c, $(OBJDIR)/%.o, $(USERLIB_SRCS))
-USERLIB_OBJS := $(patsubst %.asm, $(OBJDIR)/%.o, $(USERLIB_OBJS))
+USER_OBJS := $(patsubst %.c, $(OBJDIR)/%.o, $(USER_SRCS))
+USER_OBJS := $(patsubst %.asm, $(OBJDIR)/%.o, $(USER_OBJS))
 
 # 这里给我整不会了，文件名只能长度为16位，否则会寄，原因还挺难找
 USER_SRCS := user/ptTest.c \
@@ -24,9 +24,9 @@ $(OBJDIR)/user/%.o: $(SRCDIR)/user/%.asm
 	@mkdir -p $(@D)
 	@$(AS) -I ./include -f elf -o $@ $<
 
-$(OBJDIR)/user/%.bin: $(OBJDIR)/user/%.o $(USERLIB_OBJS) $(LIB_A) $(OBJDIR)/.vars.LDFLAGS
+$(OBJDIR)/user/%.bin: $(OBJDIR)/user/%.o $(USER_OBJS) $(KERNLIB_A) $(USERLIB_A) $(OBJDIR)/.vars.LDFLAGS
 	@echo + ld $@
-	@$(LD) $(LDFLAGS) -o $@ $< $(USERLIB_OBJS) $(LIB_A) $(GCC_LIB)
+	@$(LD) $(LDFLAGS) -o $@ $< $(USER_OBJS) $(KERNLIB_A) $(USERLIB_A) $(GCC_LIB)
 
 $(OBJDIR)/user/$(USER_TAR): $(USER_BINS)
 	@echo + tar $@

@@ -4,7 +4,7 @@
 ; Forrest Yu, 2005
 ;
 
-%include "lib/sconst.inc"
+%include "define/sconst.inc"
 
 ; 导入全局变量
 extern disp_pos

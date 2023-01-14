@@ -15,9 +15,9 @@
 #include <kernel/proc.h>
 #include <kernel/syscall.h>
 #include <device/x86.h>
-#include <lib/assert.h>
-#include <lib/stdio.h>
-#include <lib/string.h>
+#include <kernlib/assert.h>
+#include <kernlib/stdio.h>
+#include <kernlib/string.h>
 
 struct part_ent PARTITION_ENTRY;
 

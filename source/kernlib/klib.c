@@ -5,9 +5,9 @@
  * @date 2005
  */
 
-#include <lib/klib.h>
+#include <kernlib/klib.h>
 
-#include <lib/string.h>
+#include <kernlib/string.h>
 
 int disp_pos;
 int saved_color = 0x0F;  // 初始化为黑底白字

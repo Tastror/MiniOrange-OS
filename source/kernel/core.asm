@@ -5,7 +5,7 @@
 ;
 
 
-%include "lib/sconst.inc"
+%include "define/sconst.inc"
 
 ; 导入函数
 extern    cstart

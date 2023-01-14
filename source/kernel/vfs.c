@@ -11,8 +11,8 @@
 #include <kernel/kernel.h>
 #include <kernel/proc.h>
 #include <kernel/syscall.h>
-#include <lib/stdio.h>
-#include <lib/string.h>
+#include <kernlib/stdio.h>
+#include <kernlib/string.h>
 
 // static struct device  device_table[NR_DEV];  //deleted by mingxuan 2020-10-18
 static struct vfs vfs_table[NR_FS];  // modified by mingxuan 2020-10-18

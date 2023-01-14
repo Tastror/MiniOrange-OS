@@ -7,8 +7,8 @@
 #include <kernel/memman.h>
 #include <kernel/proc.h>
 #include <kernel/kernel.h>
-#include <lib/stdio.h>
-#include <lib/string.h>
+#include <kernlib/stdio.h>
+#include <kernlib/string.h>
 
 u32 cr3_ready;
 u32 cr2_save;

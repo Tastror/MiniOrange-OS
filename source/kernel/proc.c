@@ -9,7 +9,7 @@
 
 #include <kernel/syscall.h>
 #include <kernel/kernel.h>
-#include <lib/string.h>
+#include <kernlib/string.h>
 
 PROCESS *p_proc_current;
 PROCESS *p_proc_next;

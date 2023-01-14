@@ -5,9 +5,9 @@
 #include <kernel/hd.h>
 #include <kernel/proc.h>
 #include <kernel/tty.h>
-#include <lib/assert.h>
-#include <lib/stdio.h>
-#include <lib/string.h>
+#include <kernlib/assert.h>
+#include <kernlib/stdio.h>
+#include <kernlib/string.h>
 
 struct file_desc f_desc_table[NR_FILE_DESC];
 

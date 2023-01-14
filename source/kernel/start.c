@@ -7,8 +7,8 @@
 
 #include <kernel/kernel.h>
 #include <kernel/protect.h>
-#include <lib/stdio.h>
-#include <lib/string.h>
+#include <kernlib/stdio.h>
+#include <kernlib/string.h>
 
 void cstart()
 {

@@ -1,4 +1,4 @@
-#include <lib/string.h>
+#include <kernlib/string.h>
 
 int strlen(const char *s)
 {

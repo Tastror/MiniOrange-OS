@@ -7,7 +7,7 @@
 #include <kernel/fat32.h>
 
 #include <kernel/console.h>
-#include <lib/string.h>
+#include <kernlib/string.h>
 
 extern CHAR cur_path[256];
 extern u8  *buf;

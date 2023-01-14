@@ -1,0 +1,21 @@
+OBJDIRS += userlib
+
+USERLIB_OBJS := userlib/syscall.o
+
+USERLIB_OBJS := $(patsubst %, $(OBJDIR)/%, $(USERLIB_OBJS))
+
+USERLIB_A =	$(OBJDIR)/userlib/ulib.a	
+
+$(OBJDIR)/userlib/%.o: $(SRCDIR)/userlib/%.c $(OBJDIR)/.vars.CFLAGS
+	@echo + cc $<
+	@mkdir -p $(@D)
+	@$(CC) $(CFLAGS) -c -o $@ $<
+
+$(OBJDIR)/userlib/%.o: $(SRCDIR)/userlib/%.asm
+	@echo + as obj $<
+	@mkdir -p $(@D)
+	@$(AS) -I ./include/ -f elf -o $@ $<
+
+$(USERLIB_A): $(USERLIB_OBJS) $(KERNLIB_OBJS)
+	@echo + ar $@
+	@$(AR) $(ARFLAGS) -o $@ $(KERNLIB_OBJS) $(USERLIB_OBJS)

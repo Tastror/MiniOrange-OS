@@ -8,8 +8,8 @@
 
 #include <kernel/proc.h>
 #include <kernel/pagepte.h>
-#include <lib/stdio.h>
-#include <lib/string.h>
+#include <kernlib/stdio.h>
+#include <kernlib/string.h>
 
 static int fork_mem_cpy(u32 ppid, u32 pid);
 static int fork_pcb_cpy(PROCESS *p_child);

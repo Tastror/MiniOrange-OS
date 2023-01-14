@@ -1,7 +1,7 @@
-#include <lib/stdio.h>
+#include <kernlib/stdio.h>
 
 #include <common/stdarg.h>
-#include <lib/string.h>
+#include <kernlib/string.h>
 
 /*
  * Print a number (base <= 16) in reverse order,

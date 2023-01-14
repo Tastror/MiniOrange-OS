@@ -4,8 +4,8 @@
  * Added by xw, 18/6/17
  */
 
-#include <lib/string.h>
-#include <lib/stdio.h>
+#include <kernlib/string.h>
+#include <kernlib/stdio.h>
 
 /*
  * This syscall needs long time to finish, so we can use it

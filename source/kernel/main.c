@@ -8,9 +8,9 @@
 #include <device/pci.h>
 #include <device/x86.h>
 #include <kernel/all_head.h>
-#include <lib/assert.h>
-#include <lib/stdio.h>
-#include <lib/string.h>
+#include <kernlib/assert.h>
+#include <kernlib/stdio.h>
+#include <kernlib/string.h>
 
 static int initialize_processes();  // added by xw, 18/5/26
 static int initialize_cpus();       // added by xw, 18/6/2

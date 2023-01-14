@@ -3,7 +3,7 @@ OBJDIRS += kernel
 KERN_ENTRY_ADDR := 0xC0030400
 
 # 在这里添加其他库的依赖项，便于最终链接的时候调用
-KERN_REQUIREMENT := $(LIB_A) \
+KERN_REQUIREMENT := $(KERNLIB_A) \
 		$(OBJDIR)/device/pci.o \
 
 KERN_SRCFILES := kernel/core.asm \
@@ -34,8 +34,8 @@ KERN_SRCFILES := kernel/core.asm \
 		kernel/i8259.c \
 		kernel/testfunc.c \
 		kernel/protect.c \
-		lib/klib.c \
-		lib/kliba.asm \
+		kernlib/klib.c \
+		kernlib/kliba.asm \
 
 
 KERN_OBJFILES := $(patsubst %.c, $(OBJDIR)/%.o, $(KERN_SRCFILES))

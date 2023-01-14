@@ -3,8 +3,8 @@
 #include <kernel/fs.h>
 #include <kernel/tty.h>
 #include <device/x86.h>
-#include <lib/stdio.h>
-#include <lib/string.h>
+#include <kernlib/stdio.h>
+#include <kernlib/string.h>
 
 CONSOLE console_table[NR_CONSOLES];
 

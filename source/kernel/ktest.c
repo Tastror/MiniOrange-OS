@@ -6,8 +6,8 @@
 
 #include <kernel/syscall.h>
 #include <kernel/vfs.h>
-#include <lib/stdio.h>
-#include <lib/string.h>
+#include <kernlib/stdio.h>
+#include <kernlib/string.h>
 
 /**
  * @struct posix_tar_header

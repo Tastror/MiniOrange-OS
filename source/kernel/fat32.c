@@ -10,8 +10,8 @@
 #include <kernel/kernel.h>
 #include <kernel/fs.h>
 #include <kernel/hd.h>
-#include <lib/stdio.h>
-#include <lib/string.h>
+#include <kernlib/stdio.h>
+#include <kernlib/string.h>
 
 extern DWORD FAT_END;
 extern DWORD TotalSectors;

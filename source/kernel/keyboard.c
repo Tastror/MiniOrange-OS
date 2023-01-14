@@ -5,7 +5,7 @@
 #include <kernel/tty.h>
 #include <device/x86.h>
 #include <device/keymap.h>
-#include <lib/string.h>
+#include <kernlib/string.h>
 
 static KB_INPUT    kb_in;
 static MOUSE_INPUT mouse_in;

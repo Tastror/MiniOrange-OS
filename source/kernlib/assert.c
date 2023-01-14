@@ -1,7 +1,7 @@
-#include <lib/assert.h>
+#include <kernlib/assert.h>
 
 #include <common/stdarg.h>
-#include <lib/stdio.h>
+#include <kernlib/stdio.h>
 
 /*
  * 当发生不可挽回的错误时就打印错误信息并使CPU核休眠

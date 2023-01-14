@@ -1,7 +1,7 @@
 #include <kernel/memman.h>
 
-#include <lib/stdio.h>
-#include <lib/string.h>
+#include <kernlib/stdio.h>
+#include <kernlib/string.h>
 
 u32            MemInfo[256] = {0};  // 存放FMIBuff后1k内容
 struct MEMMAN  s_memman;

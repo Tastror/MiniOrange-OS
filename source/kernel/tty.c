@@ -4,8 +4,8 @@
 #include <kernel/keyboard.h>
 #include <device/x86.h>
 #include <device/keymap.h>
-#include <lib/stdio.h>
-#include <lib/string.h>
+#include <kernlib/stdio.h>
+#include <kernlib/string.h>
 
 TTY tty_table[NR_CONSOLES];
 

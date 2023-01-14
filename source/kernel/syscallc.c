@@ -3,8 +3,8 @@
 #include <kernel/memman.h>
 #include <kernel/proc.h>
 #include <kernel/pagepte.h>
-#include <lib/stdio.h>
-#include <lib/string.h>
+#include <kernlib/stdio.h>
+#include <kernlib/string.h>
 
 struct memfree *memarg = 0;
 

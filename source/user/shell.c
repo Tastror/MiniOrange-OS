@@ -1,5 +1,5 @@
-#include <lib/stdio.h>
-#include <lib/string.h>
+#include <kernlib/stdio.h>
+#include <kernlib/string.h>
 
 #include <device/pci.h>
 #include <kernel/syscall.h>

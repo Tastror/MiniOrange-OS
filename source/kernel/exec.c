@@ -10,8 +10,8 @@
 #include <kernel/fs.h>
 #include <kernel/vfs.h>
 #include <kernel/elf.h>
-#include <lib/stdio.h>
-#include <lib/string.h>
+#include <kernlib/stdio.h>
+#include <kernlib/string.h>
 
 static u32 exec_elfcpy(u32 fd, Elf32_Phdr Echo_Phdr, u32 attribute);
 static u32 exec_load(u32 fd, const Elf32_Ehdr *Echo_Ehdr, const Elf32_Phdr Echo_Phdr[]);
