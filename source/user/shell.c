@@ -34,6 +34,8 @@ int main(int arg, char *argv[])
                 printf("to try the net\n\n");
             } else if (strcmp(buf, "net") == 0) {
                 printf("trying net now...\n");
+                net_test();
+                printf("\n");
             } else if (strcmp(buf, "exit") == 0) {
                 printf("exiting now.\n");
                 return 0;

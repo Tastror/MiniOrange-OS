@@ -26,6 +26,7 @@ KERN_SRCFILES := kernel/core.asm \
 		kernel/pagetbl.c \
 		kernel/pthread.c \
 		kernel/memman.c \
+		kernel/network.c \
 		kernel/main.c \
 		kernel/exec.c \
 		kernel/ktest.c \

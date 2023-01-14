@@ -4,7 +4,7 @@
 #include <common/type.h>
 #include <define/define.h>
 
-void  delay(int time);
+void delay(int time);
 
 int   get_ticks();
 int   get_pid();
@@ -17,11 +17,13 @@ int   free_4k(void *AdddrLin);
 int   fork();
 int   pthread(void *arg);
 
-u32   exec(char *path);
-void  yield();
-void  sleep(int n);
-void  test_net(int n);
-void  print_E();
-void  print_F();
+u32  exec(char *path);
+void yield();
+void sleep(int n);
+void test_net(int n);
+void print_E();
+void print_F();
+
+void net_test();
 
 #endif

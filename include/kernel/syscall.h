@@ -46,15 +46,10 @@ void  sys_set_color(int color);     // add by tastror 2020.12
 void  sys_yield();
 void  sys_sleep(int n);
 void  sys_wakeup(void *channel);
-
-/* exec.c */
-u32 sys_exec(char *path);  // add by visual 2016.5.23
-
-/* fork.c */
-int sys_fork();  // add by visual 2016.5.25
-
-/* testfunc.c */
-void sys_print_E();
-void sys_print_F();
+u32   sys_exec(char *path);  // exec.c, add by visual 2016.5.23
+int   sys_fork();            // fork.c, add by visual 2016.5.25
+void  sys_print_E();         // testfunc.c
+void  sys_print_F();         // testfunc.c
+void  sys_net_test();
 
 #endif
