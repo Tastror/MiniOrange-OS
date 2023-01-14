@@ -44,6 +44,25 @@ typedef unsigned long long uint64_t;
 
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
 
+// Rounding operations (efficient when n is a power of 2)
+// Round down to the nearest multiple of n
+#define ROUNDDOWN(a, n)						\
+({								\
+	uint32_t __a = (uint32_t) (a);				\
+	(typeof(a)) (__a - __a % (n));				\
+})
+// Round up to the nearest multiple of n
+#define ROUNDUP(a, n)						\
+({								\
+	uint32_t __n = (uint32_t) (n);				\
+	(typeof(a)) (ROUNDDOWN((uint32_t) (a) + __n - 1, __n));	\
+})
+
+#define PGSIZE		4096		// bytes mapped by a page
+
+typedef uint32_t pte_t;
+typedef uint32_t pde_t;
+
 /* added by PCI: End */
 
 typedef long long          i64;

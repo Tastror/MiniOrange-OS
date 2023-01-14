@@ -3,7 +3,7 @@
  */
 
 #include <kernel/pagepte.h>
-
+#include <lib/assert.h>
 #include <kernel/memman.h>
 #include <kernel/proc.h>
 #include <kernel/kernel.h>
@@ -357,4 +357,51 @@ void clear_kernel_pagepte_low()
     memset((void *)(K_PHY2LIN(KernelPageTblAddr)), 0, 4 * page_num);              // 从内核页目录中清除内核页目录项前8项
     memset((void *)(K_PHY2LIN(KernelPageTblAddr + 0x1000)), 0, 4096 * page_num);  // 从内核页表中清除线性地址的低端映射关系
     refresh_page_cache();
+}
+
+/**
+ * @brief Map [va, va+size) of virtual address space to physical 
+ * [pa, pa+size) in the page table rooted at pgdir
+ * 
+ */
+static void
+boot_map_region(pde_t *pgdir, uintptr_t va, size_t size, phyaddr_t pa, int perm) {
+    size_t pgs = size / PGSIZE;
+    if (size % PGSIZE != 0) {
+        pgs++;
+    }
+    for (int i = 0; i < pgs; i++) {
+        
+    }
+}
+
+/**
+ * @brief 将[pa,pa+size) 进行映射，返回映射到区域的第一个线性地址，
+ * size不必为PGSIZE的整数倍
+ * 
+ * @param pa 第一个物理地址
+ * @param size 映射区域的大小
+ * @return void* 
+ */
+void *mmio_map_region(uint32_t pa, size_t size) {
+    // 1. 找到当前最大的线性地址
+    phyaddr_t base = p_proc_current->task.memmap.heap_lin_limit;
+    size = ROUNDUP(size, PGSIZE);
+    if (base + size > p_proc_current->task.memmap.kernel_lin_limit) {
+        panic("mmio_map_region reservation overflow\n");
+    }
+    // 2. 进行映射
+    size_t pgs = size / PGSIZE;
+    for (int i = 0; i < pgs; i++) {
+        lin_mapping_phy(
+            base + i * PGSIZE,
+            pa + i * PGSIZE,
+            get_pid(),
+            PG_P | PG_RWW,
+            PG_P | PG_RWW
+        );
+    }
+    // 3. 结束
+    p_proc_current->task.memmap.heap_lin_limit += size;
+    return (void *)base;
 }
