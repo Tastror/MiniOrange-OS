@@ -16,21 +16,21 @@ static uint32_t pci_conf1_addr_ioport = 0x0cf8;
 static uint32_t pci_conf1_data_ioport = 0x0cfc;
 
 /* Declarations */
-static int pci_bridge_attach(struct pci_func *pcif);
+// static int pci_bridge_attach(struct pci_func *pcif);
 // int pci_e1000_attach(struct pci_func * pcif); // kernel/e1000.c
 
-// PCI driver table
-struct pci_driver {
-    uint32_t key1, key2;
-    int (*attachfn)(struct pci_func *pcif);
-};
+// // PCI driver table
+// struct pci_driver {
+//     uint32_t key1, key2;
+//     int (*attachfn)(struct pci_func *pcif);
+// };
 
-// pci_attach_class matches the class and subclass of a PCI device
-struct pci_driver pci_attach_class[] = {
-    {PCI_CLASS_BRIDGE, PCI_SUBCLASS_BRIDGE_PCI, &pci_bridge_attach},
+// // pci_attach_class matches the class and subclass of a PCI device
+// struct pci_driver pci_attach_class[] = {
+//     {PCI_CLASS_BRIDGE, PCI_SUBCLASS_BRIDGE_PCI, &pci_bridge_attach},
 
-    {0, 0, 0},
-};
+//     {0, 0, 0},
+// };
 
 // pci_attach_vendor matches the vendor ID and device ID of a PCI device. key1
 // and key2 should be the vendor ID and device ID respectively
@@ -58,27 +58,27 @@ pci_conf1_set_addr(
     outl(pci_conf1_addr_ioport, v);
 }
 
-static int __attribute__((warn_unused_result))
-pci_attach_match(
-    uint32_t key1, uint32_t key2,
-    struct pci_driver *list, struct pci_func *pcif
-)
-{
-    uint32_t i;
+// static int __attribute__((warn_unused_result))
+// pci_attach_match(
+//     uint32_t key1, uint32_t key2,
+//     struct pci_driver *list, struct pci_func *pcif
+// )
+// {
+//     uint32_t i;
 
-    for (i = 0; list[i].attachfn; i++) {
-        if (list[i].key1 == key1 && list[i].key2 == key2) {
-            int r = list[i].attachfn(pcif);
-            if (r > 0)
-                return r;
-            if (r < 0)
-                kprintf("pci_attach_match: attaching "
-                        "%x.%x (%p): e\n",
-                        key1, key2, list[i].attachfn, r);
-        }
-    }
-    return 0;
-}
+//     for (i = 0; list[i].attachfn; i++) {
+//         if (list[i].key1 == key1 && list[i].key2 == key2) {
+//             int r = list[i].attachfn(pcif);
+//             if (r > 0)
+//                 return r;
+//             if (r < 0)
+//                 kprintf("pci_attach_match: attaching "
+//                         "%x.%x (%p): e\n",
+//                         key1, key2, list[i].attachfn, r);
+//         }
+//     }
+//     return 0;
+// }
 
 // static int
 // pci_attach(struct pci_func *f)
@@ -119,12 +119,12 @@ pci_conf_read(struct pci_func *f, uint32_t off)
     return inl(pci_conf1_data_ioport);
 }
 
-static void
-pci_conf_write(struct pci_func *f, uint32_t off, uint32_t v)
-{
-    pci_conf1_set_addr(f->bus->busno, f->dev, f->func, off);
-    outl(pci_conf1_data_ioport, v);
-}
+// static void
+// pci_conf_write(struct pci_func *f, uint32_t off, uint32_t v)
+// {
+//     pci_conf1_set_addr(f->bus->busno, f->dev, f->func, off);
+//     outl(pci_conf1_data_ioport, v);
+// }
 
 static int
 pci_scan_bus(struct pci_bus *bus)
@@ -159,59 +159,64 @@ pci_scan_bus(struct pci_bus *bus)
             if (pci_show_devs)
                 pci_print_func(&ssrf);
             // pci_attach(&ssrf);
+
+            if (PCI_VENDOR(ssrf.dev_id) == 0x8086 && PCI_PRODUCT(ssrf.dev_id) == 0x100e) {
+                kprintf("Found e1000\n");
+                // e1000_init();
+            }
         }
     }
 
     return totaldev;
 }
 
-void pci_func_enable(struct pci_func *f)
-{
-    pci_conf_write(f, PCI_COMMAND_STATUS_REG, PCI_COMMAND_IO_ENABLE | PCI_COMMAND_MEM_ENABLE | PCI_COMMAND_MASTER_ENABLE);
+// void pci_func_enable(struct pci_func *f)
+// {
+//     pci_conf_write(f, PCI_COMMAND_STATUS_REG, PCI_COMMAND_IO_ENABLE | PCI_COMMAND_MEM_ENABLE | PCI_COMMAND_MASTER_ENABLE);
 
-    uint32_t bar_width;
-    uint32_t bar;
-    for (bar = PCI_MAPREG_START; bar < PCI_MAPREG_END;
-         bar += bar_width) {
-        uint32_t oldv = pci_conf_read(f, bar);
+//     uint32_t bar_width;
+//     uint32_t bar;
+//     for (bar = PCI_MAPREG_START; bar < PCI_MAPREG_END;
+//          bar += bar_width) {
+//         uint32_t oldv = pci_conf_read(f, bar);
 
-        bar_width = 4;
-        pci_conf_write(f, bar, 0xffffffff);
-        uint32_t rv = pci_conf_read(f, bar);
+//         bar_width = 4;
+//         pci_conf_write(f, bar, 0xffffffff);
+//         uint32_t rv = pci_conf_read(f, bar);
 
-        if (rv == 0)
-            continue;
+//         if (rv == 0)
+//             continue;
 
-        int      regnum = PCI_MAPREG_NUM(bar);
-        uint32_t base, size;
-        if (PCI_MAPREG_TYPE(rv) == PCI_MAPREG_TYPE_MEM) {
-            if (PCI_MAPREG_MEM_TYPE(rv) == PCI_MAPREG_MEM_TYPE_64BIT)
-                bar_width = 8;
+//         int      regnum = PCI_MAPREG_NUM(bar);
+//         uint32_t base, size;
+//         if (PCI_MAPREG_TYPE(rv) == PCI_MAPREG_TYPE_MEM) {
+//             if (PCI_MAPREG_MEM_TYPE(rv) == PCI_MAPREG_MEM_TYPE_64BIT)
+//                 bar_width = 8;
 
-            size = PCI_MAPREG_MEM_SIZE(rv);
-            base = PCI_MAPREG_MEM_ADDR(oldv);
-            if (pci_show_addrs)
-                kprintf("  mem region %d: %d bytes at 0x%x\n", regnum, size, base);
-        } else {
-            size = PCI_MAPREG_IO_SIZE(rv);
-            base = PCI_MAPREG_IO_ADDR(oldv);
-            if (pci_show_addrs)
-                kprintf("  io region %d: %d bytes at 0x%x\n", regnum, size, base);
-        }
+//             size = PCI_MAPREG_MEM_SIZE(rv);
+//             base = PCI_MAPREG_MEM_ADDR(oldv);
+//             if (pci_show_addrs)
+//                 kprintf("  mem region %d: %d bytes at 0x%x\n", regnum, size, base);
+//         } else {
+//             size = PCI_MAPREG_IO_SIZE(rv);
+//             base = PCI_MAPREG_IO_ADDR(oldv);
+//             if (pci_show_addrs)
+//                 kprintf("  io region %d: %d bytes at 0x%x\n", regnum, size, base);
+//         }
 
-        pci_conf_write(f, bar, oldv);
-        f->reg_base[regnum] = base;
-        f->reg_size[regnum] = size;
+//         pci_conf_write(f, bar, oldv);
+//         f->reg_base[regnum] = base;
+//         f->reg_size[regnum] = size;
 
-        if (size && !base)
-            kprintf("PCI device %02x:%02x.%d (%04x:%04x) "
-                    "may be misconfigured: "
-                    "region %d: base 0x%x, size %d\n",
-                    f->bus->busno, f->dev, f->func, PCI_VENDOR(f->dev_id), PCI_PRODUCT(f->dev_id), regnum, base, size);
-    }
+//         if (size && !base)
+//             kprintf("PCI device %02x:%02x.%d (%04x:%04x) "
+//                     "may be misconfigured: "
+//                     "region %d: base 0x%x, size %d\n",
+//                     f->bus->busno, f->dev, f->func, PCI_VENDOR(f->dev_id), PCI_PRODUCT(f->dev_id), regnum, base, size);
+//     }
 
-    kprintf("PCI function %02x:%02x.%d (%04x:%04x) enabled\n", f->bus->busno, f->dev, f->func, PCI_VENDOR(f->dev_id), PCI_PRODUCT(f->dev_id));
-}
+//     kprintf("PCI function %02x:%02x.%d (%04x:%04x) enabled\n", f->bus->busno, f->dev, f->func, PCI_VENDOR(f->dev_id), PCI_PRODUCT(f->dev_id));
+// }
 
 int init_pci(void)
 {
@@ -221,25 +226,25 @@ int init_pci(void)
     return pci_scan_bus(&root_bus);
 }
 
-static int
-pci_bridge_attach(struct pci_func *pcif)
-{
-    uint32_t ioreg = pci_conf_read(pcif, PCI_BRIDGE_STATIO_REG);
-    uint32_t busreg = pci_conf_read(pcif, PCI_BRIDGE_BUS_REG);
+// static int
+// pci_bridge_attach(struct pci_func *pcif)
+// {
+//     uint32_t ioreg = pci_conf_read(pcif, PCI_BRIDGE_STATIO_REG);
+//     uint32_t busreg = pci_conf_read(pcif, PCI_BRIDGE_BUS_REG);
 
-    if (PCI_BRIDGE_IO_32BITS(ioreg)) {
-        kprintf("PCI: %02x:%02x.%d: 32-bit bridge IO not supported.\n", pcif->bus->busno, pcif->dev, pcif->func);
-        return 0;
-    }
+//     if (PCI_BRIDGE_IO_32BITS(ioreg)) {
+//         kprintf("PCI: %02x:%02x.%d: 32-bit bridge IO not supported.\n", pcif->bus->busno, pcif->dev, pcif->func);
+//         return 0;
+//     }
 
-    struct pci_bus nbus;
-    memset(&nbus, 0, sizeof(nbus));
-    nbus.parent_bridge = pcif;
-    nbus.busno = (busreg >> PCI_BRIDGE_BUS_SECONDARY_SHIFT) & 0xff;
+//     struct pci_bus nbus;
+//     memset(&nbus, 0, sizeof(nbus));
+//     nbus.parent_bridge = pcif;
+//     nbus.busno = (busreg >> PCI_BRIDGE_BUS_SECONDARY_SHIFT) & 0xff;
 
-    if (pci_show_devs)
-        kprintf("PCI: %02x:%02x.%d: bridge to PCI bus %d--%d\n", pcif->bus->busno, pcif->dev, pcif->func, nbus.busno, (busreg >> PCI_BRIDGE_BUS_SUBORDINATE_SHIFT) & 0xff);
+//     if (pci_show_devs)
+//         kprintf("PCI: %02x:%02x.%d: bridge to PCI bus %d--%d\n", pcif->bus->busno, pcif->dev, pcif->func, nbus.busno, (busreg >> PCI_BRIDGE_BUS_SUBORDINATE_SHIFT) & 0xff);
 
-    pci_scan_bus(&nbus);
-    return 1;
-}
+//     pci_scan_bus(&nbus);
+//     return 1;
+// }
