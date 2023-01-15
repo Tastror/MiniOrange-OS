@@ -1,5 +1,7 @@
 #include <userlib/stdlib.h>
 
+#include <kernlib/string.h>
+
 void delay(int time)
 {
     int i, j, k;
@@ -9,4 +11,12 @@ void delay(int time)
             for (j = 0; j < 10000; j++) {}
         }
     }
+}
+
+void net_test_shell(u16 len, u8 *data)
+{
+    u8 mem[E1000_PACK_BUFF_SAVE_SIZE];
+    memcpy((void *)(mem + 2), (void *)data, len);
+    *(u16 *)mem = len;
+    net_test(mem);
 }

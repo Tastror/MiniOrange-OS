@@ -1,7 +1,7 @@
-#include <userlib/stdio.h>
-#include <userlib/string.h>
 #include <userlib/fcntl.h>
+#include <userlib/stdio.h>
 #include <userlib/stdlib.h>
+#include <userlib/string.h>
 
 int main(int arg, char *argv[])
 {
@@ -37,7 +37,7 @@ int main(int arg, char *argv[])
                 printf("to try the net\n\n");
             } else if (strcmp(buf, "net") == 0) {
                 printf("trying net now...\n");
-                net_test();
+                net_test_shell(6, (u8 *)"hello\0");
                 printf("\n");
             } else if (strcmp(buf, "exit") == 0) {
                 printf("exiting now.\n");

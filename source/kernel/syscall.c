@@ -168,15 +168,14 @@ void sys_display_str(char *arg)
     return;
 }
 
-
 void sys_set_color(int color)
 {
     kern_set_color(color);
     return;
 }
 
-void sys_net_test()
+void sys_net_test(u8 *args)
 {
-    kern_net_test();
+    kern_net_test(args);
     return;
 }

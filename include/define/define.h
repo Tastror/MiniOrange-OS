@@ -4,6 +4,7 @@
 #include <define/fs_const.h>
 #include <define/fs_misc.h>
 #include <define/kern_const.h>
+#include <define/network_define.h>
 #include <define/proc_define.h>
 #include <define/protect_define.h>
 

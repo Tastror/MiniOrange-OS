@@ -53,6 +53,8 @@ void hwint12();
 void hwint13();
 void hwint14();
 void hwint15();
+void e1000_send_pack_handler();
+void e1000_receive_pack_handler();
 void syscall_handler();
 
 
@@ -93,6 +95,8 @@ void init_prot()
     init_idt_desc(INT_VECTOR_IRQ8 + 5, DA_386IGate, hwint13, PRIVILEGE_KRNL);
     init_idt_desc(INT_VECTOR_IRQ8 + 6, DA_386IGate, hwint14, PRIVILEGE_KRNL);
     init_idt_desc(INT_VECTOR_IRQ8 + 7, DA_386IGate, hwint15, PRIVILEGE_KRNL);
+    init_idt_desc(INT_VECTOR_E1000_SEND_PACK, DA_386IGate, e1000_send_pack_handler, PRIVILEGE_KRNL);
+    init_idt_desc(INT_VECTOR_E1000_RECEIVE_PACK, DA_386IGate, e1000_receive_pack_handler, PRIVILEGE_KRNL);
     init_idt_desc(INT_VECTOR_SYS_CALL, DA_386IGate, syscall_handler, PRIVILEGE_USER);
 
     /* 修改显存描述符 */  // add by visual 2016.5.12
@@ -109,7 +113,12 @@ void init_prot()
     u16      selector_ldt = INDEX_LDT_FIRST << 3;
 
     for (int i = 0; i < NR_PCBS; i++) {  // edit by visual 2016.4.5
-        init_descriptor(&gdt[selector_ldt >> 3], vir2phys(seg2phys(SELECTOR_KERNEL_DS), proc_table[i].task.ldts), LDT_SIZE * sizeof(DESCRIPTOR) - 1, DA_LDT);
+        init_descriptor(
+            &gdt[selector_ldt >> 3],
+            vir2phys(seg2phys(SELECTOR_KERNEL_DS), proc_table[i].task.ldts),
+            LDT_SIZE * sizeof(DESCRIPTOR) - 1,
+            DA_LDT
+        );
         p_proc++;
         selector_ldt += 1 << 3;
     }

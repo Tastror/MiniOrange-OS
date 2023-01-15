@@ -30,8 +30,8 @@ extern    tss
 extern    disp_pos
 extern    k_reenter
 extern    syscall_table
-extern     cr3_ready            ;add by visual 2016.4.5
-extern  p_proc_current
+extern    cr3_ready            ;add by visual 2016.4.5
+extern    p_proc_current
 extern    p_proc_next            ;added by xw, 18/4/26
 extern    kernel_initial        ;added by xw, 18/6/10
 
@@ -54,7 +54,6 @@ global _start    ; 导出 _start
 global restart_initial    ; Added by xw, 18/4/21
 global restart_restore    ; Added by xw, 18/4/21
 global sched              ; Added by xw, 18/4/21
-global syscall_handler
 global read_cr2           ; add by visual 2016.5.9
 global refresh_page_cache ; add by visual 2016.5.12
 global halt               ; added by xw, 18/6/11
@@ -92,6 +91,7 @@ global    hwint12
 global    hwint13
 global    hwint14
 global    hwint15
+global    syscall_handler
 
 
 _start:

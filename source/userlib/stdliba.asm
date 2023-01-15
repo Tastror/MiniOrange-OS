@@ -382,6 +382,9 @@ set_color:
 
 
 net_test:
+    push    ebx
+    mov     ebx, [esp + 8]
     mov     eax, _NR_net_test
     int     INT_VECTOR_SYS_CALL
+    pop     ebx
     ret
