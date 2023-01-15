@@ -156,6 +156,7 @@ pci_scan_bus(struct pci_bus *bus)
                 PCI_PRODUCT(ssrf.dev_id) == PCI_E1000_DEVICE_ID
             ) {
                 kprintf("Found e1000\n");
+                pci_e1000_attach(&ssrf);
             }
         }
     }

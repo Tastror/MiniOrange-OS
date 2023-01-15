@@ -4,6 +4,8 @@
 #include <common/type.h>
 #include <define/define.h>
 
+#include <device/pci.h>
+
 #define PCI_E1000_VENDER_ID 0x8086
 #define PCI_E1000_DEVICE_ID 0x100E
 
@@ -127,6 +129,7 @@ struct E1000RxDesc {
 #define E1000_RCTL_SZ_4096        0x00030000    /* rx buffer size 4096 */
 
 
+int pci_e1000_attach(struct pci_func *pcif);
 int e1000_transmit(void *addr, size_t len);
 int e1000_receive(void *buf, size_t *len);
 
