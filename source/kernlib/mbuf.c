@@ -1,4 +1,4 @@
-#include <device/mbuf.h>
+#include <kernlib/mbuf.h>
 #include <kernel/memman.h>
 #include <kernlib/stdio.h>
 #include <kernlib/string.h>
@@ -47,7 +47,7 @@ struct mbuf* mbufalloc(unsigned int hdr_size) {
 
     if (hdr_size > MBUF_SIZE)
         return 0;
-    m = (struct mbuf*)do_kmalloc_4k();
+    m = (struct mbuf*)do_malloc_4k();
 
     if (m == NULL)
         return 0;

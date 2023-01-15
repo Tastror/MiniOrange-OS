@@ -3,15 +3,15 @@
 
 #include <common/type.h>
 #include <define/define.h>
-
 #include <device/pci.h>
+#include <kernlib/mbuf.h>
 
 #define PCI_E1000_VENDER_ID 0x8086
 #define PCI_E1000_DEVICE_ID 0x100E
 
 /* 循环队列的长度 */
-#define TX_RING_SIZE     32
-#define RX_RING_SIZE     128
+#define TX_RING_SIZE     16
+#define RX_RING_SIZE     16
 
 // manual [E1000 3.3.3]
 struct tx_desc
@@ -133,10 +133,14 @@ struct rx_desc
 /* Transmit Descriptor status definitions [E1000 3.3.3.2] */
 #define E1000_TXD_STAT_DD    0x00000001 /* Descriptor Done */
 
+/* Receive Descriptor bit definitions [E1000 3.2.3.1] */
+#define E1000_RXD_STAT_DD       0x01    /* Descriptor Done */
+#define E1000_RXD_STAT_EOP      0x02    /* End of Packet */
+
 
 int pci_e1000_attach(struct pci_func *pcif);
-int e1000_transmit(void *addr, size_t len);
-int e1000_receive(void *buf, size_t *len);
+int e1000_transmit(struct mbuf *m);
+void e1000_receive(void);
 void e1000_receive_pack_handler();
 
 #endif  // SOL >= 6

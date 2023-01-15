@@ -6,6 +6,7 @@ KERNLIB_SRCS :=	kernlib/string.c \
 		kernlib/printfmt.c \
 		kernlib/stdio.c \
 		kernlib/stdioa.asm \
+		kernlib/mbuf.c \
 
 KERNLIB_OBJS := $(patsubst %.c, $(OBJDIR)/%.o, $(KERNLIB_SRCS))
 KERNLIB_OBJS := $(patsubst %.asm, $(OBJDIR)/%.o, $(KERNLIB_OBJS))

@@ -1,4 +1,3 @@
-#include <device/mbuf.h>
 #include <device/e1000.h>
 #include <device/interrupt_register.h>
 #include <device/pci.h>
@@ -6,12 +5,13 @@
 #include <kernlib/assert.h>
 #include <kernlib/string.h>
 #include <kernel/spinlock.h>
+#include <kernel/memman.h>
 
 volatile uint32_t *e1000;
 
 struct spinlock e1000_lock;
 
-uint32_t regs[64]; // size is 32/64
+uint32_t* regs;
 
 static struct tx_desc tx_ring[TX_RING_SIZE] __attribute__((aligned(16)));
 static struct mbuf *tx_mbufs[TX_RING_SIZE];
@@ -22,8 +22,7 @@ static struct mbuf *rx_mbufs[RX_RING_SIZE];
 // called by pci_init().
 // xregs is the memory address at which the
 // e1000's registers are mapped.
-void
-e1000_init(uint32_t *regs)
+void e1000_init(uint32_t *regs)
 {
     int i;
     
@@ -52,7 +51,7 @@ e1000_init(uint32_t *regs)
     for (i = 0; i < RX_RING_SIZE; i++) {
         rx_mbufs[i] = mbufalloc(0);
         if (!rx_mbufs[i])
-        panic("e1000");
+            panic("e1000");
         rx_ring[i].addr = (uint32_t) rx_mbufs[i]->head;
     }
     regs[E1000_RDBAL] = (uint32_t) rx_ring;
@@ -91,6 +90,81 @@ e1000_init(uint32_t *regs)
     kprintf("e1000 init succeed\n");
 }
 
+int e1000_transmit(struct mbuf *m)
+{
+  // the mbuf contains an ethernet frame; program it into
+  // the TX descriptor ring so that the e1000 sends it. Stash
+  // a pointer so that it can be freed after sending.
+  //
+
+  // First ask the E1000 for the TX ring index at which it's expecting the next packet, 
+  // by reading the E1000_TDT control register.
+  acquire(&e1000_lock);
+
+  uint32_t index = regs[E1000_TDT];
+  
+  // check if the the ring is overflowing. 
+  // If E1000_TXD_STAT_DD is not set in the descriptor indexed by E1000_TDT, 
+  // the E1000 hasn't finished the corresponding previous transmission request, 
+  // so return an error.
+
+  if ((tx_ring[index].status & E1000_TXD_STAT_DD) == 0) {
+      release(&e1000_lock);
+      kprintf("buffer overflow\n");
+      return -1;
+  }
+
+
+  // use mbuffree() to free the last mbuf that 
+  // was transmitted from that descriptor (if there was one).
+  if (tx_mbufs[index]) 
+    mbuffree(tx_mbufs[index]);
+
+  tx_ring[index].addr = (uint32_t)m->head; 
+  tx_ring[index].length = m->len;
+  tx_ring[index].cmd = E1000_TXD_CMD_RS | E1000_TXD_CMD_EOP;
+  tx_mbufs[index] = m;
+  
+
+  regs[E1000_TDT] = (index + 1) % TX_RING_SIZE;
+  __sync_synchronize();
+  release(&e1000_lock); 
+  
+  return 0;
+}
+
+void e1000_recv(void)
+{
+  // Check for packets that have arrived from the e1000
+  // Create and deliver an mbuf for each packet (using net_rx()).
+  //
+  for (;;) {
+    // next index
+      uint32_t index = (regs[E1000_RDT] + 1) % RX_RING_SIZE;
+
+      // check status, if not set we will return 
+      if ((rx_ring[index].status & E1000_RXD_STAT_DD) == 0) 
+        break;
+      
+      // deliver to network stack
+      rx_mbufs[index]->len = rx_ring[index].length;
+      rx_mbufs[index]->head = rx_mbufs[index]->buf;
+      eth_rx(rx_mbufs[index]); 
+
+      // allocate a new mbuf using mbufalloc() 
+      // to replace the one just given to net_rx(). 
+      // Program its data pointer (m->head) into the descriptor. 
+      // Clear the descriptor's status bits to zero. 
+      rx_mbufs[index] = mbufalloc(0);
+      rx_ring[index].addr = (uint32_t)rx_mbufs[index]->head; 
+      rx_ring[index].status = 0;
+
+      // current index
+      regs[E1000_RDT] = index;
+  }
+
+}
+
 int pci_e1000_attach(struct pci_func *pcif)
 {
     kprintf("ready to start e1000...\n");
@@ -98,6 +172,8 @@ int pci_e1000_attach(struct pci_func *pcif)
     pci_func_enable(pcif);
     // 注册一下 receive 的中断
     register_device_interrupt(pcif->irq_line, DA_386IGate, e1000_receive_pack_handler, PRIVILEGE_KRNL);
+    // 映射内存
+    regs = (uint32_t*)do_kmalloc(0x20000);
     // E1000 初始化
     e1000_init(regs);
     // e1000 = mmio_map_region(pcif->reg_base[0], pcif->reg_size[0]);
