@@ -132,6 +132,6 @@ struct E1000RxDesc {
 int pci_e1000_attach(struct pci_func *pcif);
 int e1000_transmit(void *addr, size_t len);
 int e1000_receive(void *buf, size_t *len);
-
+void e1000_receive_pack_handler();
 
 #endif  // SOL >= 6

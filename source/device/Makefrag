@@ -4,7 +4,8 @@ OBJDIRS += device
 DEVICE_REQUIREMENT := $(KERNLIB_A)
 
 DEVICE_SRCS = device/pci.c \
-		device/e1000.c
+		device/e1000.c \
+		device/interrupt_register.c
 
 DEVICE_A = $(OBJDIR)/device/ulib.a
 

@@ -155,7 +155,7 @@ pci_scan_bus(struct pci_bus *bus)
                 PCI_VENDOR(ssrf.dev_id) == PCI_E1000_VENDER_ID &&
                 PCI_PRODUCT(ssrf.dev_id) == PCI_E1000_DEVICE_ID
             ) {
-                kprintf("Found e1000\n");
+                // kprintf("Found e1000\n");
                 pci_e1000_attach(&ssrf);
             }
         }
@@ -170,8 +170,10 @@ void pci_func_enable(struct pci_func *f)
 
     uint32_t bar_width;
     uint32_t bar;
-    for (bar = PCI_MAPREG_START; bar < PCI_MAPREG_END;
-         bar += bar_width) {
+    for (
+        bar = PCI_MAPREG_START; bar < PCI_MAPREG_END;
+        bar += bar_width
+    ) {
         uint32_t oldv = pci_conf_read(f, bar);
 
         bar_width = 4;

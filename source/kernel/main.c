@@ -5,7 +5,6 @@
  * @date 2005
  */
 
-#include <device/pci.h>
 #include <device/x86.h>
 #include <kernel/all_head.h>
 #include <kernlib/assert.h>
@@ -87,9 +86,6 @@ int kernel_main()
     init_fs();
     init_fs_fat();  // added by mingxuan 2019-5-17
     // init_vfs();    //added by mingxuan 2019-5-17    //deleted by mingxuan 2020-10-30
-
-    init_pci();
-
     /*************************************************************************
      *第一个进程开始启动执行
      **************************************************************************/

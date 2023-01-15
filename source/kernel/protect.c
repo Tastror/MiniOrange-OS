@@ -7,6 +7,7 @@
 
 #include <kernel/protect.h>
 
+#include <device/interrupt_register.h>
 #include <kernel/interrupt.h>
 #include <kernel/kernel.h>
 #include <kernel/proc.h>
@@ -53,14 +54,20 @@ void hwint12();
 void hwint13();
 void hwint14();
 void hwint15();
-void e1000_send_pack_handler();
-void e1000_receive_pack_handler();
 void syscall_handler();
-
 
 void init_prot()
 {
     init_8259A();
+
+    // 添加 device 初始化时提供的中断。
+    // 因为 device 不依赖 kernel，所以写到了一个结构体里，在这个时候处理
+    // 注意 device 的初始化 (init_pci) 必须写在 init_prot 前面，否则没法进行中断的注册
+    for (int i = 0; i < device_interrupt_num; ++i) {
+        struct device_interrupt *now = &device_interrupt_table[i];
+        init_idt_desc(now->interrupt_num, now->desc_type, now->handler_func, now->privilege);
+        kprintf("add device interrupt num %u\n", now->interrupt_num);
+    }
 
     // 全部初始化成中断门(没有陷阱门)
     init_idt_desc(INT_VECTOR_DIVIDE, DA_386IGate, divide_error, PRIVILEGE_KRNL);
@@ -95,8 +102,6 @@ void init_prot()
     init_idt_desc(INT_VECTOR_IRQ8 + 5, DA_386IGate, hwint13, PRIVILEGE_KRNL);
     init_idt_desc(INT_VECTOR_IRQ8 + 6, DA_386IGate, hwint14, PRIVILEGE_KRNL);
     init_idt_desc(INT_VECTOR_IRQ8 + 7, DA_386IGate, hwint15, PRIVILEGE_KRNL);
-    init_idt_desc(INT_VECTOR_E1000_SEND_PACK, DA_386IGate, e1000_send_pack_handler, PRIVILEGE_KRNL);
-    init_idt_desc(INT_VECTOR_E1000_RECEIVE_PACK, DA_386IGate, e1000_receive_pack_handler, PRIVILEGE_KRNL);
     init_idt_desc(INT_VECTOR_SYS_CALL, DA_386IGate, syscall_handler, PRIVILEGE_USER);
 
     /* 修改显存描述符 */  // add by visual 2016.5.12

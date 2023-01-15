@@ -5,6 +5,8 @@
  * @date 2005
  */
 
+#include <device/pci.h>
+#include <device/interrupt_register.h>
 #include <kernel/kernel.h>
 #include <kernel/protect.h>
 #include <kernlib/stdio.h>
@@ -12,7 +14,8 @@
 
 void cstart()
 {
-    kprintf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n-----\"cstart\" begins-----\n");
+    // kprintf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    kprintf("-----\"cstart\" begins-----\n");
 
     // 将 LOADER 中的 GDT 复制到新的 GDT 中
     memcpy(&gdt,                               // New GDT
@@ -31,7 +34,14 @@ void cstart()
     *p_idt_limit = IDT_SIZE * sizeof(GATE) - 1;
     *p_idt_base = (u32)&idt;
 
+    kern_set_color(CYAN);
+    device_interrupt_num = 0;
+    init_pci();
     init_prot();
+    kern_set_color(WHITE);
 
     kprintf("-----\"cstart\" finished-----\n");
+
+    // 需要查看输出时关掉这里
+    // while (1) {}
 }
