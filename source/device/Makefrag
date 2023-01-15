@@ -1,6 +1,0 @@
-OBJDIRS += device
-
-$(OBJDIR)/device/%.o: $(SRCDIR)/device/%.c $(OBJDIR)/.vars.CFLAGS
-	@echo + cc $<
-	@mkdir -p $(@D)
-	@$(CC) $(CFLAGS) -c -o $@ $<
