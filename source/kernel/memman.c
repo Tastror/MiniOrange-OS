@@ -200,7 +200,7 @@ u32 memman_kalloc_4k(struct MEMMAN *man)
             }
         }
     }
-    return -1;
+    return 0;
 }
 
 u32 memman_free(struct MEMMAN *man, u32 addr, u32 size)
