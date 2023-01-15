@@ -1,4 +1,5 @@
 #include <kernlib/string.h>
+#include <kernlib/stdio.h>
 #include <device/arp.h>
 #include <device/ip.h>
 
@@ -39,7 +40,7 @@ void arp_rx(struct mbuf* mbuffer) {
 
 
     if(!hdr) {
-        printf ("arp fail: null header \n");
+        kprintf ("arp fail: null header \n");
         goto fin;
     }
     

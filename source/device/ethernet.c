@@ -1,6 +1,8 @@
-#include <device/ethernet.h>
 #include <kernlib/assert.h>
 #include <kernlib/stdio.h>
+#include <device/ethernet.h>
+#include <device/ip.h>
+#include <device/arp.h>
 
 // TODO: 尽量不要使用硬编码
 // 52:54:00:12:34:56
@@ -42,7 +44,7 @@ void eth_rx(struct mbuf* m) {
     kprintf("receive eth packet\n");
 
     if (ethhdr == NULL) {
-        printf("fail in eth \n");
+        kprintf("fail in eth \n");
         return;
     }
     ethtype = ntohs(ethhdr->type);

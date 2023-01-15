@@ -67,13 +67,13 @@ typedef i32 off_t;
 // 通常描述物理地址
 typedef u32 phyaddr_t;
 
-static inline uint16 bswaps(uint16 val)
+static inline uint16_t bswaps(uint16_t val)
 {
   return (((val & 0x00ffU) << 8) |
           ((val & 0xff00U) >> 8));
 }
 
-static inline uint32 bswapl(uint32 val)
+static inline uint32_t bswapl(uint32_t val)
 {
   return (((val & 0x000000ffUL) << 24) |
           ((val & 0x0000ff00UL) << 8) |
