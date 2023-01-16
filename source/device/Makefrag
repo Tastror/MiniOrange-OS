@@ -8,7 +8,6 @@ DEVICE_SRCS = device/pci.c \
 		device/interrupt_register.c \
 		device/ethernet.c \
 		device/arp.c \
-		kernlib/mbuf.c \
 
 DEVICE_A = $(OBJDIR)/device/ulib.a
 

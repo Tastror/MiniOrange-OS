@@ -20,5 +20,5 @@ void net_test_shell(u16 len, u8 *data)
     u8 mem[E1000_PACK_BUFF_SAVE_SIZE];
     memcpy((void *)(mem + 2), (void *)data, len);
     *(u16 *)mem = len;
-    sys_net_test(mem);
+    net_test(mem);
 }
