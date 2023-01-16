@@ -32,10 +32,10 @@ struct pci_driver pci_attach_class[] = {
 
 // pci_attach_vendor matches the vendor ID and device ID of a PCI device. key1
 // and key2 should be the vendor ID and device ID respectively
-// struct pci_driver pci_attach_vendor[] = {
-//     {PCI_E1000_VENDER_ID, PCI_E1000_DEVICE_ID, &pci_e1000_attach},
-//     {0, 0, 0},
-// };
+struct pci_driver pci_attach_vendor[] = {
+    {PCI_E1000_VENDER_ID, PCI_E1000_DEVICE_ID, &pci_e1000_attach},
+    {0, 0, 0},
+};
 
 static void pci_conf1_set_addr(
     uint32_t bus,
@@ -76,11 +76,11 @@ static int __attribute__((warn_unused_result)) pci_attach_match(
     return 0;
 }
 
-// static int pci_attach(struct pci_func *f)
-// {
-//     return pci_attach_match(PCI_CLASS(f->dev_class), PCI_SUBCLASS(f->dev_class), &pci_attach_class[0], f) ||
-//            pci_attach_match(PCI_VENDOR(f->dev_id), PCI_PRODUCT(f->dev_id), &pci_attach_vendor[0], f);
-// }
+static int pci_attach(struct pci_func *f)
+{
+    return pci_attach_match(PCI_CLASS(f->dev_class), PCI_SUBCLASS(f->dev_class), &pci_attach_class[0], f) ||
+           pci_attach_match(PCI_VENDOR(f->dev_id), PCI_PRODUCT(f->dev_id), &pci_attach_vendor[0], f);
+}
 
 static const char *pci_class[] = {
     [0x0] = "Unknown",
@@ -148,15 +148,15 @@ pci_scan_bus(struct pci_bus *bus)
             ssrf.dev_class = pci_conf_read(&ssrf, PCI_CLASS_REG);
             if (pci_show_devs)
                 pci_print_func(&ssrf);
-            // pci_attach(&ssrf);
+            pci_attach(&ssrf);
 
-            if (
-                PCI_VENDOR(ssrf.dev_id) == PCI_E1000_VENDER_ID &&
-                PCI_PRODUCT(ssrf.dev_id) == PCI_E1000_DEVICE_ID
-            ) {
-                // kprintf("Found e1000\n");
-                pci_e1000_attach(&ssrf);
-            }
+        //     if (
+        //         PCI_VENDOR(ssrf.dev_id) == PCI_E1000_VENDER_ID &&
+        //         PCI_PRODUCT(ssrf.dev_id) == PCI_E1000_DEVICE_ID
+        //     ) {
+        //         // kprintf("Found e1000\n");
+        //         pci_e1000_attach(&ssrf);
+        //     }
         }
     }
 
@@ -167,52 +167,52 @@ void pci_func_enable(struct pci_func *f)
 {
     pci_conf_write(f, PCI_COMMAND_STATUS_REG, PCI_COMMAND_IO_ENABLE | PCI_COMMAND_MEM_ENABLE | PCI_COMMAND_MASTER_ENABLE);
 
-    // uint32_t bar_width;
-    // uint32_t bar;
-    // for (
-    //     bar = PCI_MAPREG_START; bar < PCI_MAPREG_END;
-    //     bar += bar_width
-    // ) {
-    //     uint32_t oldv = pci_conf_read(f, bar);
+    uint32_t bar_width;
+    uint32_t bar;
+    for (
+        bar = PCI_MAPREG_START; bar < PCI_MAPREG_END;
+        bar += bar_width
+    ) {
+        uint32_t oldv = pci_conf_read(f, bar);
 
-    //     bar_width = 4;
-    //     pci_conf_write(f, bar, 0xffffffff);
-    //     uint32_t rv = pci_conf_read(f, bar);
+        bar_width = 4;
+        pci_conf_write(f, bar, 0xffffffff);
+        uint32_t rv = pci_conf_read(f, bar);
 
-    //     if (rv == 0)
-    //         continue;
+        if (rv == 0)
+            continue;
 
-    //     int      regnum = PCI_MAPREG_NUM(bar);
-    //     uint32_t base, size;
-    //     if (PCI_MAPREG_TYPE(rv) == PCI_MAPREG_TYPE_MEM) {
-    //         if (PCI_MAPREG_MEM_TYPE(rv) == PCI_MAPREG_MEM_TYPE_64BIT)
-    //             bar_width = 8;
+        int      regnum = PCI_MAPREG_NUM(bar);
+        uint32_t base, size;
+        if (PCI_MAPREG_TYPE(rv) == PCI_MAPREG_TYPE_MEM) {
+            if (PCI_MAPREG_MEM_TYPE(rv) == PCI_MAPREG_MEM_TYPE_64BIT)
+                bar_width = 8;
 
-    //         size = PCI_MAPREG_MEM_SIZE(rv);
-    //         base = PCI_MAPREG_MEM_ADDR(oldv);
-    //         if (pci_show_addrs)
-    //             kprintf("  mem region %d: %d bytes at 0x%x\n", regnum, size, base);
-    //     } else {
-    //         size = PCI_MAPREG_IO_SIZE(rv);
-    //         base = PCI_MAPREG_IO_ADDR(oldv);
-    //         if (pci_show_addrs)
-    //             kprintf("  io region %d: %d bytes at 0x%x\n", regnum, size, base);
-    //     }
+            size = PCI_MAPREG_MEM_SIZE(rv);
+            base = PCI_MAPREG_MEM_ADDR(oldv);
+            if (pci_show_addrs)
+                kprintf("  mem region %d: %d bytes at 0x%x\n", regnum, size, base);
+        } else {
+            size = PCI_MAPREG_IO_SIZE(rv);
+            base = PCI_MAPREG_IO_ADDR(oldv);
+            if (pci_show_addrs)
+                kprintf("  io region %d: %d bytes at 0x%x\n", regnum, size, base);
+        }
 
-    //     pci_conf_write(f, bar, oldv);
-    //     f->reg_base[regnum] = base;
-    //     f->reg_size[regnum] = size;
+        pci_conf_write(f, bar, oldv);
+        f->reg_base[regnum] = base;
+        f->reg_size[regnum] = size;
 
-    //     if (size && !base)
-    //         kprintf(
-    //             "PCI device %02x:%02x.%d (%04x:%04x) "
-    //             "may be misconfigured: "
-    //             "region %d: base 0x%x, size %d\n",
-    //             f->bus->busno, f->dev, f->func,
-    //             PCI_VENDOR(f->dev_id), PCI_PRODUCT(f->dev_id),
-    //             regnum, base, size
-    //         );
-    // }
+        if (size && !base)
+            kprintf(
+                "PCI device %02x:%02x.%d (%04x:%04x) "
+                "may be misconfigured: "
+                "region %d: base 0x%x, size %d\n",
+                f->bus->busno, f->dev, f->func,
+                PCI_VENDOR(f->dev_id), PCI_PRODUCT(f->dev_id),
+                regnum, base, size
+            );
+    }
 
     kprintf(
         "PCI function %02x:%02x.%d (%04x:%04x) enabled\n",

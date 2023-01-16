@@ -137,6 +137,8 @@ struct rx_desc
 #define E1000_RXD_STAT_DD       0x01    /* Descriptor Done */
 #define E1000_RXD_STAT_EOP      0x02    /* End of Packet */
 
+#define E1000_DEVICE_STATUS   0x00008  /* Device Status - RO */
+
 
 int pci_e1000_attach(struct pci_func *pcif);
 int e1000_transmit(struct mbuf *m);
