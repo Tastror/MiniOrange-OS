@@ -1,19 +1,20 @@
-#include <kernlib/string.h>
-#include <kernlib/stdio.h>
-#include <kernlib/mbuf.h>
 #include <device/arp.h>
 #include <device/ip.h>
+#include <kernlib/mbuf.h>
+#include <kernlib/stdio.h>
+#include <kernlib/string.h>
 
 // TODO: 尽量不要使用硬编码
-static uint8_t local_mac[ETHADDR_LEN] = { 0x52, 0x54, 0x00, 0x12, 0x34, 0x56 };
+static uint8_t local_mac[ETHADDR_LEN] = {0x52, 0x54, 0x00, 0x12, 0x34, 0x56};
 
-void arp_tx(uint16_t op, uint8_t desmac[ETHADDR_LEN], uint32_t tip){
-    struct arp_hdr* hdr;
-    struct mbuf* m;
+void arp_tx(uint16_t op, uint8_t desmac[ETHADDR_LEN], uint32_t tip)
+{
+    struct arp_hdr *hdr;
+    struct mbuf    *m;
 
     m = mbufalloc(sizeof(struct eth_hdr) + sizeof(struct arp_hdr));
-    
-    hdr = (struct arp_hdr*)mbufpush(m, sizeof(struct arp_hdr));
+
+    hdr = (struct arp_hdr *)mbufpush(m, sizeof(struct arp_hdr));
 
     hdr->ar_hrd = htons(ARP_HRD_ETHER);
     hdr->ar_pro = htons(ETHTYPE_IP);
@@ -21,35 +22,36 @@ void arp_tx(uint16_t op, uint8_t desmac[ETHADDR_LEN], uint32_t tip){
     hdr->ar_pln = sizeof(uint32_t);
     hdr->ar_op = htons(op);
 
-    memmove(hdr->arp_sha,local_mac,ETHADDR_LEN);
+    memmove(hdr->arp_sha, local_mac, ETHADDR_LEN);
     hdr->arp_sip = htonl(local_ip);
-    
-    memmove(hdr->arp_tha,desmac,ETHADDR_LEN);
+
+    memmove(hdr->arp_tha, desmac, ETHADDR_LEN);
     hdr->arp_tip = htonl(tip);
 
-    eth_tx(m,ETHTYPE_ARP);
+    eth_tx(m, ETHTYPE_ARP);
 }
 
-void arp_rx(struct mbuf* mbuffer) {
+void arp_rx(struct mbuf *mbuffer)
+{
 
     kprintf("arp packet recv \n");
 
-    struct arp_hdr* hdr;
-    uint8_t smac[ETHADDR_LEN];
-    
-    hdr = (struct arp_hdr*)mbufpull(mbuffer,sizeof(*hdr));
+    struct arp_hdr *hdr;
+    uint8_t         smac[ETHADDR_LEN];
+
+    hdr = (struct arp_hdr *)mbufpull(mbuffer, sizeof(*hdr));
 
 
-    if(!hdr) {
-        kprintf ("arp fail: null header \n");
+    if (!hdr) {
+        kprintf("arp fail: null header \n");
         goto fin;
     }
-    
-    if (ntohs(hdr->ar_hrd) != ARP_HRD_ETHER || 
-        ntohs(hdr->ar_pro) != ETHTYPE_IP || 
+
+    if (ntohs(hdr->ar_hrd) != ARP_HRD_ETHER ||
+        ntohs(hdr->ar_pro) != ETHTYPE_IP ||
         hdr->ar_hln != ETHADDR_LEN ||
         hdr->ar_pln != sizeof(uint32_t)) {
-        kprintf ("arp fail\n");
+        kprintf("arp fail\n");
         goto fin;
     }
 
@@ -58,10 +60,10 @@ void arp_rx(struct mbuf* mbuffer) {
         goto fin;
     }
 
-    memmove(smac,hdr->arp_sha,ETHADDR_LEN);
+    memmove(smac, hdr->arp_sha, ETHADDR_LEN);
 
     kprintf("ready to send arp\n");
-    arp_tx(ARP_OP_REPLY,smac, ntohl(hdr->arp_sip));
+    arp_tx(ARP_OP_REPLY, smac, ntohl(hdr->arp_sip));
 fin:
     mbuffree(mbuffer);
 }
