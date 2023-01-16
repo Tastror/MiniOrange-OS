@@ -175,7 +175,7 @@ int pci_e1000_attach(struct pci_func *pcif)
     // 注册一下 receive 的中断
     register_device_interrupt(pcif->irq_line, DA_386IGate, e1000_receive_pack_handler, PRIVILEGE_KRNL);
     // 映射内存
-    regs = (uint32_t*)do_kmalloc(0x20000);
+    regs = (uint32_t*)do_malloc(0x20000);
     // E1000 初始化
     e1000_init(regs);
     // e1000 = mmio_map_region(pcif->reg_base[0], pcif->reg_size[0]);
