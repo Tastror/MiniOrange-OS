@@ -1,7 +1,8 @@
 #include <kernel/network.h>
-
 #include <kernlib/stdio.h>
 #include <kernlib/string.h>
+#include <device/ip.h>
+#include <device/arp.h>
 
 u8* e1000_save_buff[E1000_PACK_BUFF_SAVE_SIZE];
 u16 e1000_save_len;
@@ -24,6 +25,10 @@ void kern_net_test(u8 *args)
     e1000_save_len = len;
 
     kprintf("e1000 begin to send pack now...\n");
+
+    uint32_t tip = dst_ip;
+    uint8_t broadcast_mac[ETHADDR_LEN] = { 0xFF, 0XFF, 0XFF, 0XFF, 0XFF, 0XFF };
+    arp_tx(ARP_OP_REQUEST, broadcast_mac, dst_ip);
 
     return;
 }

@@ -1,5 +1,6 @@
 #include <kernlib/assert.h>
 #include <kernlib/stdio.h>
+#include <kernlib/mbuf.h>
 #include <device/ethernet.h>
 #include <device/ip.h>
 #include <device/arp.h>
