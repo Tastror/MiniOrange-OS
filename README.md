@@ -1,83 +1,86 @@
-# MiniOS
 
-## MiniOS 简介
+# MIT6.828 Operating System Engineering
+花了两个月多的时间，终于把 MIT6.828 的课程跟完了。刚接触这个课程时，就有一种感觉：哇，好神奇！ 这个课程真的是循序渐进，一步一步在你的脑海里建立起 OS 的大厦框架。从 Lab1 的手把手教学到 Lab6 的放任你自由，很好地对学生的学习进行了引导。学完这个课程后，你也就拥有了一个属于你自己的完整的内核雏形！
 
----
+# 1. 简介
+课程评价：**神级课程——要是早遇到，我还会是这种 five（废物） 系列** 
 
-MiniOS 是一个面向操作系统开发学习者的、微型的操作系统内核，可以运行在 32 位 x86 架构的 CPU 上。MiniOS 专注于对操作系统开发中的核心概念和基础原理的学习与研究，并基于通用硬件对操作系统中的各基本子系统或模块进行实现。
-流行的 [Linux](https://github.com/torvalds/linux)、[FreeBSD](https://github.com/freebsd/freebsd) 等操作系统内核固然很好，然而它们却并不适合内核开发的初学者。一方面，这些操作系统内核已经发展了很多年，积累了十分庞大的代码量（发布于 2005 年的 Linux 内核早期版本 v2.6.12 就已经有大约 400 万行代码），另一方面，因为应用在生产环境中的需要，这些内核代码中包含了大量和操作系统基本原理无关的细节，初学者很难抓到其中的要领。因此，从一个简单的、代码量较少的操作系统内核入手，使用较短的时间熟悉并掌握操作系统内核开发领域的核心概念和基础原理，等把这些基础性知识掌握到一定程度，再投身于 Linux 等实用内核的开发，对于内核初学者来说是一个比较现实可行的策略。即使不打算从事内核开发，通过一个易于入手的内核学习一些操作系统相关的基础知识，也会有利于写出更健壮、性能更好的应用程序。
-查看 MiniOS 的 [release_notes](https://github.com/doubleXnine/MiniOS/blob/master/release_notes.txt) 可了解 MiniOS 的当前开发进展。
+课程网址：[6.828: Operating System Engineering](https://pdos.csail.mit.edu/6.828/2018/schedule.html)，一直跟着其 schedule 走就可以啦。
 
-## MiniOS 开发工具
+xv6 讲义：[a simple, Unix-like teaching operating system](https://pdos.csail.mit.edu/6.828/2018/xv6/book-rev11.pdf)，讲义中会将每个部分的实现讲得十分详细，在代码编写时遇到不太清晰的概念时，可以多参考讲义。
 
----
+我的实现环境：
+- VMware Workstation虚拟机
+- Ubuntu16.04
+- qemu，最好使用 MIT 给的 patch 版本（Lab6 用到 pacth 版本的qemu 较多）。安装方法也可参考[Tools Used in 6.828](https://pdos.csail.mit.edu/6.828/2018/tools.html) 链接
+- 工具链 [Tools Used in 6.828](https://pdos.csail.mit.edu/6.828/2018/tools.html)
 
-MiniOS 主要基于 C 语言和 x86 汇编语言开发，使用的开发工具包括：
+环境搭建网络上教程很多，这里我就不再赘述，大家可自行百度（搜索以下关键词），包括：
 
-* 汇编器 [nasm](https://www.nasm.us/)
-* C 语言编译器 gcc
-* GNU 二进制工具集 [Binutils](http://www.gnu.org/software/binutils/)
-* 项目构建工具 make
-* 调试器 gdb
+- VMware 或 VirtualBox 安装
+- Ubuntu虚拟机
+- qemu安装：英文教程参考上文给出[官网的工具链的安装](https://pdos.csail.mit.edu/6.828/2018/tools.html)， 中文教程可参考网络上的博文（[QEMU模拟器安装](https://www.cnblogs.com/gatsby123/p/9746193.html)）
 
-其中，Binutils 是一套对二进制文件进行操作的工具集，包括创建静态库的工具 ar，从二进制文件中去除符号表以减小文件体积的工具 strip 等。
+# 2. Xv6
+学习6.828时，你会发现经常遇到 xv6 和 JOS这两个名词，不明白它们两者之间的关系，在完成实验时思路就会不是很清晰。xv6 是一个类Unix的教学操作系统，而 JOS 是在xv6的基础上改写，让我们能在其上进行实验的 OS。 所以实际上，当我们遇到不会实现的问题时，可以去参考 xv6 相应部分的源码。
 
-## 运行 MiniOS
+Homework 实现：完整实现代码。[Github_SmallPond/MIT6.828_OS](https://github.com/SmallPond/MIT6.828_OS/tree/master/xv6-public)
 
----
+- [MIT6.828_Homework_Shell_MIT_6.828](https://blog.csdn.net/Small_Pond/article/details/90544379)
+- [MIT6.828_HW2_Boot_xv6_MIT6.828](https://blog.csdn.net/Small_Pond/article/details/90665444)
+- [MIT6.828_HW3_XV6 System calls](https://blog.csdn.net/Small_Pond/article/details/91345372)
+- [ MIT6.828_HW4_xv6 lazy page allocation](https://blog.csdn.net/Small_Pond/article/details/91346550)
+- [ MIT6.828_HW5_xv6 CPU alarm](https://blog.csdn.net/Small_Pond/article/details/92838818)
+- [MIT6.828_HW6_Threads and Locking](https://blog.csdn.net/Small_Pond/article/details/92838852)
+- [MIT6.828_HW7_xv6 locking](https://blog.csdn.net/Small_Pond/article/details/93200120)
+- [MIT6.828_HW8_User-level threads](https://blog.csdn.net/Small_Pond/article/details/94600772)
+- [MIT6.828_HW9_barriers](https://blog.csdn.net/Small_Pond/article/details/94968225)
+- [MIT6.828_HW10_Bigger file for xv6](https://blog.csdn.net/Small_Pond/article/details/95009224)
+- [MIT6.828_HW11_xv6 log](https://blog.csdn.net/Small_Pond/article/details/95210975)
 
-MiniOS 当前从软盘中启动，启动流程为：
+# 3. JOS
+以下是我实验过程中记下的笔记，包含我的实现思路以及代码。 不过有些重复的细节，我就没有记录，可以参考我的完整实现代码。[Github_SmallPond/MIT6.828_OS](https://github.com/SmallPond/MIT6.828_OS)
 
-1. BIOS 自检完毕后从软盘引导扇区中加载引导程序（boot.bin）至内存，并将控制权交给引导程序。
-2. 引导程序从软盘中读取加载器（loader.bin）至内存，并将控制器交给加载器。
-3. 加载器运行时会从软盘中读取 MiniOS 内核（kernel.bin）至内存，然后从CPU的实模式进入保护模式，并将控制权交给内核。
-4. MiniOS 开始运行。
+- Lab1 Booting a PC
+    - [ LAB_1_Part1_PC Bootstrap and Part2 The Boot loader](https://www.dingmos.com/index.php/archives/3/)
+    - [LAB1_Part3_The Kernel](https://www.dingmos.com/index.php/archives/4/)
+- Lab2 Memory management
+    - [LAB2_Part1_Physical Page Management](https://www.dingmos.com/index.php/archives/5/)
+    - [LAB2_Part2_Virtual Memory](https://www.dingmos.com/index.php/archives/6/)
+    - [ LAB2_Part3_Kernel Address Space(内核地址空间)](https://www.dingmos.com/index.php/archives/7/)
+- Lab3 User-Level Environments
+    - [LAB3_User-Level Environments_PartA_User Environments and Exception Handling](https://www.dingmos.com/index.php/archives/8/)
+    - [LAB3_User-Level Environments_PartB Page Faults, Breakpoints Exceptions, and System Calls](https://www.dingmos.com/index.php/archives/9/)
 
-由于 MiniOS 是一个面向学习者的操作系统内核，因此目前主要运行在虚拟机中，可选的虚拟机有 [Bochs](http://bochs.sourceforge.net/) 和 [Qemu](https://www.qemu.org/)。
+- Lab4 Preemptive Multitasking_
+    - [LAB4_Preemptive Multitasking_PartA Multiprocessor Support and Cooperative Multitasking](https://www.dingmos.com/index.php/archives/10/)
+    - [LAB4_Preemptive Multitasking_PartB Copy-on-Write Fork](https://www.dingmos.com/index.php/archives/11/)
+    - [LAB4_Preemptive Multitasking_PartC Preemptive Multitasking and IPC](https://www.dingmos.com/index.php/archives/12/)
+- Lab5 File system, Spawn and Shell
+    - [Lab5_File system, Spawn and Shell](https://www.dingmos.com/index.php/archives/13/)
+- Lab6 Network Driver
+    - [Lab6_Network Driver](https://www.dingmos.com/index.php/archives/14/)
 
-### 在 Bochs 中运行 MiniOS
 
-1. 安装 Bochs，在 Ubuntu 系统下可以直接执行命令 `sudo apt-get install bochs` 进行安装，也可以先下载 Bochs 的源码再进行编译安装，通过源码进行安装可以选择想要的 Bochs 版本。
-2. 进入 MiniOS 源目录，执行 `tar zxvf misc/80m.img.tar.gz .`，从硬盘镜像压缩包中解压出硬盘镜像。
-3. 在当前目录下执行 `bochs` 命令启动 Bochs 虚拟机，Bochs 首先会从 bochsrc 文件中读取配置信息，然后对 Bochs 给出的运行提示信息进行确认便可让 MiniOS 在 Bochs 内运行。
+# 4. 参考文献
+1. [MIT 6.828 JOS 操作系统学习笔记/fatsheep9146](https://www.cnblogs.com/fatsheep9146/category/769143.html)，刚入门时参考，包括环境搭建。博文写得十分详细，可惜貌似只写到了 Lab2。
+2.  [clpsz/mit-jos-2014](https://github.com/clpsz/mit-jos-2014)，此大神放出了自己到 Lab4 的代码，其文档提及了一些细节，很有帮助。
+3. [Unknown Unknown](https://buweilv.github.io/categories/OS/)，过程较详细（相当于对官方文档做了一遍翻译），英语不好可以参考这边，但我还是建议以官方文档为主，毕竟英语还是要学好呀。这位大神做到了LAB5，但不包括HW。
+4. [bysui的博客](https://blog.csdn.net/bysui/article/category/6232831), 这位大神完成了全部的实验，但是我在后面才发现这么好的资源！
 
-### 在 Qemu 中运行 MiniOS
+我的课程能顺利完成，少不了各位大佬记录下的实验过程，由衷感谢以上各位大神。同时希望我也能帮到后来的学习者~
 
-1. 按照 Qemu，在 Ubuntu 系统下可以直接执行命令 `sudo apt-get install qemu-system-x86` 进行安装，也可以下载 Qemu 的源代码进行编译安装。
-2. 进入 MiniOS 源目录，执行 `tar zxvf misc/80m.img.tar.gz .`，从硬盘镜像压缩包中解压出硬盘镜像。
-3. 在当前目录下执行 `./launch-qemu.sh` 命令启动 Qemu 虚拟机，之后 MiniOS 将直接在 Qemu 内开始运行。Qemu 虚拟机没有使用像 bochsrc 一样的配置文件，配置信息是通过命令行选项指定的，脚本 launch-qemu.sh 中包含了当前使用的配置选项。
+# 5. FAQ
+1. 零基础可以做这个课程吗？
 
-## 调试 MiniOS
+不管做什么事情总会有个从零到一的过程的。当然这个课程需要一些基础，如汇编语言、操作系统、计算机组成原理以及体系结构等。毕竟操作系统是一门比较底层且考察综合性计算机知识的课程。可能零基础做这个课程会相对困难一点，但如果坚持下来了至少会学到一些知识（基础不够的情况下，不要求完全独立完成整个课程，可参考其他博客等资料）。并且我一直认为，以边学边做的方式来学习一门课程是最好的方式之一。种一棵树最好的时机是十年前或现在！加油~
 
-通过使用 Bochs 或 Qemu 中自带的调试功能可以对MiniOS进行汇编语言级的调试，但由于汇编程序比较冗长且难以阅读，这种调试方式使用起来不太方便。幸运的是，Bochs 和 Qemu 中都内置了 gdb 支持，通过和 gdb 提供的远程调试功能配合，可以对 MiniOS 进行 C 源码级的调试。
+2. 如何开始这个课程？
 
-### 使用 Bochs+gdb 调试 MiniOS
+如果你是完全零基础，那么从熟悉我上文提到的几个名词开始（Vmware、Ubuntu虚拟机等），然后开始搭建实验环境（网络上教程很多，自己得培养出搜索并甄别资料是否优质的能力，不能拿来主义）。然后参考官网的 scheduler 做Lab 和 homework（理想路线）。若不知道如何继续的时候，可适当参考本文的给出的各个博客链接或自行搜索更优质的内容。
 
-1. 从源代码编译安装 Bochs，并在编译时打开 gdb 支持选项。然后在 Bochs 配置文件中添加 gdb 配置信息，MiniOS 源目录下的 bochsrc-gdb 文件中已经包含了所需的配置选项。
-2. 在 MiniOS 源目录下执行 `./launch-bochs-gdb.sh`，所运行的 shell 脚本会在一个新的终端窗口中运行 gdb，并加载 debug 版的内核二进制文件。
-3. 在 gdb 命令界面执行命令 `target remote :2345` 和 Bochs 建立连接。
-4. 用 gdb 像调试本地程序一样对 MiniOS 进行调试。
+3. 6.828 和 6.s081 有什么区别
 
-### 使用 Qemu+gdb 调试 MiniOS
+2018 之前只有 6.828，后来出现了6.s081。简单来说，2018之后的6.828面向研究生，重点是操作系统研究；6.s081 面向本科生，有些类似2018年6.828的低难度版？（我没有做）。以下是官方介绍。
 
-1. 在启动 Qemu 时添加命令行选项以启用 gdb 支持，MiniOS 源目录下的脚本文件 launch-qemu-gdb.sh 中已经添加了所需的配置选项。
-2. 在 MiniOS 源目录下执行 `./launch-bochs-gdb.sh`，所运行的 shell 脚本会在一个新的终端窗口中运行 gdb，并加载 debug 版的内核二进制文件。
-3. 在 gdb 命令界面执行命令 `target remote :1234` 和 Qemu 建立连接。
-4. 用 gdb 像调试本地程序一样对 MiniOS 进行调试。
-
-## 常用 MiniOS 构建选项
-
-```bash
-# 编译 MiniOS 所有内容
-make all
-# 编译 MiniOS 所有内容，并在 qume 中运行 MiniOS
-make run
-# 清除所有编译文件
-make clean
-```
-
-## 参考资料
-
-* [Orange&#39;s](https://github.com/yyu/Oranges)，由于渊开发的一个微型操作系统，在《一个操作系统的实现》这本书中讲述了 Orange's 的开发过程。MiniOS 是基于 Orange's 进行开发的。
-* [xv6](https://pdos.csail.mit.edu/6.828/2014/xv6.html)，由 MIT 开发的一个用于教学的微型操作系统，xv6 由 Unix V6 改写而来，被应用在 MIT 的操作系统课程 6.828: Operating System Engineering 中。
-* [Minix](http://www.minix3.org/)，最初由 Andrew S. Tanenbaum 教授开发的一个微内核操作系统，Linus 在开发早期的 Linux 的时候从 Minix 处继承了很多特性，于渊在开发 Orange's 的时候也多次借鉴了 Minix。
+> 6.828 and 6.S081 will be offered as two separate classes. 6.S081 (Introduction to Operating Systems) will be taught as a stand-alone AUS subject for undergraduates, and will provide an introduction to operating systems. 6.828 will be offered as a graduate-level seminar-style class focused on research in operating systems. 6.828 will assume you have taken 6.S081 or an equivalent class. 

@@ -1,6 +1,0 @@
-#ifndef _NETWORK_DEFINE_H_
-#define _NETWORK_DEFINE_H_
-
-#define E1000_PACK_BUFF_SAVE_SIZE 4096
-
-#endif
