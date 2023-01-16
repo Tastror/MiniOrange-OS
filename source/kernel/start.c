@@ -43,5 +43,5 @@ void cstart()
     kprintf("-----\"cstart\" finished-----\n");
 
     // 需要查看输出时关掉这里
-    // while (1) {}
+    while (1) {}
 }

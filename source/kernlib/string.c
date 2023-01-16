@@ -101,6 +101,29 @@ void *memcpy(void *dst, const void *src, size_t n)
     return dst;
 }
 
+void*
+memmove(void *dst, const void *src, uint32_t n)
+{
+  const char *s;
+  char *d;
+
+  if(n == 0)
+    return dst;
+  
+  s = src;
+  d = dst;
+  if(s < d && s + n > d){
+    s += n;
+    d += n;
+    while(n-- > 0)
+      *--d = *--s;
+  } else
+    while(n-- > 0)
+      *d++ = *s++;
+
+  return dst;
+}
+
 char *itoa(char *str, int num) /* 数字前面的 0 不被显示出来, 比如 0000B800 被显示成 B800 */
 {
     char *p = str;
