@@ -1,10 +1,11 @@
+#include <kernlib/stdio.h>
+#include <kernlib/assert.h>
+#include <kernlib/string.h>
+#include <kernlib/mbuf.h>
 #include <device/e1000.h>
 #include <device/interrupt_register.h>
 #include <device/pci.h>
 #include <device/ethernet.h>
-#include <kernlib/stdio.h>
-#include <kernlib/assert.h>
-#include <kernlib/string.h>
 #include <kernel/spinlock.h>
 #include <kernel/memman.h>
 

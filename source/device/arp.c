@@ -1,5 +1,6 @@
 #include <kernlib/string.h>
 #include <kernlib/stdio.h>
+#include <kernlib/mbuf.h>
 #include <device/arp.h>
 #include <device/ip.h>
 

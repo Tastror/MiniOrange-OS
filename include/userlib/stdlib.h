@@ -1,6 +1,8 @@
 #ifndef __USER_STDLIB_H__
 #define __USER_STDLIB_H__
 
+#pragma once
+
 #include <common/type.h>
 #include <define/define.h>
 

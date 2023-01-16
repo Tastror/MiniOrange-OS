@@ -1,6 +1,8 @@
 #include <userlib/stdlib.h>
-
 #include <kernlib/string.h>
+#include <kernel/syscall.h>
+#include <device/ip.h>
+#include <device/arp.h>
 
 void delay(int time)
 {
@@ -18,5 +20,5 @@ void net_test_shell(u16 len, u8 *data)
     u8 mem[E1000_PACK_BUFF_SAVE_SIZE];
     memcpy((void *)(mem + 2), (void *)data, len);
     *(u16 *)mem = len;
-    net_test(mem);
+    sys_net_test(mem);
 }

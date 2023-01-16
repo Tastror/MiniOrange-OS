@@ -5,12 +5,12 @@
  * @date 2005
  */
 
+#include <kernlib/stdio.h>
+#include <kernlib/string.h>
 #include <device/pci.h>
 #include <device/interrupt_register.h>
 #include <kernel/kernel.h>
 #include <kernel/protect.h>
-#include <kernlib/stdio.h>
-#include <kernlib/string.h>
 
 void cstart()
 {
@@ -43,5 +43,5 @@ void cstart()
     kprintf("-----\"cstart\" finished-----\n");
 
     // 需要查看输出时关掉这里
-    while (1) {}
+    // while (1) {}
 }
