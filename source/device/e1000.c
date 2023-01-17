@@ -179,6 +179,8 @@ int pci_e1000_attach(struct pci_func *pcif)
 
     // 注册一下 receive 的中断
     // TODO: 改为 MSI 中断
+    // TODO: 由于将 init_pci 移到了 main 中，需要完善中断注册函数
+    // 这样做的原因是 mmio 需要在内核的页表被映射后才能使用
     register_device_interrupt(pcif->irq_line, DA_386IGate, e1000_receive_pack_handler, PRIVILEGE_KRNL);
 
     // E1000 初始化

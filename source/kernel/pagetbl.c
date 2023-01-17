@@ -397,6 +397,8 @@ pte_t *pgdir_walk(pde_t *pgdir, const void *va, const int create) {
 
     pde = pgdir + pdx;
 
+    // kprintf("%x ", *pde);
+
     if (*pde & PG_P) {
         // 如果页目录项存在
         pte = (pte_t *)K_PHY2LIN(*pde & ~0xFFF);
@@ -414,6 +416,9 @@ pte_t *pgdir_walk(pde_t *pgdir, const void *va, const int create) {
             *pde = pte_phy | (PG_P | PG_RWW | PG_USU);
             // 获取页表
             pte = (pte_t *)K_PHY2LIN(*pde & ~0xFFF); 
+            // 测试一下
+            // kprintf("%x ", *pte); // WRONG HERE
+            // kprintf("%x ", *(pte + ptx));
         }
     }
     // 返回页表项的虚拟地址
