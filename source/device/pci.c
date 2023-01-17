@@ -1,10 +1,10 @@
+#include <device/e1000.h>
+#include <device/pci.h>
+#include <device/pcireg.h>
+#include <device/x86.h>
 #include <kernlib/assert.h>
 #include <kernlib/stdio.h>
 #include <kernlib/string.h>
-#include <device/pci.h>
-#include <device/e1000.h>
-#include <device/pcireg.h>
-#include <device/x86.h>
 
 /* Parameters for PCI */
 // Flags to do "lspci" at bootup
@@ -37,6 +37,8 @@ struct pci_driver pci_attach_class[] = {
 //     {0, 0, 0},
 // };
 
+// 本函数为 "outl pci_addr_ioport, <bus, dev, func, offset>"
+// 用于切换当前读写的地址
 static void pci_conf1_set_addr(
     uint32_t bus,
     uint32_t dev,
@@ -50,12 +52,43 @@ static void pci_conf1_set_addr(
     assert(offset < 256);
     assert((offset & 0x3) == 0);
 
-    uint32_t v = (1 << 31) |  // config-space
-                 (bus << 16) | (dev << 11) | (func << 8) | (offset);
-    outl(pci_conf1_addr_ioport, v);
+    // 对 pci 总线进行读写，需要用  "inl port, data" / "outl port, data" 指令
+    // "inl" 是读取，"outl" 是写入，"port" 是读写的端口，"data" 是读写的数据
+    //
+    // port 是固定的，可以写死，有两个，为 0x0cf8 (地址读写) 和 0x0cfc (数据读写)
+    // 地址读写用来切换地址；数据读写用来读写真实信息
+    // 读取方法：outl 0x0cf8 (地址读写) 写入地址，然后 inl 0x0cfc (数据读写) 就能获得地址上的信息
+    // 写入方法：outl 0x0cf8 (地址读写) 写入地址，然后 outl 0x0cfc (数据读写) 写入地址上的信息
+    //
+    // 数据读写就是纯粹数据了；
+    // 地址读写的协议中，data 所需要填写的内容为
+    //
+    //   31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00
+    //    1  (     nothing     )  [        bus         ]  [    dev    ]  [funct]  [      reg     ]  0  0
+    // enable     reserved              bus number         dev number  function num    reg num
+    //
+    // 前面是总线、设备、功能的编号，都好理解，但是 reg num 是什么呢？
+    // 答案是 16 个不同的寄存器，分别保存了如下信息（着重看第一个、最后一个和 04 ~ 09）
+    //
+    // reg 00:  device ID 16bit, vender ID 16bit
+    // reg 01:  statuc 16bit, command 16bit
+    // reg 02:  class code 24bit, revision ID 8bit
+    // reg 03:  bist, header type, lat timer, cache line. each 8bit
+    // reg 04 ~ reg 09:  bar register * 6, 32bit [也就是用于设备的具体功能的 6 个读写寄存器]
+    // reg 10:  cardbus cis pointer 32bit
+    // reg 11:  subsystem ID 16bit, subsystem vender ID 16bit
+    // reg 12:  expansion rom base address 32bit
+    // reg 13:  nothing 24bit, cap pointer 8bit
+    // reg 14:  nothing 32bit
+    // reg 15:  max lat, min gnt, interrupt pin, interrupt line. each 8bit
+
+    u32 target_address = (1 << 31) | (bus << 16) | (dev << 11) | (func << 8) | (offset);
+    outl(pci_conf1_addr_ioport, target_address);
 }
 
-static int __attribute__((warn_unused_result)) pci_attach_match(
+static int
+// __attribute__((warn_unused_result))
+pci_attach_match(
     uint32_t key1, uint32_t key2,
     struct pci_driver *list, struct pci_func *pcif
 )
@@ -68,9 +101,11 @@ static int __attribute__((warn_unused_result)) pci_attach_match(
             if (r > 0)
                 return r;
             if (r < 0)
-                kprintf("pci_attach_match: attaching "
-                        "%x.%x (%p): e\n",
-                        key1, key2, list[i].attachfn, r);
+                kprintf(
+                    "pci_attach_match: attaching "
+                    "%x.%x (%p): e\n",
+                    key1, key2, list[i].attachfn, r
+                );
         }
     }
     return 0;
@@ -92,8 +127,7 @@ static const char *pci_class[] = {
     [0x6] = "Bridge device",
 };
 
-static void
-pci_print_func(struct pci_func *f)
+static void pci_print_func(struct pci_func *f)
 {
     const char *class = pci_class[0];
     if (PCI_CLASS(f->dev_class) < ARRAY_SIZE(pci_class))
@@ -102,22 +136,21 @@ pci_print_func(struct pci_func *f)
     kprintf("PCI: %02x:%02x.%d: %04x:%04x: class: %x.%x (%s) irq: %d\n", f->bus->busno, f->dev, f->func, PCI_VENDOR(f->dev_id), PCI_PRODUCT(f->dev_id), PCI_CLASS(f->dev_class), PCI_SUBCLASS(f->dev_class), class, f->irq_line);
 }
 
-static uint32_t
-pci_conf_read(struct pci_func *f, uint32_t off)
+// f 为设备基础信息；off = 寄存器编号 << 2，即寄存器字节编号（宏定义的已经 << 2 了）
+static uint32_t pci_conf_read(struct pci_func *f, uint32_t off)
 {
     pci_conf1_set_addr(f->bus->busno, f->dev, f->func, off);
     return inl(pci_conf1_data_ioport);
 }
 
-static void
-pci_conf_write(struct pci_func *f, uint32_t off, uint32_t v)
+// f 为设备基础信息；off = 寄存器编号 << 2，即寄存器字节编号（宏定义的已经 << 2 了）
+static void pci_conf_write(struct pci_func *f, uint32_t off, uint32_t write_data)
 {
     pci_conf1_set_addr(f->bus->busno, f->dev, f->func, off);
-    outl(pci_conf1_data_ioport, v);
+    outl(pci_conf1_data_ioport, write_data);
 }
 
-static int
-pci_scan_bus(struct pci_bus *bus)
+static int pci_scan_bus(struct pci_bus *bus)
 {
     int32_t         totaldev = 0;  // total count of device
     struct pci_func rf;            // root node of bus
@@ -175,43 +208,43 @@ void pci_func_enable(struct pci_func *f)
     // ) {
     //     uint32_t oldv = pci_conf_read(f, bar);
 
-    //     bar_width = 4;
-    //     pci_conf_write(f, bar, 0xffffffff);
-    //     uint32_t rv = pci_conf_read(f, bar);
+    // bar_width = 4;
+    // pci_conf_write(f, bar, 0xffffffff);
+    // uint32_t rv = pci_conf_read(f, bar);
 
-    //     if (rv == 0)
-    //         continue;
+    // if (rv == 0)
+    //     continue;
 
-    //     int      regnum = PCI_MAPREG_NUM(bar);
-    //     uint32_t base, size;
-    //     if (PCI_MAPREG_TYPE(rv) == PCI_MAPREG_TYPE_MEM) {
-    //         if (PCI_MAPREG_MEM_TYPE(rv) == PCI_MAPREG_MEM_TYPE_64BIT)
-    //             bar_width = 8;
+    // int      regnum = PCI_MAPREG_NUM(bar);
+    // uint32_t base, size;
+    // if (PCI_MAPREG_TYPE(rv) == PCI_MAPREG_TYPE_MEM) {
+    //     if (PCI_MAPREG_MEM_TYPE(rv) == PCI_MAPREG_MEM_TYPE_64BIT)
+    //         bar_width = 8;
 
-    //         size = PCI_MAPREG_MEM_SIZE(rv);
-    //         base = PCI_MAPREG_MEM_ADDR(oldv);
-    //         if (pci_show_addrs)
-    //             kprintf("  mem region %d: %d bytes at 0x%x\n", regnum, size, base);
-    //     } else {
-    //         size = PCI_MAPREG_IO_SIZE(rv);
-    //         base = PCI_MAPREG_IO_ADDR(oldv);
-    //         if (pci_show_addrs)
-    //             kprintf("  io region %d: %d bytes at 0x%x\n", regnum, size, base);
-    //     }
+    // size = PCI_MAPREG_MEM_SIZE(rv);
+    // base = PCI_MAPREG_MEM_ADDR(oldv);
+    // if (pci_show_addrs)
+    //     kprintf("  mem region %d: %d bytes at 0x%x\n", regnum, size, base);
+    // } else {
+    // size = PCI_MAPREG_IO_SIZE(rv);
+    // base = PCI_MAPREG_IO_ADDR(oldv);
+    // if (pci_show_addrs)
+    //     kprintf("  io region %d: %d bytes at 0x%x\n", regnum, size, base);
+    // }
 
-    //     pci_conf_write(f, bar, oldv);
-    //     f->reg_base[regnum] = base;
-    //     f->reg_size[regnum] = size;
+    // pci_conf_write(f, bar, oldv);
+    // f->reg_base[regnum] = base;
+    // f->reg_size[regnum] = size;
 
-    //     if (size && !base)
-    //         kprintf(
-    //             "PCI device %02x:%02x.%d (%04x:%04x) "
-    //             "may be misconfigured: "
-    //             "region %d: base 0x%x, size %d\n",
-    //             f->bus->busno, f->dev, f->func,
-    //             PCI_VENDOR(f->dev_id), PCI_PRODUCT(f->dev_id),
-    //             regnum, base, size
-    //         );
+    // if (size && !base)
+    //     kprintf(
+    //         "PCI device %02x:%02x.%d (%04x:%04x) "
+    //         "may be misconfigured: "
+    //         "region %d: base 0x%x, size %d\n",
+    //         f->bus->busno, f->dev, f->func,
+    //         PCI_VENDOR(f->dev_id), PCI_PRODUCT(f->dev_id),
+    //         regnum, base, size
+    //     );
     // }
 
     kprintf(
@@ -229,8 +262,7 @@ int init_pci(void)
     return pci_scan_bus(&root_bus);
 }
 
-static int
-pci_bridge_attach(struct pci_func *pcif)
+static int pci_bridge_attach(struct pci_func *pcif)
 {
     uint32_t ioreg = pci_conf_read(pcif, PCI_BRIDGE_STATIO_REG);
     uint32_t busreg = pci_conf_read(pcif, PCI_BRIDGE_BUS_REG);
