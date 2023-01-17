@@ -65,7 +65,7 @@ static void pci_conf1_set_addr(
     //
     //   31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00
     //    1  (     nothing     )  [        bus         ]  [    dev    ]  [funct]  [      reg     ]  0  0
-    // enable     reserved              bus number         dev number  function num    reg num
+    // enable     reseread_bar_dataed              bus number         dev number  function num    reg num
     //
     // 前面是总线、设备、功能的编号，都好理解，但是 reg num 是什么呢？
     // 答案是 16 个不同的寄存器，分别保存了如下信息（着重看第一个、最后一个和 04 ~ 09）
@@ -200,52 +200,52 @@ void pci_func_enable(struct pci_func *f)
 {
     pci_conf_write(f, PCI_COMMAND_STATUS_REG, PCI_COMMAND_IO_ENABLE | PCI_COMMAND_MEM_ENABLE | PCI_COMMAND_MASTER_ENABLE);
 
-    // uint32_t bar_width;
-    // uint32_t bar;
-    // for (
-    //     bar = PCI_MAPREG_START; bar < PCI_MAPREG_END;
-    //     bar += bar_width
-    // ) {
-    //     uint32_t oldv = pci_conf_read(f, bar);
+    uint32_t bar_width = 4;
 
-    // bar_width = 4;
-    // pci_conf_write(f, bar, 0xffffffff);
-    // uint32_t rv = pci_conf_read(f, bar);
+    // 04 ~ 09 的 6 个 bar 寄存器的初始化
+    for (
+        uint32_t bar = PCI_MAPREG_START; bar < PCI_MAPREG_END;
+        bar += bar_width
+    ) {
+        uint32_t old_bar_data = pci_conf_read(f, bar);
 
-    // if (rv == 0)
-    //     continue;
+        bar_width = 4;
+        pci_conf_write(f, bar, 0xffffffff);
+        uint32_t read_bar_data = pci_conf_read(f, bar);
+        if (read_bar_data == 0)
+            continue;
 
-    // int      regnum = PCI_MAPREG_NUM(bar);
-    // uint32_t base, size;
-    // if (PCI_MAPREG_TYPE(rv) == PCI_MAPREG_TYPE_MEM) {
-    //     if (PCI_MAPREG_MEM_TYPE(rv) == PCI_MAPREG_MEM_TYPE_64BIT)
-    //         bar_width = 8;
+        int regnum = PCI_MAPREG_NUM(bar);
 
-    // size = PCI_MAPREG_MEM_SIZE(rv);
-    // base = PCI_MAPREG_MEM_ADDR(oldv);
-    // if (pci_show_addrs)
-    //     kprintf("  mem region %d: %d bytes at 0x%x\n", regnum, size, base);
-    // } else {
-    // size = PCI_MAPREG_IO_SIZE(rv);
-    // base = PCI_MAPREG_IO_ADDR(oldv);
-    // if (pci_show_addrs)
-    //     kprintf("  io region %d: %d bytes at 0x%x\n", regnum, size, base);
-    // }
+        uint32_t base, size;
+        if (PCI_MAPREG_TYPE(read_bar_data) == PCI_MAPREG_TYPE_MEM) {
+            if (PCI_MAPREG_MEM_TYPE(read_bar_data) == PCI_MAPREG_MEM_TYPE_64BIT)
+                bar_width = 8;
+            size = PCI_MAPREG_MEM_SIZE(read_bar_data);
+            base = PCI_MAPREG_MEM_ADDR(old_bar_data);
+            if (pci_show_addrs)
+                kprintf("  mem region %d: %d bytes at 0x%x\n", regnum, size, base);
+        } else {
+            size = PCI_MAPREG_IO_SIZE(read_bar_data);
+            base = PCI_MAPREG_IO_ADDR(old_bar_data);
+            if (pci_show_addrs)
+                kprintf("  io region %d: %d bytes at 0x%x\n", regnum, size, base);
+        }
 
-    // pci_conf_write(f, bar, oldv);
-    // f->reg_base[regnum] = base;
-    // f->reg_size[regnum] = size;
+        pci_conf_write(f, bar, old_bar_data);
+        f->reg_base[regnum] = base;
+        f->reg_size[regnum] = size;
 
-    // if (size && !base)
-    //     kprintf(
-    //         "PCI device %02x:%02x.%d (%04x:%04x) "
-    //         "may be misconfigured: "
-    //         "region %d: base 0x%x, size %d\n",
-    //         f->bus->busno, f->dev, f->func,
-    //         PCI_VENDOR(f->dev_id), PCI_PRODUCT(f->dev_id),
-    //         regnum, base, size
-    //     );
-    // }
+        if (size && !base)
+            kprintf(
+                "PCI device %02x:%02x.%d (%04x:%04x) "
+                "may be misconfigured: "
+                "region %d: base 0x%x, size %d\n",
+                f->bus->busno, f->dev, f->func,
+                PCI_VENDOR(f->dev_id), PCI_PRODUCT(f->dev_id),
+                regnum, base, size
+            );
+    }
 
     kprintf(
         "PCI function %02x:%02x.%d (%04x:%04x) enabled\n",
