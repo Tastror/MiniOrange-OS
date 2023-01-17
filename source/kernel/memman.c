@@ -380,8 +380,3 @@ void memman_test()
 
     return;
 }
-
-uint32_t *mmio_map_region(uint32_t base, uint32_t size)
-{
-    return NULL;
-}

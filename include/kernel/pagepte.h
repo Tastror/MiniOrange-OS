@@ -23,5 +23,7 @@ void write_page_pte(u32 TblPhyAddr, u32 AddrLin, u32 PhyAddr, u32 Attribute);
 u32  vmalloc(u32 size);
 int  lin_mapping_phy(u32 AddrLin, u32 phy_addr, u32 pid, u32 pde_Attribute, u32 pte_Attribute);  // edit by visual 2016.5.19
 void clear_kernel_pagepte_low();                                                                 // add by visual 2016.5.12
+uint32_t *mmio_map_region(uint32_t base, uint32_t size);    // add by netowrk 2023.1.17
+pte_t *pgdir_walk(pde_t *pgdir, const void *va, const int create); // add by netowrk 2023.1.17
 
 #endif

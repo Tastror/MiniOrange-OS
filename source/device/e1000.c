@@ -3,6 +3,7 @@
 #include <device/interrupt_register.h>
 #include <device/pci.h>
 #include <kernel/memman.h>
+#include <kernel/pagepte.h>
 #include <kernel/spinlock.h>
 #include <kernlib/assert.h>
 #include <kernlib/mbuf.h>
@@ -181,9 +182,14 @@ int pci_e1000_attach(struct pci_func *pcif)
     register_device_interrupt(pcif->irq_line, DA_386IGate, e1000_receive_pack_handler, PRIVILEGE_KRNL);
 
     // E1000 初始化
-    e1000_init();
+    e1000_init(regs);
+    kprintf("device status: %08x\n", regs[E1000_DEVICE_STATUS]);
 
-    // kprintf("device status:[%08x]\n", e1000_regs[E1000_LOCATE(E1000_DEVICE_STATUS)]);
+    while(1) {}
+
+    // e1000_transmit_init();
+    // e1000_receive_init();
+    
     return 0;
 }
 

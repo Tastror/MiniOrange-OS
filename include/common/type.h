@@ -30,7 +30,7 @@ enum {
 #define MAX_UNSIGNED_INT 0xFFFFFFFF  // 最大的无符号整形
 #define MAX_INT          0x7FFFFFFF  // 最大的整形数
 
-/* added by PCI: Start */
+/* added by network: Start */
 
 // Explicitly-sized versions of integer types
 typedef signed char        int8_t;
@@ -44,7 +44,43 @@ typedef unsigned long long uint64_t;
 
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
 
-/* added by PCI: End */
+static inline uint16_t bswaps(uint16_t val)
+{
+  return (((val & 0x00ffU) << 8) |
+          ((val & 0xff00U) >> 8));
+}
+
+static inline uint32_t bswapl(uint32_t val)
+{
+  return (((val & 0x000000ffUL) << 24) |
+          ((val & 0x0000ff00UL) << 8) |
+          ((val & 0x00ff0000UL) >> 8) |
+          ((val & 0xff000000UL) >> 24));
+}
+
+#define ntohs bswaps
+#define ntohl bswapl
+#define htons bswaps
+#define htonl bswapl
+
+typedef uint32_t pte_t;
+typedef uint32_t pde_t;
+
+// Rounding operations (efficient when n is a power of 2)
+// Round down to the nearest multiple of n
+#define ROUNDDOWN(a, n)						\
+({								\
+	uint32_t __a = (uint32_t) (a);				\
+	(typeof(a)) (__a - __a % (n));				\
+})
+// Round up to the nearest multiple of n
+#define ROUNDUP(a, n)						\
+({								\
+	uint32_t __n = (uint32_t) (n);				\
+	(typeof(a)) (ROUNDDOWN((uint32_t) (a) + __n - 1, __n));	\
+})
+
+/* added by network: End */
 
 typedef long long          i64;
 typedef unsigned long long u64;
@@ -66,24 +102,5 @@ typedef i32 ssize_t;
 typedef i32 off_t;
 // 通常描述物理地址
 typedef u32 phyaddr_t;
-
-static inline uint16_t bswaps(uint16_t val)
-{
-  return (((val & 0x00ffU) << 8) |
-          ((val & 0xff00U) >> 8));
-}
-
-static inline uint32_t bswapl(uint32_t val)
-{
-  return (((val & 0x000000ffUL) << 24) |
-          ((val & 0x0000ff00UL) << 8) |
-          ((val & 0x00ff0000UL) >> 8) |
-          ((val & 0xff000000UL) >> 24));
-}
-
-#define ntohs bswaps
-#define ntohl bswapl
-#define htons bswaps
-#define htonl bswapl
 
 #endif /* _ORANGES_TYPE_H_ */

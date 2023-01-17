@@ -3,10 +3,10 @@
  */
 
 #include <kernel/pagepte.h>
-
 #include <kernel/kernel.h>
 #include <kernel/memman.h>
 #include <kernel/proc.h>
+#include <kernlib/assert.h>
 #include <kernlib/stdio.h>
 #include <kernlib/string.h>
 
@@ -384,4 +384,83 @@ void clear_kernel_pagepte_low()
     memset((void *)(K_PHY2LIN(KernelPageTblAddr)), 0, 4 * page_num);              // 从内核页目录中清除内核页目录项前8项
     memset((void *)(K_PHY2LIN(KernelPageTblAddr + 0x1000)), 0, 4096 * page_num);  // 从内核页表中清除线性地址的低端映射关系
     refresh_page_cache();
+}
+
+/**
+ * 找到 pgdir 中对应虚拟地址的页表项，返回其虚拟地址
+*/
+pte_t *pgdir_walk(pde_t *pgdir, const void *va, const int create) {
+    uint32_t pdx = get_pde_index((uint32_t)va);
+    uint32_t ptx = get_pte_index((uint32_t)va);
+    pde_t *pde;
+    pte_t *pte;
+
+    pde = pgdir + pdx;
+
+    if (*pde & PG_P) {
+        // 如果页目录项存在
+        pte = (pte_t *)K_PHY2LIN(*pde & ~0xFFF);
+    } else {
+        // 页目录项不存在
+        if (!create) {
+            return NULL;
+        } else {
+            // 为页目录申请一页
+            *pde = do_kmalloc_4k();
+            if (!(*pde)) {
+                // 分配失败
+                return NULL;
+            }
+            // 初始化页目录项
+            memset(pde, 0, PGSIZE);
+            // 获取页表
+            pte = (void *)K_PHY2LIN(*pde & ~0xFFF); 
+        }
+    }
+    // 返回页表项的虚拟地址
+    return pte + ptx;
+}
+
+/**
+ * 将 pgdir 中的 [va, va+size) 虚拟地址映射到 [pa, pa+size) 物理地址
+*/
+static void boot_map_region(pde_t *pgdir, uintptr_t va, size_t size, uint32_t pa, int perm) {
+    // 计算页数
+    size_t pgs = size / PGSIZE;
+    if (size % PGSIZE != 0) {
+        pgs++;
+    }
+    // 逐页映射
+    for (int i = 0; i < pgs; i++) {
+        pte_t *pte = pgdir_walk(pgdir, (void *)va, 1);
+        if (pte == NULL) {
+            panic("boot_map_region out of memory\n");
+        }
+        *pte = pa | PG_P | perm;
+        va += PGSIZE;
+        pa += PGSIZE;
+    }
+}
+
+// 保存当前 MMIO 分配的最高地址，随着每次分配都会增长
+static uintptr_t mmio_base = MMIOBASE;
+
+/**
+ * MMIO 区域为 [MMIOBASE, MMIOLIM]
+ * 从 MMIO 区域中映射 size bytes 到 [pa, pa+size)
+ * 返回映射区域的基地址 base
+ * size 可以不是 PGSIZE 的整数倍
+*/
+uint32_t *mmio_map_region(uint32_t pa, uint32_t size)
+{
+    // 1. 从 MMIO 区域中预留出 size 大小的地址
+    void *ret = (void *)mmio_base;
+    size = ROUNDUP(size, PGSIZE);
+    if (mmio_base + size > MMIOLIM || mmio_base + size < mmio_base) {
+        panic("mmio_map_region reservation overflow\n");
+    }
+    // 2. 将 [base, base+size) 线性地址映射到 [pa, pa+size)
+    pde_t *pde_addr_phy = (pde_t *)get_pde_phy_addr(p_proc_current->task.pid);
+    boot_map_region(pde_addr_phy, mmio_base, size, pa, PG_RWW | PG_PCD | PG_PWT);
+    return NULL;
 }

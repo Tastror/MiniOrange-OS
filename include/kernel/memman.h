@@ -30,6 +30,4 @@ u32  do_kmalloc_4k();
 u32  do_free(u32 addr, u32 size);
 u32  do_free_4k(u32 addr);
 
-uint32_t *mmio_map_region(uint32_t base, uint32_t size);
-
 #endif /* _ORANGES_MEMMAN_H_ */
