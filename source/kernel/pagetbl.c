@@ -390,8 +390,8 @@ void clear_kernel_pagepte_low()
  * 找到 pgdir 中对应虚拟地址的页表项，返回其虚拟地址
 */
 pte_t *pgdir_walk(pde_t *pgdir, const void *va, const int create) {
-    uint32_t pdx = get_pde_index((uint32_t)va);
-    uint32_t ptx = get_pte_index((uint32_t)va);
+    uint32_t pdx = PDX((uint32_t)va);
+    uint32_t ptx = PTX((uint32_t)va);
     pde_t *pde;
     pte_t *pte;
 
@@ -406,15 +406,14 @@ pte_t *pgdir_walk(pde_t *pgdir, const void *va, const int create) {
             return NULL;
         } else {
             // 为页目录申请一页
-            *pde = do_kmalloc_4k();
-            if (!(*pde)) {
+            uint32_t pte_phy = do_kmalloc_4k();
+            if (!pte_phy) {
                 // 分配失败
                 return NULL;
             }
-            // 初始化页目录项
-            memset(pde, 0, PGSIZE);
+            *pde = pte_phy | (PG_P | PG_RWW | PG_USU);
             // 获取页表
-            pte = (void *)K_PHY2LIN(*pde & ~0xFFF); 
+            pte = (pte_t *)K_PHY2LIN(*pde & ~0xFFF); 
         }
     }
     // 返回页表项的虚拟地址
@@ -436,7 +435,7 @@ static void boot_map_region(pde_t *pgdir, uintptr_t va, size_t size, uint32_t pa
         if (pte == NULL) {
             panic("boot_map_region out of memory\n");
         }
-        *pte = pa | PG_P | perm;
+        *pte = pa | PG_P | perm; // ERROR HERE
         va += PGSIZE;
         pa += PGSIZE;
     }
@@ -460,7 +459,15 @@ uint32_t *mmio_map_region(uint32_t pa, uint32_t size)
         panic("mmio_map_region reservation overflow\n");
     }
     // 2. 将 [base, base+size) 线性地址映射到 [pa, pa+size)
-    pde_t *pde_addr_phy = (pde_t *)get_pde_phy_addr(p_proc_current->task.pid);
+    uint32_t kern_cr3;
+    __asm__ __volatile__ (
+        "mov %%cr3, %%eax\n\t"
+        "mov %%eax, %0\n\t"
+    : "=m" (kern_cr3)
+    : /* no input */
+    : "%eax"
+    );
+    pde_t *pde_addr_phy = (pde_t *)(K_PHY2LIN(kern_cr3 & 0xFFFFF000));
     boot_map_region(pde_addr_phy, mmio_base, size, pa, PG_RWW | PG_PCD | PG_PWT);
-    return NULL;
+    return ret;
 }

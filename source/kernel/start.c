@@ -41,7 +41,4 @@ void cstart()
     kern_set_color(WHITE);
 
     kprintf("-----\"cstart\" finished-----\n");
-
-    // 需要查看输出时关掉这里
-    // while (1) {}
 }

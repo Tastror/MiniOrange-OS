@@ -185,10 +185,7 @@ int pci_e1000_attach(struct pci_func *pcif)
     e1000_init(e1000_regs);
     kprintf("device status: %08x\n", e1000_regs[E1000_DEVICE_STATUS]);
 
-    while(1) {}
-
-    // e1000_transmit_init();
-    // e1000_receive_init();
+    // while(1) {}
     
     return 0;
 }
