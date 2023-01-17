@@ -9,11 +9,9 @@
 #include <kernlib/stdio.h>
 #include <kernlib/string.h>
 
-volatile uint32_t *e1000;
+uint32_t *regs;
 
 struct spinlock e1000_lock;
-
-uint32_t *regs;
 
 static struct tx_desc tx_ring[TX_RING_SIZE] __attribute__((aligned(16)));
 static struct mbuf   *tx_mbufs[TX_RING_SIZE];
@@ -170,21 +168,21 @@ int pci_e1000_attach(struct pci_func *pcif)
 {
     kprintf("ready to start e1000...\n");
 
-    // 写 E1000 寄存器，使能 E1000
+    // 使能改设备，并读取 bar 的相关信息
     pci_func_enable(pcif);
-    pci_bar_read(pcif);
 
-    // 映射内存
-    regs = (uint32_t *)do_malloc(0x20000);
+    // 由于 e1000 只用到第一个 bar（第二个是 io bar），这一段可以根据设备硬编码
+    // 直接 mmio_map 到虚拟内存里就好
+    // 这一步之后，就不用走 inl 和 outl 了，直接读写内存即可
+    regs = mmio_map_region(pcif->reg_base[0], pcif->reg_size[0]);
 
     // 注册一下 receive 的中断
     // TODO: 改为 MSI 中断
     register_device_interrupt(pcif->irq_line, DA_386IGate, e1000_receive_pack_handler, PRIVILEGE_KRNL);
-    
+
     // E1000 初始化
     e1000_init(regs);
 
-    // e1000 = mmio_map_region(pcif->reg_base[0], pcif->reg_size[0]);
     // e1000_transmit_init();
     // e1000_receive_init();
     // cprintf("device status:[%08x]\n", e1000[E1000_LOCATE(E1000_DEVICE_STATUS)]);

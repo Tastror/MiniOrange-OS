@@ -24,18 +24,20 @@ struct pci_driver {
     int (*attachfn)(struct pci_func *pcif);
 };
 
+
+// 这两个数组里添加需要注册的各种设备，这样编码会稍微软一点
+
 // pci_attach_class matches the class and subclass of a PCI device
 struct pci_driver pci_attach_class[] = {
     {PCI_CLASS_BRIDGE, PCI_SUBCLASS_BRIDGE_PCI, &pci_bridge_attach},
     {0, 0, 0},
 };
-
 // pci_attach_vendor matches the vendor ID and device ID of a PCI device. key1
 // and key2 should be the vendor ID and device ID respectively
-// struct pci_driver pci_attach_vendor[] = {
-//     {PCI_E1000_VENDER_ID, PCI_E1000_DEVICE_ID, &pci_e1000_attach},
-//     {0, 0, 0},
-// };
+struct pci_driver pci_attach_vendor[] = {
+    {PCI_E1000_VENDER_ID, PCI_E1000_DEVICE_ID, &pci_e1000_attach},
+    {0, 0, 0},
+};
 
 // 本函数为 "outl pci_addr_ioport, <bus, dev, func, offset>"
 // 用于切换当前读写的地址
@@ -112,11 +114,17 @@ pci_attach_match(
     return 0;
 }
 
-// static int pci_attach(struct pci_func *f)
-// {
-//     return pci_attach_match(PCI_CLASS(f->dev_class), PCI_SUBCLASS(f->dev_class), &pci_attach_class[0], f) ||
-//            pci_attach_match(PCI_VENDOR(f->dev_id), PCI_PRODUCT(f->dev_id), &pci_attach_vendor[0], f);
-// }
+static int pci_attach(struct pci_func *f, uint32_t attach_num)
+{
+    return (
+        // pci_attach_match(
+        //     PCI_CLASS(f->dev_class), PCI_SUBCLASS(f->dev_class), &pci_attach_class[attach_num], f
+        // ) ||
+        pci_attach_match(
+            PCI_VENDOR(f->dev_id), PCI_PRODUCT(f->dev_id), &pci_attach_vendor[attach_num], f
+        )
+    );
+}
 
 static const char *pci_class[] = {
     [0x0] = "Unknown",
@@ -183,15 +191,9 @@ static int pci_scan_bus(struct pci_bus *bus)
             ssrf.dev_class = pci_conf_read(&ssrf, PCI_CLASS_REG);
             if (pci_show_devs)
                 pci_print_func(&ssrf);
-            // pci_attach(&ssrf);
-
-            if (
-                PCI_VENDOR(ssrf.dev_id) == PCI_E1000_VENDER_ID &&
-                PCI_PRODUCT(ssrf.dev_id) == PCI_E1000_DEVICE_ID
-            ) {
-                // kprintf("Found e1000\n");
-                pci_e1000_attach(&ssrf);
-            }
+            
+            // 在这里开始连接 e1000，其他连接按照序号来就可
+            pci_attach(&ssrf, 0);
         }
     }
 
@@ -282,6 +284,8 @@ void pci_bar_read(struct pci_func *f)
 void pci_func_enable(struct pci_func *f)
 {
     pci_conf_write(f, PCI_COMMAND_STATUS_REG, PCI_COMMAND_IO_ENABLE | PCI_COMMAND_MEM_ENABLE | PCI_COMMAND_MASTER_ENABLE);
+
+    pci_bar_read(f);
 
     kprintf(
         "PCI function %02x:%02x.%d (%04x:%04x) enabled\n",

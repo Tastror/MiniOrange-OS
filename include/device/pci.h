@@ -35,6 +35,5 @@ struct pci_bus {
 // scan the pci bus
 int  init_pci(void);
 void pci_func_enable(struct pci_func *f);
-void pci_bar_read(struct pci_func *f);
 
 #endif
