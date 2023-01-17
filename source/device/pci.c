@@ -65,7 +65,7 @@ static void pci_conf1_set_addr(
     //
     //   31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00
     //    1  (     nothing     )  [        bus         ]  [    dev    ]  [funct]  [      reg     ]  0  0
-    // enable     reseread_bar_dataed              bus number         dev number  function num    reg num
+    // enable     reseones_fill_bar_dataed              bus number         dev number  function num    reg num
     //
     // 前面是总线、设备、功能的编号，都好理解，但是 reg num 是什么呢？
     // 答案是 16 个不同的寄存器，分别保存了如下信息（着重看第一个、最后一个和 04 ~ 09）
@@ -75,6 +75,7 @@ static void pci_conf1_set_addr(
     // reg 02:  class code 24bit, revision ID 8bit
     // reg 03:  bist, header type, lat timer, cache line. each 8bit
     // reg 04 ~ reg 09:  bar register * 6, 32bit [也就是用于设备的具体功能的 6 个读写寄存器]
+    //   BAR 根据 mmio 和 pio 有两种不同的布局，其中 bit0 用于指示是内存是 mmio 还是 pio
     // reg 10:  cardbus cis pointer 32bit
     // reg 11:  subsystem ID 16bit, subsystem vender ID 16bit
     // reg 12:  expansion rom base address 32bit
@@ -152,8 +153,9 @@ static void pci_conf_write(struct pci_func *f, uint32_t off, uint32_t write_data
 
 static int pci_scan_bus(struct pci_bus *bus)
 {
-    int32_t         totaldev = 0;  // total count of device
-    struct pci_func rf;            // root node of bus
+    int32_t totaldev = 0;  // total count of device
+
+    struct pci_func rf;  // root node of bus
     memset(&rf, 0, sizeof(rf));
     rf.bus = bus;
 
@@ -196,43 +198,72 @@ static int pci_scan_bus(struct pci_bus *bus)
     return totaldev;
 }
 
-void pci_func_enable(struct pci_func *f)
+void pci_bar_read(struct pci_func *f)
 {
-    pci_conf_write(f, PCI_COMMAND_STATUS_REG, PCI_COMMAND_IO_ENABLE | PCI_COMMAND_MEM_ENABLE | PCI_COMMAND_MASTER_ENABLE);
-
     uint32_t bar_width = 4;
 
     // 04 ~ 09 的 6 个 bar 寄存器的初始化
+    // 它用 init_regs 作为初始化值
     for (
         uint32_t bar = PCI_MAPREG_START; bar < PCI_MAPREG_END;
         bar += bar_width
     ) {
-        uint32_t old_bar_data = pci_conf_read(f, bar);
+        // 这个 bar 里的初始化信息，读完长度要复原回去
+        uint32_t reset_bar_data = pci_conf_read(f, bar);
 
         bar_width = 4;
-        pci_conf_write(f, bar, 0xffffffff);
-        uint32_t read_bar_data = pci_conf_read(f, bar);
-        if (read_bar_data == 0)
-            continue;
-
         int regnum = PCI_MAPREG_NUM(bar);
 
-        uint32_t base, size;
-        if (PCI_MAPREG_TYPE(read_bar_data) == PCI_MAPREG_TYPE_MEM) {
-            if (PCI_MAPREG_MEM_TYPE(read_bar_data) == PCI_MAPREG_MEM_TYPE_64BIT)
-                bar_width = 8;
-            size = PCI_MAPREG_MEM_SIZE(read_bar_data);
-            base = PCI_MAPREG_MEM_ADDR(old_bar_data);
-            if (pci_show_addrs)
-                kprintf("  mem region %d: %d bytes at 0x%x\n", regnum, size, base);
-        } else {
-            size = PCI_MAPREG_IO_SIZE(read_bar_data);
-            base = PCI_MAPREG_IO_ADDR(old_bar_data);
-            if (pci_show_addrs)
-                kprintf("  io region %d: %d bytes at 0x%x\n", regnum, size, base);
+        // 用全 1 填充，可以获得 PCI 设备使用的 BAR 空间的长度
+        pci_conf_write(f, bar, 0xffffffff);
+        uint32_t ones_fill_bar_data = pci_conf_read(f, bar);
+        if (ones_fill_bar_data == 0) {
+            f->reg_base[regnum] = 0;
+            f->reg_size[regnum] = 0;
+            continue;
         }
 
-        pci_conf_write(f, bar, old_bar_data);
+        uint32_t base, size;
+
+        // 这里 bar 分为 memory space 和 I/O space 两种
+        //
+        // memory space 的格式为
+        // 31 - 04       03            02 01  00
+        // base address  prefetchable   type   0
+        // base 掩码：0xffff_fff0
+        //
+        // I/O space 的格式为
+        // 31 - 02            01  00
+        // base address  nothing   1
+        // base 掩码：0xffff_fffc
+
+        // 末尾为 0：memory space
+        if (PCI_MAPREG_TYPE(ones_fill_bar_data) == PCI_MAPREG_TYPE_MEM) {
+            if (PCI_MAPREG_MEM_TYPE(ones_fill_bar_data) == PCI_MAPREG_MEM_TYPE_64BIT)
+                bar_width = 8;
+            base = PCI_MAPREG_MEM_ADDR(reset_bar_data);
+            size = PCI_MAPREG_MEM_SIZE(ones_fill_bar_data);
+            if (pci_show_addrs)
+                kprintf(
+                    "  [%d] mem region: %d bytes(%d) at 0x%08x\n",
+                    regnum, size, log2(size), base
+                );
+        }
+
+        // 末尾不为 0：I/O space
+        else {
+            base = PCI_MAPREG_IO_ADDR(reset_bar_data);
+            size = PCI_MAPREG_IO_SIZE(ones_fill_bar_data);
+            if (pci_show_addrs)
+                kprintf(
+                    "  [%d] io region: %d bytes(%d) at 0x%08x\n",
+                    regnum, size, log2(size), base
+                );
+        }
+
+        // 复原回去
+        pci_conf_write(f, bar, reset_bar_data);
+        // 保存到 f 里，供后面使用
         f->reg_base[regnum] = base;
         f->reg_size[regnum] = size;
 
@@ -246,6 +277,11 @@ void pci_func_enable(struct pci_func *f)
                 regnum, base, size
             );
     }
+}
+
+void pci_func_enable(struct pci_func *f)
+{
+    pci_conf_write(f, PCI_COMMAND_STATUS_REG, PCI_COMMAND_IO_ENABLE | PCI_COMMAND_MEM_ENABLE | PCI_COMMAND_MASTER_ENABLE);
 
     kprintf(
         "PCI function %02x:%02x.%d (%04x:%04x) enabled\n",

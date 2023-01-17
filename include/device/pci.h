@@ -20,10 +20,11 @@ struct pci_func {
     uint32_t dev_id;        // read from device by PCI_ID_REG
     uint32_t dev_class;     // read from device by PCI_CLASS_REG
 
+    // 6 bars
     uint32_t reg_base[6];
     uint32_t reg_size[6];
-    uint8_t irq_line;       // PCI_INTERRUPT_LINE(intr), where 'intr' 
-                            // is read from device by PCI_INTERRUPT_REG
+
+    uint8_t irq_line;       // read from device by PCI_INTERRUPT_REG
 };
 
 struct pci_bus {
@@ -34,5 +35,6 @@ struct pci_bus {
 // scan the pci bus
 int  init_pci(void);
 void pci_func_enable(struct pci_func *f);
+void pci_bar_read(struct pci_func *f);
 
 #endif

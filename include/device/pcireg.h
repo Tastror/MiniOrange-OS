@@ -350,49 +350,61 @@ typedef uint8_t pci_revision_t;
 #define PCI_MAPREG_PPB_END 0x18
 #define PCI_MAPREG_PCB_END 0x14
 
-#define PCI_MAPREG_TYPE(mr) \
-    ((mr)&PCI_MAPREG_TYPE_MASK)
 #define PCI_MAPREG_TYPE_MASK 0x00000001
+#define PCI_MAPREG_TYPE(mr)  ((mr)&PCI_MAPREG_TYPE_MASK)
 
 #define PCI_MAPREG_TYPE_MEM   0x00000000
 #define PCI_MAPREG_TYPE_IO    0x00000001
 #define PCI_MAPREG_ROM_ENABLE 0x00000001
 
-#define PCI_MAPREG_MEM_TYPE(mr) \
-    ((mr)&PCI_MAPREG_MEM_TYPE_MASK)
 #define PCI_MAPREG_MEM_TYPE_MASK 0x00000006
+#define PCI_MAPREG_MEM_TYPE(mr)  ((mr)&PCI_MAPREG_MEM_TYPE_MASK)
 
 #define PCI_MAPREG_MEM_TYPE_32BIT    0x00000000
 #define PCI_MAPREG_MEM_TYPE_32BIT_1M 0x00000002
 #define PCI_MAPREG_MEM_TYPE_64BIT    0x00000004
 
-#define PCI_MAPREG_MEM_PREFETCHABLE(mr) \
-    (((mr)&PCI_MAPREG_MEM_PREFETCHABLE_MASK) != 0)
 #define PCI_MAPREG_MEM_PREFETCHABLE_MASK 0x00000008
+#define PCI_MAPREG_MEM_PREFETCHABLE(mr)  (((mr)&PCI_MAPREG_MEM_PREFETCHABLE_MASK) != 0)
 
-#define PCI_MAPREG_MEM_ADDR(mr) \
-    ((mr)&PCI_MAPREG_MEM_ADDR_MASK)
-#define PCI_MAPREG_MEM_SIZE(mr) \
-    (PCI_MAPREG_MEM_ADDR(mr) & -PCI_MAPREG_MEM_ADDR(mr))
 #define PCI_MAPREG_MEM_ADDR_MASK 0xfffffff0
+#define PCI_MAPREG_MEM_ADDR(mr)  ((mr)&PCI_MAPREG_MEM_ADDR_MASK)
 
-#define PCI_MAPREG_MEM64_ADDR(mr) \
-    ((mr)&PCI_MAPREG_MEM64_ADDR_MASK)
-#define PCI_MAPREG_MEM64_SIZE(mr) \
-    (PCI_MAPREG_MEM64_ADDR(mr) & -PCI_MAPREG_MEM64_ADDR(mr))
+// 记 k = 0b_mnop_qrst（二进制数字序列 mnopqrst）
+// k & -k 是在干什么呢？
+//
+// -0b_mnop_qrst = 0b_~m~n~o~p_~q~r~s~t + 1
+// 若 t 为 1
+// 0b_mnop_qrs1 & 0b_~m~n~o~p_~q~r~s0 + 1 = 0b_0000_0001（~s & s == 0）
+// 若 t 为 0，s 为 1
+// 0b_mnop_qr10 & 0b_~m~n~o~p_~q~r01 + 1 = 0b_0000_0010（~r & r == 0）
+// 若 t 为 0，s 为 0，r 为 1
+// 0b_mnop_q100 & 0b_~m~n~o~p_~q011 + 1 = 0b_0000_0010（~q & q == 0）
+// 依次类推
+//
+// 故这个操作是在计算这个数 k 从右往左第一次不为 0 的位置，形成一个数字 0b00...010...00
+// 也即 2^n，n 是从右往左数第一次不为 0 的位置（位置从 0 开始数）
+// 换句话说，也就是计算 2^n | k 的最大的 2^n
+
+// 计算 2^n | PCI_MAPREG_MEM_ADDR(mr) 的最大的 2^n
+// log2(this) = 后缀 0 的个数
+#define PCI_MAPREG_MEM_SIZE(mr)  (PCI_MAPREG_MEM_ADDR(mr) & -PCI_MAPREG_MEM_ADDR(mr))
+
 #define PCI_MAPREG_MEM64_ADDR_MASK 0xfffffffffffffff0ULL
+#define PCI_MAPREG_MEM64_ADDR(mr)  ((mr)&PCI_MAPREG_MEM64_ADDR_MASK)
+// 计算 2^n | PCI_MAPREG_MEM64_ADDR(mr) 的最大的 2^n
+// log2(this) = 后缀 0 的个数
+#define PCI_MAPREG_MEM64_SIZE(mr)  (PCI_MAPREG_MEM64_ADDR(mr) & -PCI_MAPREG_MEM64_ADDR(mr))
 
-#define PCI_MAPREG_IO_ADDR(mr) \
-    ((mr)&PCI_MAPREG_IO_ADDR_MASK)
-#define PCI_MAPREG_IO_SIZE(mr) \
-    (PCI_MAPREG_IO_ADDR(mr) & -PCI_MAPREG_IO_ADDR(mr))
 #define PCI_MAPREG_IO_ADDR_MASK 0xfffffffc
+#define PCI_MAPREG_IO_ADDR(mr)  ((mr)&PCI_MAPREG_IO_ADDR_MASK)
+// 计算 2^n | PCI_MAPREG_IO_ADDR(mr) 的最大的 2^n
+// log2(this) = 后缀 0 的个数
+#define PCI_MAPREG_IO_SIZE(mr)  (PCI_MAPREG_IO_ADDR(mr) & -PCI_MAPREG_IO_ADDR(mr))
 
-#define PCI_MAPREG_SIZE_TO_MASK(size) \
-    (-(size))
+#define PCI_MAPREG_SIZE_TO_MASK(size) (-(size))
 
-#define PCI_MAPREG_NUM(offset) \
-    (((unsigned)(offset)-PCI_MAPREG_START) / 4)
+#define PCI_MAPREG_NUM(offset) (((unsigned)(offset)-PCI_MAPREG_START) / 4)
 
 
 /*
