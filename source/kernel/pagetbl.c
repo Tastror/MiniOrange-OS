@@ -386,6 +386,60 @@ void clear_kernel_pagepte_low()
     refresh_page_cache();
 }
 
+/*
+ * MINIOS中比较通用的页表映射函数
+ * 它将laddr处的虚拟页面映射到物理地址为paddr（如果paddr为-1则会自动申请一个新的物理页面）的物理页面
+ * 并将pte_flag置位到页表项（页目录项标志位默认为PTE_P | PTE_W | PTE_U）
+ * 这个函数中所有新申请到的页面信息会存放到page_list这个链表中
+ */
+static void
+lin_mapping_phy_boot(u32			cr3,
+		uintptr_t		laddr,
+		phyaddr_t		paddr,
+		u32			pte_flag)
+{
+    assert(PGOFF(laddr) == 0);
+
+    uintptr_t *pde_ptr = (uintptr_t *)K_PHY2LIN(cr3);
+
+    if ((pde_ptr[PDX(laddr)] & PG_P) == 0) {
+        phyaddr_t pte_phy = do_kmalloc_4k();
+        memset((void *)K_PHY2LIN(pte_phy), 0, PGSIZE);
+        pde_ptr[PDX(laddr)] = pte_phy | PG_P | PG_RWW | PG_USU;
+    }
+
+    phyaddr_t pte_phy = PTE_ADDR(pde_ptr[PDX(laddr)]);
+    uintptr_t *pte_ptr = (uintptr_t *)K_PHY2LIN(pte_phy);
+
+    phyaddr_t page_phy;
+    if (paddr == (phyaddr_t)-1) {
+        if ((pte_ptr[PTX(laddr)] & PG_P) != 0)
+            return;
+        page_phy = do_kmalloc_4k();
+    } else {
+        if ((pte_ptr[PTX(laddr)] & PG_P) != 0)
+            warn("this page was mapped before, laddr: %x", laddr);
+        assert(PGOFF(paddr) == 0);
+        page_phy = paddr;
+    }
+    pte_ptr[PTX(laddr)] = page_phy | pte_flag;
+}
+
+/*
+ * 初始化进程页表的内核部分
+ * 将3GB ~ 3GB + 128MB的线性地址映射到0 ~ 128MB的物理地址
+ */
+void
+map_kern(u32 cr3)
+{
+	for (phyaddr_t paddr = 0 ; paddr < KernelSize ; paddr += PGSIZE) {
+		lin_mapping_phy_boot(cr3,
+				K_PHY2LIN(paddr),
+				paddr,
+				PG_P | PG_RWW | PG_USU);
+	}
+}
+
 /**
  * 找到 pgdir 中对应虚拟地址的页表项，返回其虚拟地址
 */
@@ -417,8 +471,8 @@ pte_t *pgdir_walk(pde_t *pgdir, const void *va, const int create) {
             // 获取页表
             pte = (pte_t *)K_PHY2LIN(*pde & ~0xFFF); 
             // 测试一下
-            // kprintf("%x ", *pte); // WRONG HERE
-            // kprintf("%x ", *(pte + ptx));
+            kprintf("%x ", *pte); // WRONG HERE
+            kprintf("%x ", *(pte + ptx));
         }
     }
     // 返回页表项的虚拟地址

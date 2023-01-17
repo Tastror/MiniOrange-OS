@@ -86,6 +86,14 @@ typedef uint32_t pde_t;
 // page table index
 #define PTX(la)		((((uintptr_t) (la)) >> PTXSHIFT) & 0x3FF)
 
+#define MB (1024 * 1024)
+
+// offset in page
+#define PGOFF(la)	(((uintptr_t) (la)) & 0xFFF)
+
+// Address in page table or page directory entry
+#define PTE_ADDR(pte)	((phyaddr_t) (pte) & ~0xFFF)
+
 /* added by network: End */
 
 typedef long long          i64;
