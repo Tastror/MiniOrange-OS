@@ -5,10 +5,12 @@
 #include <define/define.h>
 
 // PCI subsystem interface
-enum { pci_res_bus,
-       pci_res_mem,
-       pci_res_io,
-       pci_res_max };
+enum {
+    pci_res_bus,
+    pci_res_mem,
+    pci_res_io,
+    pci_res_max
+};
 
 // PCI: pci_bus -{ pci_func(count < 8)
 
