@@ -462,5 +462,5 @@ uint32_t *mmio_map_region(uint32_t pa, uint32_t size)
     // 2. 将 [base, base+size) 线性地址映射到 [pa, pa+size)
     pde_t *pde_addr_phy = (pde_t *)get_pde_phy_addr(p_proc_current->task.pid);
     boot_map_region(pde_addr_phy, mmio_base, size, pa, PG_RWW | PG_PCD | PG_PWT);
-    return NULL;
+    return NR_DEFAULT_FILE_SECTS;
 }
