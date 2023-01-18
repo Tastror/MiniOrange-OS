@@ -134,7 +134,7 @@ int e1000_transmit(struct mbuf *m)
     return 0;
 }
 
-void e1000_recv(void)
+void e1000_receive(void)
 {
     // Check for packets that have arrived from the e1000
     // Create and deliver an mbuf for each packet (using net_rx()).
@@ -176,19 +176,20 @@ int pci_e1000_attach(struct pci_func *pcif)
     // 直接 mmio_map 到虚拟内存里就好
     // 这一步之后，就不用走 inl 和 outl 了，直接读写内存即可
     e1000_regs = mmio_map_region(pcif->reg_base[0], pcif->reg_size[0]);
+    kprintf("phy %08x -> logi %08x\n", pcif->reg_base[0], e1000_regs);
 
     // 注册一下 receive 的中断
     // TODO: 改为 MSI 中断
-    // TODO: 由于将 init_pci 移到了 main 中，需要完善中断注册函数
+    // TODO: 由于将 init_pci_device 移到了 main 中，需要完善中断注册函数
     // 这样做的原因是 mmio 需要在内核的页表被映射后才能使用
     register_device_interrupt(pcif->irq_line, DA_386IGate, e1000_receive_pack_handler, PRIVILEGE_KRNL);
 
     // E1000 初始化
-    e1000_init(e1000_regs);
+    kprintf("device status: %08x\n", e1000_regs[E1000_DEVICE_STATUS]);
+    e1000_init();
     kprintf("device status: %08x\n", e1000_regs[E1000_DEVICE_STATUS]);
 
-    // while(1) {}
-    
+    // while (1) {}
     return 0;
 }
 
@@ -204,6 +205,7 @@ void e1000_receive_pack_handler()
     );
 
     kprintf("begin to receive e1000's pack now...\n");
+    e1000_receive();
 
     __asm__ __volatile__(
         "popal\n\tpopfl\n\t"

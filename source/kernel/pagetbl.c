@@ -471,8 +471,8 @@ pte_t *pgdir_walk(pde_t *pgdir, const void *va, const int create) {
             // 获取页表
             pte = (pte_t *)K_PHY2LIN(*pde & ~0xFFF); 
             // 测试一下
-            kprintf("%x ", *pte); // WRONG HERE
-            kprintf("%x ", *(pte + ptx));
+            // kprintf("%x ", *pte);
+            // kprintf("%x ", *(pte + ptx));
         }
     }
     // 返回页表项的虚拟地址

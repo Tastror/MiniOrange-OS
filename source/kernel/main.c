@@ -45,7 +45,9 @@ int kernel_main()
     if (error != 0)
         return error;
 
-    init_pci();
+    kern_set_color(CYAN);
+    init_pci_device();
+    kern_set_color(WHITE);
 
     k_reenter = 0;  // record nest level of only interruption! it's different from Orange's.
                     // usage modified by xw

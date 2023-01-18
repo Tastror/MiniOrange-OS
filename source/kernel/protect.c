@@ -62,7 +62,6 @@ void init_prot()
 
     // 添加 device 初始化时提供的中断。
     // 因为 device 不依赖 kernel，所以写到了一个结构体里，在这个时候处理
-    // 注意 device 的初始化 (init_pci) 必须写在 init_prot 前面，否则没法进行中断的注册
     for (int i = 0; i < device_interrupt_num; ++i) {
         struct device_interrupt *now = &device_interrupt_table[i];
         init_idt_desc(now->interrupt_num, now->desc_type, now->handler_func, now->privilege);
