@@ -10,6 +10,7 @@
 #include <kernlib/assert.h>
 #include <kernlib/stdio.h>
 #include <kernlib/string.h>
+#include <device/pci.h>
 
 static int initialize_processes();  // added by xw, 18/5/26
 static int initialize_cpus();       // added by xw, 18/6/2
@@ -43,6 +44,8 @@ int kernel_main()
     error = initialize_cpus();
     if (error != 0)
         return error;
+
+    init_pci();
 
     k_reenter = 0;  // record nest level of only interruption! it's different from Orange's.
                     // usage modified by xw
