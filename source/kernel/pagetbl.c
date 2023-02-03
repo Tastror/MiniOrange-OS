@@ -2,9 +2,9 @@
  * 页式管理相关代码 add by visual 2016.4.19
  */
 
-#include <kernel/pagepte.h>
 #include <kernel/kernel.h>
 #include <kernel/memman.h>
+#include <kernel/pagepte.h>
 #include <kernel/proc.h>
 #include <kernlib/assert.h>
 #include <kernlib/stdio.h>
@@ -393,10 +393,7 @@ void clear_kernel_pagepte_low()
  * 这个函数中所有新申请到的页面信息会存放到page_list这个链表中
  */
 static void
-lin_mapping_phy_boot(u32			cr3,
-		uintptr_t		laddr,
-		phyaddr_t		paddr,
-		u32			pte_flag)
+lin_mapping_phy_boot(u32 cr3, uintptr_t laddr, phyaddr_t paddr, u32 pte_flag)
 {
     assert(PGOFF(laddr) == 0);
 
@@ -408,7 +405,7 @@ lin_mapping_phy_boot(u32			cr3,
         pde_ptr[PDX(laddr)] = pte_phy | PG_P | PG_RWW | PG_USU;
     }
 
-    phyaddr_t pte_phy = PTE_ADDR(pde_ptr[PDX(laddr)]);
+    phyaddr_t  pte_phy = PTE_ADDR(pde_ptr[PDX(laddr)]);
     uintptr_t *pte_ptr = (uintptr_t *)K_PHY2LIN(pte_phy);
 
     phyaddr_t page_phy;
@@ -429,25 +426,22 @@ lin_mapping_phy_boot(u32			cr3,
  * 初始化进程页表的内核部分
  * 将3GB ~ 3GB + 128MB的线性地址映射到0 ~ 128MB的物理地址
  */
-void
-map_kern(u32 cr3)
+void map_kern(u32 cr3)
 {
-	for (phyaddr_t paddr = 0 ; paddr < KernelSize ; paddr += PGSIZE) {
-		lin_mapping_phy_boot(cr3,
-				K_PHY2LIN(paddr),
-				paddr,
-				PG_P | PG_RWW | PG_USU);
-	}
+    for (phyaddr_t paddr = 0; paddr < KernelSize; paddr += PGSIZE) {
+        lin_mapping_phy_boot(cr3, K_PHY2LIN(paddr), paddr, PG_P | PG_RWW | PG_USU);
+    }
 }
 
 /**
  * 找到 pgdir 中对应虚拟地址的页表项，返回其虚拟地址
-*/
-pte_t *pgdir_walk(pde_t *pgdir, const void *va, const int create) {
+ */
+pte_t *pgdir_walk(pde_t *pgdir, const void *va, const int create)
+{
     uint32_t pdx = PDX((uint32_t)va);
     uint32_t ptx = PTX((uint32_t)va);
-    pde_t *pde;
-    pte_t *pte;
+    pde_t   *pde;
+    pte_t   *pte;
 
     pde = pgdir + pdx;
 
@@ -469,7 +463,7 @@ pte_t *pgdir_walk(pde_t *pgdir, const void *va, const int create) {
             }
             *pde = pte_phy | (PG_P | PG_RWW | PG_USU);
             // 获取页表
-            pte = (pte_t *)K_PHY2LIN(*pde & ~0xFFF); 
+            pte = (pte_t *)K_PHY2LIN(*pde & ~0xFFF);
             // 测试一下
             // kprintf("%x ", *pte);
             // kprintf("%x ", *(pte + ptx));
@@ -481,8 +475,9 @@ pte_t *pgdir_walk(pde_t *pgdir, const void *va, const int create) {
 
 /**
  * 将 pgdir 中的 [va, va+size) 虚拟地址映射到 [pa, pa+size) 物理地址
-*/
-static void boot_map_region(pde_t *pgdir, uintptr_t va, size_t size, uint32_t pa, int perm) {
+ */
+static void boot_map_region(pde_t *pgdir, uintptr_t va, size_t size, uint32_t pa, int perm)
+{
     // 计算页数
     size_t pgs = size / PGSIZE;
     if (size % PGSIZE != 0) {
@@ -494,7 +489,7 @@ static void boot_map_region(pde_t *pgdir, uintptr_t va, size_t size, uint32_t pa
         if (pte == NULL) {
             panic("boot_map_region out of memory\n");
         }
-        *pte = pa | PG_P | perm; // ERROR HERE
+        *pte = pa | PG_P | perm;  // ERROR HERE
         va += PGSIZE;
         pa += PGSIZE;
     }
@@ -508,7 +503,7 @@ static uintptr_t mmio_base = MMIOBASE;
  * 从 MMIO 区域中映射 size bytes 到 [pa, pa+size)
  * 返回映射区域的基地址 base
  * size 可以不是 PGSIZE 的整数倍
-*/
+ */
 uint32_t *mmio_map_region(uint32_t pa, uint32_t size)
 {
     // 1. 从 MMIO 区域中预留出 size 大小的地址
@@ -519,12 +514,12 @@ uint32_t *mmio_map_region(uint32_t pa, uint32_t size)
     }
     // 2. 将 [base, base+size) 线性地址映射到 [pa, pa+size)
     uint32_t kern_cr3;
-    __asm__ __volatile__ (
+    __asm__ __volatile__(
         "mov %%cr3, %%eax\n\t"
         "mov %%eax, %0\n\t"
-    : "=m" (kern_cr3)
-    : /* no input */
-    : "%eax"
+        : "=m"(kern_cr3)
+        : /* no input */
+        : "%eax"
     );
     pde_t *pde_addr_phy = (pde_t *)(K_PHY2LIN(kern_cr3 & 0xFFFFF000));
     boot_map_region(pde_addr_phy, mmio_base, size, pa, PG_RWW | PG_PCD | PG_PWT);

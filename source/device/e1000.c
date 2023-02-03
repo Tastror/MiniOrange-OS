@@ -185,9 +185,11 @@ int pci_e1000_attach(struct pci_func *pcif)
     register_device_interrupt(pcif->irq_line, DA_386IGate, e1000_receive_pack_handler, PRIVILEGE_KRNL);
 
     // E1000 初始化
-    kprintf("device status: %08x\n", e1000_regs[E1000_DEVICE_STATUS]);
+    kprintf("device control: %08x\n", e1000_regs[E1000_CTL]);
+    kprintf("device status: %08x\n", e1000_regs[E1000_STATUS]);
     e1000_init();
-    kprintf("device status: %08x\n", e1000_regs[E1000_DEVICE_STATUS]);
+    kprintf("device control: %08x\n", e1000_regs[E1000_CTL]);
+    kprintf("device status: %08x\n", e1000_regs[E1000_STATUS]);
 
     // while (1) {}
     return 0;

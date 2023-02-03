@@ -41,25 +41,40 @@ struct rx_desc {
  */
 
 /* Registers */
-#define E1000_CTL   (0x00000 / 4) /* Device Control Register - RW */
-#define E1000_ICR   (0x000C0 / 4) /* Interrupt Cause Read - R */
-#define E1000_IMS   (0x000D0 / 4) /* Interrupt Mask Set - RW */
-#define E1000_RCTL  (0x00100 / 4) /* RX Control - RW */
-#define E1000_TCTL  (0x00400 / 4) /* TX Control - RW */
-#define E1000_TIPG  (0x00410 / 4) /* TX Inter-packet gap -RW */
-#define E1000_RDBAL (0x02800 / 4) /* RX Descriptor Base Address Low - RW */
-#define E1000_RDTR  (0x02820 / 4) /* RX Delay Timer */
-#define E1000_RADV  (0x0282C / 4) /* RX Interrupt Absolute Delay Timer */
-#define E1000_RDH   (0x02810 / 4) /* RX Descriptor Head - RW */
-#define E1000_RDT   (0x02818 / 4) /* RX Descriptor Tail - RW */
-#define E1000_RDLEN (0x02808 / 4) /* RX Descriptor Length - RW */
-#define E1000_RSRPD (0x02C00 / 4) /* RX Small Packet Detect Interrupt */
-#define E1000_TDBAL (0x03800 / 4) /* TX Descriptor Base Address Low - RW */
-#define E1000_TDLEN (0x03808 / 4) /* TX Descriptor Length - RW */
-#define E1000_TDH   (0x03810 / 4) /* TX Descriptor Head - RW */
-#define E1000_TDT   (0x03818 / 4) /* TX Descripotr Tail - RW */
-#define E1000_MTA   (0x05200 / 4) /* Multicast Table Array - RW Array */
-#define E1000_RA    (0x05400 / 4) /* Receive Address - RW Array */
+#define E1000_CTL      (0x00000 >> 2) /* Device Control Register - RW */
+#define E1000_STATUS   (0x00008 >> 2) /* Device Status - R */
+#define E1000_EECD     (0x00010 >> 2) /* EEPROM/Flash Control/Data - RW */
+#define E1000_EERD     (0x00014 >> 2) /* EEPROM Read - RW */
+#define E1000_FLA      (0x0001C >> 2) /* Flash Access - RW */
+#define E1000_CTRL_EXT (0x00018 >> 2) /* Extended Device Control - RW */
+#define E1000_MDIC     (0x00020 >> 2) /* MDI Control - RW */
+#define E1000_FCAL     (0x00028 >> 2) /* Flow Control Address Low - RW */
+#define E1000_FCAH     (0x0002C >> 2) /* Flow Control Address High - RW */
+#define E1000_FCT      (0x00030 >> 2) /* Flow Control Type - RW */
+#define E1000_VET      (0x00038 >> 2) /* VLAN EtherType - RW */
+#define E1000_FCTTV    (0x00170 >> 2) /* Flow Control Transmit Timer Value - RW */
+#define E1000_TXCW     (0x00178 >> 2) /* Transmit Configuration Word - RW */
+#define E1000_RXCW     (0x00180 >> 2) /* Receive Configuration Word - R */
+#define E1000_LEDCTL   (0x00E00 >> 2) /* LED Control - RW */
+#define E1000_PBA      (0x01000 >> 2) /* Packet Buffer Allocation - RW */
+#define E1000_ICR      (0x000C0 >> 2) /* Interrupt Cause Read - R */
+#define E1000_IMS      (0x000D0 >> 2) /* Interrupt Mask Set - RW */
+#define E1000_RCTL     (0x00100 >> 2) /* RX Control - RW */
+#define E1000_TCTL     (0x00400 >> 2) /* TX Control - RW */
+#define E1000_TIPG     (0x00410 >> 2) /* TX Inter-packet gap -RW */
+#define E1000_RDBAL    (0x02800 >> 2) /* RX Descriptor Base Address Low - RW */
+#define E1000_RDTR     (0x02820 >> 2) /* RX Delay Timer */
+#define E1000_RADV     (0x0282C >> 2) /* RX Interrupt Absolute Delay Timer */
+#define E1000_RDH      (0x02810 >> 2) /* RX Descriptor Head - RW */
+#define E1000_RDT      (0x02818 >> 2) /* RX Descriptor Tail - RW */
+#define E1000_RDLEN    (0x02808 >> 2) /* RX Descriptor Length - RW */
+#define E1000_RSRPD    (0x02C00 >> 2) /* RX Small Packet Detect Interrupt */
+#define E1000_TDBAL    (0x03800 >> 2) /* TX Descriptor Base Address Low - RW */
+#define E1000_TDLEN    (0x03808 >> 2) /* TX Descriptor Length - RW */
+#define E1000_TDH      (0x03810 >> 2) /* TX Descriptor Head - RW */
+#define E1000_TDT      (0x03818 >> 2) /* TX Descripotr Tail - RW */
+#define E1000_MTA      (0x05200 >> 2) /* Multicast Table Array - RW Array */
+#define E1000_RA       (0x05400 >> 2) /* Receive Address - RW Array */
 
 /* Device Control */
 #define E1000_CTL_SLU     0x00000040 /* set link up */
@@ -134,8 +149,6 @@ struct rx_desc {
 /* Receive Descriptor bit definitions [E1000 3.2.3.1] */
 #define E1000_RXD_STAT_DD  0x01 /* Descriptor Done */
 #define E1000_RXD_STAT_EOP 0x02 /* End of Packet */
-
-#define E1000_DEVICE_STATUS (0x00008 >> 2) /* Device Status - RO */
 
 extern uint32_t *e1000_regs;
 
