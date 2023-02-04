@@ -7,12 +7,13 @@
 #define MEMMAN_FREES 4090        // 32KB
 #define MEMMAN_ADDR  0x01ff0000  // 存 memman，31M 960K
 #define FMIBuff      0x007ff000  // loader 中 getFreeMemInfo 返回值存放起始地址（7M 1020K）
-#define KWALL        0x00600000
-#define WALL         0x00800000
-#define UWALL        0x01000000
-#define MEMSTART     0x00400000
-#define MEMEND       0x02000000
-#define TEST         0x11223344
+
+#define MEMSTART 0x00400000
+#define KWALL    0x00600000
+#define WALL     0x00800000
+#define UWALL    0x01000000
+#define MEMEND   0x02000000
+
 struct FREEINFO {
     u32 addr, size;
 };
