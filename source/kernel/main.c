@@ -5,12 +5,13 @@
  * @date 2005
  */
 
+#include <device/pci.h>
 #include <device/x86.h>
 #include <kernel/all_head.h>
 #include <kernlib/assert.h>
+#include <kernlib/mbuf.h>
 #include <kernlib/stdio.h>
 #include <kernlib/string.h>
-#include <device/pci.h>
 
 static int initialize_processes();  // added by xw, 18/5/26
 static int initialize_cpus();       // added by xw, 18/6/2
@@ -33,7 +34,8 @@ int kernel_main()
     kprintf("-----Kernel Initialization Begins-----\n");
     kernel_initial = 1;  // kernel is in initial state. added by xw, 18/5/31
 
-    init();  // 内存管理模块的初始化  add by liang
+    memory_manual_init();  // 内存管理模块的初始化  add by liang
+    mbuf_init();
 
     // initialize PCBs, added by xw, 18/5/26
     error = initialize_processes();

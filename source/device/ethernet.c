@@ -25,17 +25,17 @@ void eth_tx(struct mbuf *m, uint16_t ethType)
     ethhdr->type = htons(ethType);  // 变为小端模式
 
     kprintf("%s \n", "ethernet tx ready");
-    kprintf("%s %d\n", "len of buf", m->len);
-    kprintf("%s %d\n", "head", m->head - m->buf);
+    kprintf("%s %u\n", "len of buf", m->len);
+    kprintf("%s 0x%x\n", "head", (char *)m->head - (char *)m->buf);
 
     struct ip_hdr *iphdr;
     iphdr = (struct ip_hdr *)(m->buf + 14);
-    kprintf("%s %d\n", "ttl test", iphdr->ttl);
+    kprintf("%s %u\n", "ttl test", iphdr->ttl);
 
     int n = e1000_transmit(m);
 
     mbuffree(m);
-    kprintf("%s %d\n", "finished net write", n);
+    kprintf("%s %u\n", "finished net write", n);
 }
 
 void eth_rx(struct mbuf *m)

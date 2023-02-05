@@ -12,6 +12,9 @@ struct mbuf {
     char         buf[MBUF_SIZE];
 };
 
+void mbuf_init();
+void mbuf_end();
+
 // add len to the header size
 char *mbufpull(struct mbuf* m, unsigned int len);
 // pop len of the header size

@@ -185,7 +185,7 @@ inline u32 get_pde_index(u32 AddrLin)
  */
 inline u32 get_pte_index(u32 AddrLin)
 {
-    return (((AddrLin)&0x003FFFFF) >> 12);  // 中间10位A21~A12,0x3FFFFF = 0000 0000 0011 1111 1111 1111 1111 1111
+    return ((AddrLin & 0x003FFFFF) >> 12);  // 中间10位A21~A12,0x3FFFFF = 0000 0000 0011 1111 1111 1111 1111 1111
 }
 
 /**
@@ -271,7 +271,7 @@ void write_page_pde(
     u32 Attribute        // 属性
 )
 {
-    (*((u32 *)K_PHY2LIN(PageDirPhyAddr) + get_pde_index(AddrLin))) = (TblPhyAddr & 0xFFFFF000) | Attribute;
+    *((u32 *)K_PHY2LIN(PageDirPhyAddr) + get_pde_index(AddrLin)) = (TblPhyAddr & 0xFFFFF000) | Attribute;
     return;
 }
 
@@ -285,7 +285,7 @@ void write_page_pte(
     u32 Attribute    // 属性
 )
 {
-    (*((u32 *)K_PHY2LIN(TblPhyAddr) + get_pte_index(AddrLin))) = (PhyAddr & 0xFFFFF000) | Attribute;
+    *((u32 *)K_PHY2LIN(TblPhyAddr) + get_pte_index(AddrLin)) = (PhyAddr & 0xFFFFF000) | Attribute;
     return;
 }
 

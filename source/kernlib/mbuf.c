@@ -1,10 +1,35 @@
-#include <kernlib/mbuf.h>
 #include <kernel/memman.h>
+#include <kernlib/mbuf.h>
 #include <kernlib/stdio.h>
 #include <kernlib/string.h>
 
-char* mbufpull(struct mbuf* m, unsigned int len) {
-    char* tmp = m->head;
+char *mbufstart = NULL;
+char *mbufhead = NULL;
+char *mbufend = NULL;
+
+#define MAX_TOTAL_MBUF (512 * KB)
+
+// 保证所有 mbuf 获得的区块是连续的
+void mbuf_init()
+{
+    mbufstart = NULL;
+    mbufhead = NULL;
+    mbufend = NULL;
+    mbufstart = (char *)do_kmalloc(MAX_TOTAL_MBUF);
+    mbufhead = mbufstart;
+    mbufend = mbufstart + MAX_TOTAL_MBUF;
+    return;
+}
+
+void mbuf_end()
+{
+    do_free((u32)mbufstart, MAX_TOTAL_MBUF);
+    return;
+}
+
+char *mbufpull(struct mbuf *m, unsigned int len)
+{
+    char *tmp = m->head;
     // error when the len of mbuf less than the required length
     if (m->len < len)
         return 0;
@@ -13,7 +38,8 @@ char* mbufpull(struct mbuf* m, unsigned int len) {
     return tmp;
 }
 
-char* mbufpush(struct mbuf* m, unsigned int len) {
+char *mbufpush(struct mbuf *m, unsigned int len)
+{
     char *tmp = m->head - len;
     m->head -= len;
     if (m->head < m->buf) {
@@ -24,7 +50,8 @@ char* mbufpush(struct mbuf* m, unsigned int len) {
     return tmp;
 }
 
-char* mbuftrim(struct mbuf* m, unsigned int len) {
+char *mbuftrim(struct mbuf *m, unsigned int len)
+{
 
     if (len > m->len)
         return 0;
@@ -32,8 +59,9 @@ char* mbuftrim(struct mbuf* m, unsigned int len) {
     return m->head + m->len;
 }
 
-char* mbufput(struct mbuf* m, unsigned int len) {
-    char* tmp = m->head + m->len;
+char *mbufput(struct mbuf *m, unsigned int len)
+{
+    char *tmp = m->head + m->len;
     if (m->len + len > MBUF_SIZE) {
         // TODO : panic
         return 0;
@@ -42,47 +70,57 @@ char* mbufput(struct mbuf* m, unsigned int len) {
     return tmp;
 }
 
-struct mbuf* mbufalloc(unsigned int hdr_size) {
-    struct mbuf* m;
+struct mbuf *mbufalloc(unsigned int hdr_size)
+{
+    struct mbuf *m;
 
     if (hdr_size > MBUF_SIZE)
         return 0;
-    m = (struct mbuf*)do_malloc_4k();
+    if (hdr_size + (u32)mbufhead > (u32)mbufend)
+        return 0;
+    m = (struct mbuf *)mbufhead;
+    mbufhead += hdr_size;
 
     if (m == NULL)
         return 0;
 
     m->next = 0;
-    m->head = ( char* )m->buf + hdr_size;
+    m->head = (char *)m->buf + hdr_size;
     m->len = 0;
     memset(m->buf, 0, sizeof(m->buf));
     return m;
 }
 
-void mbuffree(struct mbuf *m) {
-    do_free_4k((u32)m);
+void mbuffree(struct mbuf *m)
+{
+    mbufhead = mbufhead - ((uint32_t)m->head - (uint32_t)m->buf);
+    return;
 }
 
 // ------------mbuf_queue-------------
 
-void mbuf_queue_pushtail(struct mbuf_queue *q, struct mbuf *m) {
+void mbuf_queue_pushtail(struct mbuf_queue *q, struct mbuf *m)
+{
     q->tail->next = m;
     q->tail = m;
 }
 
-struct mbuf* mbuf_queue_pophead(struct mbuf_queue *q) {
-    struct mbuf* tmp = q->head;
+struct mbuf *mbuf_queue_pophead(struct mbuf_queue *q)
+{
+    struct mbuf *tmp = q->head;
     kprintf("living %d \n", tmp->next);
     q->head = q->head->next;
     return tmp;
 }
 
-int mbuf_queue_empty(struct mbuf_queue *q) {
-    if (q->head == NULL) 
+int mbuf_queue_empty(struct mbuf_queue *q)
+{
+    if (q->head == NULL)
         return 1;
     return 0;
 }
 
-void mbuf_queue_init(struct mbuf_queue *q) {
+void mbuf_queue_init(struct mbuf_queue *q)
+{
     q->head = NULL;
 }

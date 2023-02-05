@@ -23,7 +23,7 @@ struct MEMMAN {
     struct FREEINFO free[MEMMAN_FREES];                // 空闲内存
 };
 
-void init();
+void memory_manual_init();
 u32  do_malloc(u32 size);
 u32  do_kmalloc(u32 size);
 u32  do_malloc_4k();

@@ -1,8 +1,5 @@
 /**
  * type.h
- *
- * Forrest Yu
- * 2005
  */
 
 #ifndef _ORANGES_TYPE_H_
@@ -13,26 +10,22 @@
 #endif
 
 typedef _Bool bool;
-enum {
-    false,
-    true
-};
+enum { false, true };
 
-/* Boolean */
 #define TRUE  1
 #define FALSE 0
 
-/* max() & min() */
 #define max(a, b) ((a) > (b) ? (a) : (b))
 #define min(a, b) ((a) < (b) ? (a) : (b))
 
-/* 最大整数定义 */
 #define MAX_UNSIGNED_INT 0xFFFFFFFF  // 最大的无符号整形
 #define MAX_INT          0x7FFFFFFF  // 最大的整形数
 
-/* added by network: Start */
+#define B  (1LLU)
+#define KB (1024LLU * B)
+#define MB (1024LLU * KB)
+#define GB (1024LLU * MB)
 
-// Explicitly-sized versions of integer types
 typedef signed char        int8_t;
 typedef unsigned char      uint8_t;
 typedef short              int16_t;
@@ -42,68 +35,14 @@ typedef unsigned int       uint32_t;
 typedef long long          int64_t;
 typedef unsigned long long uint64_t;
 
-#define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
-
-static inline uint16_t bswaps(uint16_t val)
-{
-  return (((val & 0x00ffU) << 8) |
-          ((val & 0xff00U) >> 8));
-}
-
-static inline uint32_t bswapl(uint32_t val)
-{
-  return (((val & 0x000000ffUL) << 24) |
-          ((val & 0x0000ff00UL) << 8) |
-          ((val & 0x00ff0000UL) >> 8) |
-          ((val & 0xff000000UL) >> 24));
-}
-
-#define ntohs bswaps
-#define ntohl bswapl
-#define htons bswaps
-#define htonl bswapl
-
-typedef uint32_t pte_t;
-typedef uint32_t pde_t;
-
-// Rounding operations (efficient when n is a power of 2)
-// Round down to the nearest multiple of n
-#define ROUNDDOWN(a, n)						\
-({								\
-	uint32_t __a = (uint32_t) (a);				\
-	(typeof(a)) (__a - __a % (n));				\
-})
-// Round up to the nearest multiple of n
-#define ROUNDUP(a, n)						\
-({								\
-	uint32_t __n = (uint32_t) (n);				\
-	(typeof(a)) (ROUNDDOWN((uint32_t) (a) + __n - 1, __n));	\
-})
-
-// page directory index
-#define PDX(la)		((((uintptr_t) (la)) >> PDXSHIFT) & 0x3FF)
-
-// page table index
-#define PTX(la)		((((uintptr_t) (la)) >> PTXSHIFT) & 0x3FF)
-
-#define MB (1024 * 1024)
-
-// offset in page
-#define PGOFF(la)	(((uintptr_t) (la)) & 0xFFF)
-
-// Address in page table or page directory entry
-#define PTE_ADDR(pte)	((phyaddr_t) (pte) & ~0xFFF)
-
-/* added by network: End */
-
-typedef long long          i64;
-typedef unsigned long long u64;
-typedef int                i32;
-typedef unsigned int       u32;
-typedef short              i16;
-typedef unsigned short     u16;
 typedef char               i8;
 typedef unsigned char      u8;
+typedef short              i16;
+typedef unsigned short     u16;
+typedef int                i32;
+typedef unsigned int       u32;
+typedef long long          i64;
+typedef unsigned long long u64;
 
 typedef i32 intptr_t;
 typedef u32 uintptr_t;
@@ -116,5 +55,59 @@ typedef i32 ssize_t;
 typedef i32 off_t;
 // 通常描述物理地址
 typedef u32 phyaddr_t;
+
+#define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
+
+static inline uint16_t bswaps(uint16_t val)
+{
+    return (
+        ((val & 0x00ffU) << 8) |
+        ((val & 0xff00U) >> 8)
+    );
+}
+
+static inline uint32_t bswapl(uint32_t val)
+{
+    return (
+        ((val & 0x000000ffUL) << 24) |
+        ((val & 0x0000ff00UL) << 8) |
+        ((val & 0x00ff0000UL) >> 8) |
+        ((val & 0xff000000UL) >> 24)
+    );
+}
+
+#define ntohs bswaps
+#define ntohl bswapl
+#define htons bswaps
+#define htonl bswapl
+
+typedef uint32_t pte_t;
+typedef uint32_t pde_t;
+
+// Rounding operations (efficient when n is a power of 2)
+// Round down to the nearest multiple of n
+#define ROUNDDOWN(a, n) \
+    ({ \
+        uint32_t __a = (uint32_t)(a); \
+        (typeof(a))(__a - __a % (n)); \
+    })
+// Round up to the nearest multiple of n
+#define ROUNDUP(a, n) \
+    ({ \
+        uint32_t __n = (uint32_t)(n); \
+        (typeof(a))(ROUNDDOWN((uint32_t)(a) + __n - 1, __n)); \
+    })
+
+// page directory index
+#define PDX(la) ((((uintptr_t)(la)) >> PDXSHIFT) & 0x3FF)
+
+// page table index
+#define PTX(la) ((((uintptr_t)(la)) >> PTXSHIFT) & 0x3FF)
+
+// offset in page
+#define PGOFF(la) (((uintptr_t)(la)) & 0xFFF)
+
+// Address in page table or page directory entry
+#define PTE_ADDR(pte) ((phyaddr_t)(pte) & ~0xFFF)
 
 #endif /* _ORANGES_TYPE_H_ */

@@ -20,7 +20,7 @@ u32  memman_total(struct MEMMAN *man);
 
 // 于 kernel_main() 中调用，进行初始化
 // 将用到的物理空间全部索引起来
-void init()
+void memory_manual_init()
 {
     u32 memstart = MEMSTART;  // 4M 开始初始化
     u32 i, j;
@@ -355,7 +355,7 @@ void memman_test()
         kprintf("END");
     }
 
-    p4 = (u32 *)do_kmalloc_4k(4);
+    p4 = (u32 *)do_kmalloc_4k();
     if (-1 != (u32)p4) {
         kprintf("START");
         kern_display_integer((u32)p4);
