@@ -26,7 +26,7 @@ void eth_tx(struct mbuf *m, uint16_t ethType)
 
     kprintf("%s \n", "ethernet tx ready");
     kprintf("%s %u\n", "len of buf", m->len);
-    kprintf("%s 0x%x\n", "head", (char *)m->head - (char *)m->buf);
+    kprintf("head = 0x%x, buff = 0x%x\n", m->head, m->buf);
 
     struct ip_hdr *iphdr;
     iphdr = (struct ip_hdr *)(m->buf + 14);

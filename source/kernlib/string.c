@@ -101,8 +101,7 @@ void *memcpy(void *dst, const void *src, size_t n)
     return dst;
 }
 
-void*
-memmove(void *dst, const void *src, uint32_t n)
+void* memmove(void *dst, const void *src, uint32_t n)
 {
   const char *s;
   char *d;
