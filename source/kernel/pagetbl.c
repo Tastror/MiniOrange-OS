@@ -73,7 +73,7 @@ u32 init_page_pte(u32 pid)
     }
 
     // 恢复 mmio 的页表
-    mmio_recover_pagetable();
+    mmio_recover_pagetable(pid);
 
     return 0;
 }
@@ -536,25 +536,18 @@ void mmio_save_region(uintptr_t va, size_t size, uint32_t pa, int perm)
  * mmio 的信息会在 cr3 变为第一个进程的 cr3 之后消失
  * 所以每个进程 pcb 创建的时候，cr3 位置都需要复原一下所有 mmio 的映射信息
  */
-void mmio_recover_pagetable()
+void mmio_recover_pagetable(int pid)
 {
     for (int i = 0; i < mmio_save_region_num; ++i) {
-        uint32_t now_cr3;
-        __asm__ __volatile__(
-            "mov %%cr3, %%eax\n\t"
-            "mov %%eax, %0\n\t"
-            : "=m"(now_cr3)
-            : /* no input */
-            : "%eax"
-        );
-        pde_t *pde_addr_phy = (pde_t *)(K_PHY2LIN(now_cr3 & 0xFFFFF000));
-        boot_map_region(
-            pde_addr_phy,
-            mmio_save_region_data[i].va,
-            mmio_save_region_data[i].size,
-            mmio_save_region_data[i].pa,
-            mmio_save_region_data[i].perm
-        );
+        for (int j = 0; j < mmio_save_region_data[i].size; j += num_4K) {
+            lin_mapping_phy(
+                mmio_save_region_data[i].va + j,   // 线性地址
+                mmio_save_region_data[i].pa + j,   // 物理地址
+                pid,                           // 进程 pid
+                PG_P | PG_USU | PG_RWW,        // 页目录的属性位（用户权限）
+                mmio_save_region_data[i].perm  // 页表的属性位（系统权限）
+            );
+        }
     }
 }
 
