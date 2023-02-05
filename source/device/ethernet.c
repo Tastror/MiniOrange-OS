@@ -35,7 +35,7 @@ void eth_tx(struct mbuf *m, uint16_t ethType)
     int n = e1000_transmit(m);
 
     mbuffree(m);
-    kprintf("%s %u\n", "finished net write", n);
+    kprintf("%s %d\n", "finished net write", n);
 }
 
 void eth_rx(struct mbuf *m)
