@@ -103,6 +103,9 @@ int e1000_transmit(struct mbuf *m)
     acquire(&e1000_lock);
 
     uint32_t index = e1000_regs[E1000_TDT];
+    if (index >= TX_RING_SIZE) {
+        kprintf("TX ring index wrong: %u\n", index);
+    }
 
     // check if the the ring is overflowing.
     // If E1000_TXD_STAT_DD is not set in the descriptor indexed by E1000_TDT,
