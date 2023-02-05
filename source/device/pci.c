@@ -265,6 +265,7 @@ void pci_bar_read(struct pci_func *f)
 
         // 复原回去
         pci_conf_write(f, bar, reset_bar_data);
+        
         // 保存到 f 里，供后面使用
         f->reg_base[regnum] = base;
         f->reg_size[regnum] = size;

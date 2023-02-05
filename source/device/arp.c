@@ -30,6 +30,9 @@ void arp_tx(uint16_t op, uint8_t desmac[ETHADDR_LEN], uint32_t tip)
     hdr->arp_tip = htonl(tip);
 
     kprintf("head = 0x%x, buff = 0x%x\n", m->head, m->buf);
+    kprintf("device control: %08x\n", e1000_regs[E1000_CTL]);
+    kprintf("device status: %08x\n", e1000_regs[E1000_STATUS]);
+    
     eth_tx(m, ETHTYPE_ARP);
 }
 

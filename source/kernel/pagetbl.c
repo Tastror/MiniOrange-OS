@@ -13,6 +13,12 @@
 u32 cr3_ready;
 u32 cr2_save;
 u32 cr2_count = 0;
+u32 mmio_save_region_num = 0;
+
+void mmio_init()
+{
+    mmio_save_region_num = 0;
+}
 
 /**
  * added by xw, 17/12/11
@@ -26,11 +32,11 @@ void switch_pde()
 /**
  * add by visual 2016.4.19
  * 页表初始化函数
- * 该函数只初始化了进程的高端（内核端）地址页表
+ * 该函数初始化了进程的高端（内核端）地址页表 (3GB 以上)
+ * 以及 mmio 对应的页表 (紧贴着 3GB 下侧的一段空间)
  */
 u32 init_page_pte(u32 pid)
 {
-
     u32 AddrLin, pde_addr_phy_temp, err_temp;
 
     pde_addr_phy_temp = do_kmalloc_4k();  // 为页目录申请一页
@@ -65,6 +71,9 @@ u32 init_page_pte(u32 pid)
             return -1;
         }
     }
+
+    // 恢复 mmio 的页表
+    mmio_recover_pagetable();
 
     return 0;
 }
@@ -504,6 +513,51 @@ static void boot_map_region(pde_t *pgdir, uintptr_t va, size_t size, uint32_t pa
     }
 }
 
+static struct mmio_save_data {
+    uintptr_t va;
+    size_t    size;
+    uint32_t  pa;
+    int       perm;
+} mmio_save_region_data[128];
+
+/**
+ * 保存一下曾有过的 mmio 信息
+ */
+void mmio_save_region(uintptr_t va, size_t size, uint32_t pa, int perm)
+{
+    mmio_save_region_data[mmio_save_region_num].va = va;
+    mmio_save_region_data[mmio_save_region_num].size = size;
+    mmio_save_region_data[mmio_save_region_num].pa = pa;
+    mmio_save_region_data[mmio_save_region_num].perm = perm;
+    return;
+}
+
+/**
+ * mmio 的信息会在 cr3 变为第一个进程的 cr3 之后消失
+ * 所以每个进程 pcb 创建的时候，cr3 位置都需要复原一下所有 mmio 的映射信息
+ */
+void mmio_recover_pagetable()
+{
+    for (int i = 0; i < mmio_save_region_num; ++i) {
+        uint32_t now_cr3;
+        __asm__ __volatile__(
+            "mov %%cr3, %%eax\n\t"
+            "mov %%eax, %0\n\t"
+            : "=m"(now_cr3)
+            : /* no input */
+            : "%eax"
+        );
+        pde_t *pde_addr_phy = (pde_t *)(K_PHY2LIN(now_cr3 & 0xFFFFF000));
+        boot_map_region(
+            pde_addr_phy,
+            mmio_save_region_data[i].va,
+            mmio_save_region_data[i].size,
+            mmio_save_region_data[i].pa,
+            mmio_save_region_data[i].perm
+        );
+    }
+}
+
 // 保存当前 MMIO 分配的最高地址，随着每次分配都会增长
 static uintptr_t mmio_base = MMIOBASE;
 
@@ -532,5 +586,10 @@ uint32_t *mmio_map_region(uint32_t pa, uint32_t size)
     );
     pde_t *pde_addr_phy = (pde_t *)(K_PHY2LIN(kern_cr3 & 0xFFFFF000));
     boot_map_region(pde_addr_phy, mmio_base, size, pa, PG_RWW | PG_PCD | PG_PWT);
+
+    // 3. 注意，这个页表只会储存在 loader 的 cr3 里，进入第一个进程以后就消失了
+    // 我们需要在 kern_map 中保存这个信息
+    mmio_save_region(mmio_base, size, pa, PG_RWW | PG_PCD | PG_PWT);
+
     return ret;
 }

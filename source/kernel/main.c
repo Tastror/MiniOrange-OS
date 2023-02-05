@@ -36,6 +36,7 @@ int kernel_main()
 
     memory_manual_init();  // 内存管理模块的初始化  add by liang
     mbuf_init();
+    mmio_init();
 
     // initialize PCBs, added by xw, 18/5/26
     error = initialize_processes();
