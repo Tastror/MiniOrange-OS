@@ -124,12 +124,11 @@ int e1000_transmit(struct mbuf *m)
     if (tx_mbufs[index])
         mbuffree(tx_mbufs[index]);
 
-    // tx_ring[index].addr = (uint32_t)m->header_end;
-    tx_ring[index].addr = K_LIN2PHY((uint32_t)(&tx_mbufs[index]));
+    // tx_ring[index].addr = (uint32_t)m->header_end; // 这个地址是虚拟地址，但是我们应该给物理地址
+    tx_ring[index].addr = (uint32_t)get_page_phy_addr(); 
     tx_ring[index].length = m->buffer_len;
-    // tx_ring[index].length = 48;
     tx_ring[index].cmd = E1000_TXD_CMD_RS | E1000_TXD_CMD_EOP;
-    tx_mbufs[index] = m;
+    // tx_mbufs[index] = m;
     // memcpy(tx_mbufs[index], m->header_end, m->buffer_len);
 
     kprintf("::test:: E1000 tx right?\n");

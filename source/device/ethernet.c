@@ -28,7 +28,7 @@ void eth_tx(struct mbuf *m, uint16_t ethType)
     kprintf("buffer_len = %u\n", m->buffer_len);
     kprintf("header_end = 0x%x, all_buf = 0x%x\n", m->header_end, m->all_buf);
 
-    kprintf("buffer: ");
+    kprintf("mbuf: ");
     char *test = (char *)m->header_end;
     for (int i = 0; i < m->buffer_len; ++i, ++test)
         kprintf("%d ", *(u8 *)test);
