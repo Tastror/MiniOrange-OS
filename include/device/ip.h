@@ -16,8 +16,8 @@ struct ip_hdr {
     uint32_t dst_addr;       // destination ip address
 };
 
-#define local_ip MAKE_IP_ADDR(10, 0, 2, 15)
+#define local_ip MAKE_IP_ADDR(192, 168, 76, 15)
 
-#define dst_ip MAKE_IP_ADDR(10, 0, 2, 2)
+#define dst_ip MAKE_IP_ADDR(192, 168, 76, 2)
 
 #endif

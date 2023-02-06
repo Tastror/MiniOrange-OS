@@ -108,14 +108,13 @@ INSTALL_TYPE = INSTALL_TAR
 INSTALL_FILENAME = app.tar
 
 # 网络相关内容
-QEMUOPTS :=
+QEMU_NET_OPTS :=
 # 使用 SLIRP 后端
-QEMUOPTS += -netdev user,id=mynet0,hostfwd=tcp::5555-:22,
+QEMU_NET_OPTS += -netdev user,id=mynet0,hostfwd=tcp::5555-:22,net=192.168.76.0/24,dhcpstart=192.168.76.15
 # 设置虚拟机使用的网卡 e1000
-QEMUOPTS += -device e1000,netdev=mynet0
+QEMU_NET_OPTS += -device e1000,netdev=mynet0,mac=52:54:00:12:34:56
 # 设置网络通信监听文件存储
-QEMUOPTS += -object filter-dump,id=myfile1,netdev=mynet0,file=dump.pcap
-
+QEMU_NET_OPTS += -object filter-dump,id=myfile1,netdev=mynet0,file=dump.pcap
 
 # 第一个命令。如果你想要仅编译，换成 all 就好
 all:
@@ -161,14 +160,19 @@ run: $(IMAGE)
 	@qemu-system-i386 \
 	-boot order=a \
 	-drive file=$<,format=raw \
-	$(QEMUOPTS)
+
+net: $(IMAGE)
+	@qemu-system-i386 \
+	-boot order=a \
+	-drive file=$<,format=raw \
+	$(QEMU_NET_OPTS)
 
 gdb: $(IMAGE)
 	@qemu-system-i386 \
 	-boot order=a \
 	-drive file=$<,format=raw \
 	-s -S \
-	$(QEMUOPTS)
+	$(QEMU_NET_OPTS)
 
 gdb-no-graphic: $(IMAGE)
 	@qemu-system-i386 \
@@ -176,7 +180,7 @@ gdb-no-graphic: $(IMAGE)
 	-boot order=a \
 	-drive file=$<,format=raw \
 	-s -S \
-	$(QEMUOPTS)
+	$(QEMU_NET_OPTS)
 
 # 调试的内核代码 elf
 KERNDBG := $(OBJDIR)/kernel/kernel.dbg

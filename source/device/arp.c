@@ -24,10 +24,10 @@ void arp_tx(uint16_t op, uint8_t desmac[ETHADDR_LEN], uint32_t tip)
     hdr->ar_op = htons(op);
 
     memmove(hdr->arp_sha, local_mac, ETHADDR_LEN);
-    hdr->arp_sip = htonl(local_ip); // 10.0.2.15
+    hdr->arp_sip = htonl(local_ip);
 
     memmove(hdr->arp_tha, desmac, ETHADDR_LEN);
-    hdr->arp_tip = htonl(tip); // 10.0.2.2
+    hdr->arp_tip = htonl(tip);
 
     kprintf("head = 0x%x, buff = 0x%x\n", m->header_end, m->all_buf);
     kprintf("device control: %08x\n", e1000_regs[E1000_CTL]);
