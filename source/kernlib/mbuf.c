@@ -16,7 +16,7 @@ void mbuf_init()
     mbufstart = NULL;
     mbufpointer = NULL;
     mbufend = NULL;
-    mbufstart = (char *)do_kmalloc(MAX_TOTAL_MBUF);
+    mbufstart = (char *)K_PHY2LIN(do_kmalloc(MAX_TOTAL_MBUF));
     mbufpointer = mbufstart;
     mbufend = mbufstart + MAX_TOTAL_MBUF;
     return;
