@@ -95,7 +95,6 @@ int e1000_transmit(struct mbuf *m)
     // the mbuf contains an ethernet frame; program it into
     // the TX descriptor ring so that the e1000 sends it. Stash
     // a pointer so that it can be freed after sending.
-    //
 
     // First ask the E1000 for the TX ring index at which it's expecting the next packet,
     // by reading the E1000_TDT control register.
