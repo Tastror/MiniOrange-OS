@@ -62,7 +62,6 @@ void e1000_init()
     e1000_regs[E1000_RDT] = RX_RING_SIZE - 1;
     e1000_regs[E1000_RDLEN] = sizeof(rx_ring);
 
-    // TODO: 尽量不要使用硬编码
     // filter by qemu's MAC address, 52:54:00:12:34:56
     e1000_regs[E1000_RA] = 0x12005452;
     e1000_regs[E1000_RA + 1] = 0x5634 | (1 << 31);

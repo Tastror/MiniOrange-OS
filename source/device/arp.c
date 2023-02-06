@@ -4,7 +4,6 @@
 #include <kernlib/stdio.h>
 #include <kernlib/string.h>
 
-// TODO: 尽量不要使用硬编码
 static uint8_t local_mac[ETHADDR_LEN] = {0x52, 0x54, 0x00, 0x12, 0x34, 0x56};
 
 void arp_tx(uint16_t op, uint8_t desmac[ETHADDR_LEN], uint32_t tip)

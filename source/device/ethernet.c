@@ -5,8 +5,6 @@
 #include <kernlib/mbuf.h>
 #include <kernlib/stdio.h>
 
-// TODO: 尽量不要使用硬编码
-// 52:54:00:12:34:56
 static uint8_t local_mac[ETHADDR_LEN] = {0x52, 0x54, 0x00, 0x12, 0x34, 0x56};
 // static uint8_t local_mac[ETHADDR_LEN] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 static uint8_t broadcast_mac[ETHADDR_LEN] = {0xFF, 0XFF, 0XFF, 0XFF, 0XFF, 0XFF};
