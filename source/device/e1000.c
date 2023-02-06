@@ -41,7 +41,7 @@ void e1000_init()
         tx_ring[i].status = E1000_TXD_STAT_DD;
         tx_mbufs[i] = 0;
     }
-    e1000_regs[E1000_TDBAL] = (uint32_t)tx_ring;
+    e1000_regs[E1000_TDBAL] = K_LIN2PHY((uint32_t)tx_ring);
     if (sizeof(tx_ring) % 128 != 0)
         panic("e1000");
     e1000_regs[E1000_TDLEN] = sizeof(tx_ring);
@@ -132,6 +132,10 @@ int e1000_transmit(struct mbuf *m)
     kprintf("::test:: E1000 tx right?\n");
     kprintf("- status %x ", tx_ring[index].status);
     kcheck(tx_ring[index].status == E1000_TXD_STAT_DD);
+    kprintf("- addr %x ", tx_ring[index].addr);
+    kcheck(tx_ring[index].addr < 128 * MB); // DMA 的地址要为物理地址
+
+    tx_ring[index].status &= (~E1000_TXD_STAT_DD); // E1000 告诉我们已经收到 Descriptor，我们关掉 Descriptor Done
 
     e1000_regs[E1000_TDT] = (index + 1) % TX_RING_SIZE;
     __sync_synchronize();
