@@ -110,6 +110,66 @@ void page_fault_handler(
 
     cr2 = read_cr2();
 
+    if (vec_no == INT_VECTOR_PAGE_FAULT) {
+        static char err_description[][64] = {	
+            "#DE Divide Error",
+            "#DB RESERVED",
+            "—  NMI Interrupt",
+            "#BP Breakpoint",
+            "#OF Overflow",
+            "#BR BOUND Range Exceeded",
+            "#UD Invalid Opcode (Undefined Opcode)",
+            "#NM Device Not Available (No Math Coprocessor)",
+            "#DF Double Fault",
+            "    Coprocessor Segment Overrun (reserved)",
+            "#TS Invalid TSS",
+            "#NP Segment Not Present",
+            "#SS Stack-Segment Fault",
+            "#GP General Protection",
+            "#PF Page Fault",
+            "—  (Intel reserved. Do not use.)",
+            "#MF x87 FPU Floating-Point Error (Math Fault)",
+            "#AC Alignment Check",
+            "#MC Machine Check",
+            "#XF SIMD Floating-Point Exception"
+        };
+        #define PANIC_STR_SIZE 256
+        static char fmtstr[PANIC_STR_SIZE];
+
+        // Page fault error codes
+        #define FEC_PR		0x1	// Page fault caused by protection violation
+        #define FEC_WR		0x2	// Page fault caused by a write
+        #define FEC_U		0x4	// Page fault occured while in user mode
+
+        char *p_str = fmtstr;
+        p_str += snprintf(
+            p_str, PANIC_STR_SIZE - (p_str - fmtstr) - 1,
+            "you receive a page fault!\n");
+        p_str += snprintf(
+            p_str, PANIC_STR_SIZE - (p_str - fmtstr) - 1,
+            "CS: %%x EIP: %%x You tried to access the address: %%x\n");
+        if ((err_code & FEC_PR) == 0) {
+            p_str += snprintf(
+            p_str, PANIC_STR_SIZE - (p_str - fmtstr) - 1,
+            "You tried to access a nonexistent page!\n");
+        }
+        if ((err_code & FEC_WR) != 0) {
+            p_str += snprintf(
+            p_str, PANIC_STR_SIZE - (p_str - fmtstr) - 1,
+            "You tried to write in this page!\n");
+        } else {
+            p_str += snprintf(
+            p_str, PANIC_STR_SIZE - (p_str - fmtstr) - 1,
+            "You tried to read in this page!\n");
+        }
+        if ((err_code & FEC_U) != 0) {
+            p_str += snprintf(
+            p_str, PANIC_STR_SIZE - (p_str - fmtstr) - 1,
+            "You tried to access a page in user mode!\n");
+        }
+        panic(fmtstr, cs, eip, cr2);
+    }
+
     // if page fault happens in kernel, it's an error.
     if (kernel_initial == 1) {
         kern_display_string("\n");
