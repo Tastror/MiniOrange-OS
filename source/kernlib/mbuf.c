@@ -27,6 +27,9 @@ void mbuf_end()
     return;
 }
 
+/**
+ * 使用空间减小
+*/
 char *mbufpull(struct mbuf *m, unsigned int len)
 {
     char *tmp = m->head;
@@ -38,6 +41,9 @@ char *mbufpull(struct mbuf *m, unsigned int len)
     return tmp;
 }
 
+/**
+ * 使用空间增大
+*/
 char *mbufpush(struct mbuf *m, unsigned int len)
 {
     char *tmp = m->head - len;
