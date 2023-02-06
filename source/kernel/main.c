@@ -38,6 +38,10 @@ int kernel_main()
     mbuf_init();
     mmio_init();
 
+    kern_set_color(CYAN);
+    init_pci_device();
+    kern_set_color(WHITE);
+
     // initialize PCBs, added by xw, 18/5/26
     error = initialize_processes();
     if (error != 0)
@@ -47,10 +51,6 @@ int kernel_main()
     error = initialize_cpus();
     if (error != 0)
         return error;
-
-    kern_set_color(CYAN);
-    init_pci_device();
-    kern_set_color(WHITE);
 
     k_reenter = 0;  // record nest level of only interruption! it's different from Orange's.
                     // usage modified by xw

@@ -529,6 +529,7 @@ void mmio_save_region(uintptr_t va, size_t size, uint32_t pa, int perm)
     mmio_save_region_data[mmio_save_region_num].size = size;
     mmio_save_region_data[mmio_save_region_num].pa = pa;
     mmio_save_region_data[mmio_save_region_num].perm = perm;
+    mmio_save_region_num++;
     return;
 }
 
