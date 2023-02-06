@@ -28,9 +28,6 @@ void mbuf_end()
     return;
 }
 
-/**
- * 使用空间减小
- */
 char *mbufpull(struct mbuf *m, unsigned int len)
 {
     char *tmp = m->header_end;
@@ -41,17 +38,13 @@ char *mbufpull(struct mbuf *m, unsigned int len)
     return tmp;
 }
 
-/**
- * 使用空间增大
- */
 char *mbufpush(struct mbuf *m, unsigned int len)
 {
-    char *tmp = m->header_end;
     if (m->header_end - len < m->all_buf)
         panic("mbufpush overflow");
     m->header_end -= len;
     m->buffer_len += len;
-    return tmp;
+    return m->header_end;
 }
 
 char *mbuftrim(struct mbuf *m, unsigned int len)

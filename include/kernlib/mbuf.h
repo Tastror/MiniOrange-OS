@@ -24,23 +24,27 @@ void mbuf_end();
 // start: [header][   buffer   ][tail] 
 // end  : [header   ][buffer   ][tail]
 //               - return value is here
+// buffer 的头部转移给 header，返回原来 buffer 的头部
 char *mbufpull(struct mbuf* m, unsigned int len);
 
 // pop len of the header size
 // start: [header   ][buffer   ][tail] 
 // end  : [header][   buffer   ][tail]
-//                  - return value is here
+//               - return value is here
+// header 的尾部转移给 buffer，返回现在 buffer 的头部
 char *mbufpush(struct mbuf* m, unsigned int len);
 
 
 // start: [header][buffer][tail] 
 // end  : [header][buffer   ][tail]
-//                       - return value 
+//                       - return value is here
+// tail 的头部部转移给 buffer，返回原来 tail 的头部
 char *mbufput(struct mbuf* m, unsigned int len);
 
 // start: [header][buffer   ][tail] 
 // end  : [header][buffer][tail]
-//                       - return value 
+//                       - return value is here
+// buffer 的尾部部转移给 tail，返回现在 tail 的头部
 char *mbuftrim(struct mbuf* m, unsigned int len);
 
 
