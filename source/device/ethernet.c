@@ -42,7 +42,10 @@ void eth_tx(struct mbuf *m, uint16_t ethType)
 
     int n = e1000_transmit(m);
 
+    // do not mbuffree(m); here!
+    // the e1000_transmit will take charge of m, let it free it.
     // mbuffree(m);
+
     kprintf("%s %d\n", "finished net write", n);
 }
 
