@@ -129,6 +129,9 @@ int e1000_transmit(struct mbuf *m)
     tx_ring[index].cmd = E1000_TXD_CMD_RS | E1000_TXD_CMD_EOP;
     tx_mbufs[index] = m;
 
+    kprintf("::test:: E1000 tx right?\n");
+    kprintf("- status %x ", tx_ring[index].status);
+    kcheck(tx_ring[index].status == E1000_TXD_STAT_DD);
 
     e1000_regs[E1000_TDT] = (index + 1) % TX_RING_SIZE;
     __sync_synchronize();

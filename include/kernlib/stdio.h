@@ -27,6 +27,7 @@ int  vsnprintf(char *buf, int n, const char *fmt, va_list ap);
 int  snprintf(char *buf, int n, const char *fmt, ...);
 int  vkprintf(const char *fmt, va_list ap);
 int  kprintf(const char *fmt, ...);
+void kcheck(const int arg);
 void kern_set_color(int color);
 void kern_display_string(char *info);
 void kern_display_integer(int input);

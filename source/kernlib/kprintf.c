@@ -23,3 +23,16 @@ int kprintf(const char *fmt, ...)
 
     return rc;
 }
+
+void kcheck(const int arg) {
+    if (arg) {
+        kern_set_color(GREEN);
+        kprintf("PASS\n");
+        kern_set_color(WHITE);
+    } else {
+        kern_set_color(RED);
+        kprintf("FAIL\n");
+        kern_set_color(WHITE);
+    }
+    
+}
