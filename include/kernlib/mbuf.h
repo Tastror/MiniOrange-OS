@@ -5,19 +5,31 @@
 
 #define MBUF_SIZE 4096
 #define MBUF_DEFAULT_HEADROOM  128
+
+// [mbuf struct][ header ][    buffer     ][ tail ]
+//             - all_buf here
+//                       - header_end here
+//                       <-- buffer_len -->
 struct mbuf {
     struct mbuf* next;
-    char*        head;
-    uint8_t      len;
-    char         buf[MBUF_SIZE];
+    char*        header_end;
+    uint8_t      buffer_len;
+    char         all_buf[MBUF_SIZE];
 }__attribute__((__packed__));
 
 void mbuf_init();
 void mbuf_end();
 
 // add len to the header size
+// start: [header][   buffer   ][tail] 
+// end  : [header   ][buffer   ][tail]
+//               - return value is here
 char *mbufpull(struct mbuf* m, unsigned int len);
+
 // pop len of the header size
+// start: [header   ][buffer   ][tail] 
+// end  : [header][   buffer   ][tail]
+//                  - return value is here
 char *mbufpush(struct mbuf* m, unsigned int len);
 
 

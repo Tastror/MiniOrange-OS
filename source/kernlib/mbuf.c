@@ -33,12 +33,11 @@ void mbuf_end()
  */
 char *mbufpull(struct mbuf *m, unsigned int len)
 {
-    char *tmp = m->head;
-    // error when the len of mbuf less than the required length
-    if (m->len < len)
+    char *tmp = m->header_end;
+    if (m->buffer_len < len)
         panic("mbufpull overflow");
-    m->len -= len;
-    m->head += len;
+    m->buffer_len -= len;
+    m->header_end += len;
     return tmp;
 }
 
@@ -47,28 +46,28 @@ char *mbufpull(struct mbuf *m, unsigned int len)
  */
 char *mbufpush(struct mbuf *m, unsigned int len)
 {
-    char *tmp = m->head - len;
-    m->head -= len;
-    if (m->head < m->buf)
+    char *tmp = m->header_end;
+    if (m->header_end - len < m->all_buf)
         panic("mbufpush overflow");
-    m->len += len;
+    m->header_end -= len;
+    m->buffer_len += len;
     return tmp;
 }
 
 char *mbuftrim(struct mbuf *m, unsigned int len)
 {
-    if (len > m->len)
+    if (len > m->buffer_len)
         panic("mbuftrim overflow");
-    m->len -= len;
-    return m->head + m->len;
+    m->buffer_len -= len;
+    return m->header_end + m->buffer_len;
 }
 
 char *mbufput(struct mbuf *m, unsigned int len)
 {
-    char *tmp = m->head + m->len;
-    if (m->len + len > MBUF_SIZE)
+    char *tmp = m->header_end + m->buffer_len;
+    if (m->buffer_len + len > MBUF_SIZE)
         panic("mbufput overflow");
-    m->len += len;
+    m->buffer_len += len;
     return tmp;
 }
 
@@ -89,8 +88,8 @@ struct mbuf *mbufalloc(unsigned int hdr_size)
         return 0;
 
     m->next = 0;
-    m->head = (char *)((u32)m->buf + (u32)hdr_size);
-    m->len = 0;
+    m->header_end = (char *)((u32)m->all_buf + (u32)hdr_size);
+    m->buffer_len = 0;
     return m;
 }
 

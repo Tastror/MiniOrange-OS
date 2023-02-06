@@ -13,7 +13,7 @@ void arp_tx(uint16_t op, uint8_t desmac[ETHADDR_LEN], uint32_t tip)
     struct mbuf    *m;
 
     m = mbufalloc(sizeof(struct eth_hdr) + sizeof(struct arp_hdr));
-    kprintf("head = 0x%x, buff = 0x%x\n", m->head, m->buf);
+    kprintf("head = 0x%x, buff = 0x%x\n", m->header_end, m->all_buf);
 
     hdr = (struct arp_hdr *)mbufpush(m, sizeof(struct arp_hdr));
 
@@ -29,7 +29,7 @@ void arp_tx(uint16_t op, uint8_t desmac[ETHADDR_LEN], uint32_t tip)
     memmove(hdr->arp_tha, desmac, ETHADDR_LEN);
     hdr->arp_tip = htonl(tip); // 10.0.2.2
 
-    kprintf("head = 0x%x, buff = 0x%x\n", m->head, m->buf);
+    kprintf("head = 0x%x, buff = 0x%x\n", m->header_end, m->all_buf);
     kprintf("device control: %08x\n", e1000_regs[E1000_CTL]);
     kprintf("device status: %08x\n", e1000_regs[E1000_STATUS]);
     

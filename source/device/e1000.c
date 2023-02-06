@@ -53,7 +53,7 @@ void e1000_init()
         rx_mbufs[i] = mbufalloc(0);
         if (!rx_mbufs[i])
             panic("e1000");
-        rx_ring[i].addr = (uint32_t)rx_mbufs[i]->head;
+        rx_ring[i].addr = (uint32_t)rx_mbufs[i]->header_end;
     }
     e1000_regs[E1000_RDBAL] = (uint32_t)rx_ring;
     if (sizeof(rx_ring) % 128 != 0)
@@ -124,8 +124,8 @@ int e1000_transmit(struct mbuf *m)
     if (tx_mbufs[index])
         mbuffree(tx_mbufs[index]);
 
-    tx_ring[index].addr = (uint32_t)m->head;
-    tx_ring[index].length = m->len;
+    tx_ring[index].addr = (uint32_t)m->header_end;
+    tx_ring[index].length = m->buffer_len;
     tx_ring[index].cmd = E1000_TXD_CMD_RS | E1000_TXD_CMD_EOP;
     tx_mbufs[index] = m;
 
@@ -160,8 +160,8 @@ void e1000_receive(void)
             break;
 
         // deliver to network stack
-        rx_mbufs[index]->len = rx_ring[index].length;
-        rx_mbufs[index]->head = rx_mbufs[index]->buf;
+        rx_mbufs[index]->buffer_len = rx_ring[index].length;
+        rx_mbufs[index]->header_end = rx_mbufs[index]->all_buf;
         eth_rx(rx_mbufs[index]);
 
         // allocate a new mbuf using mbufalloc()
@@ -169,7 +169,7 @@ void e1000_receive(void)
         // Program its data pointer (m->head) into the descriptor.
         // Clear the descriptor's status bits to zero.
         rx_mbufs[index] = mbufalloc(0);
-        rx_ring[index].addr = (uint32_t)rx_mbufs[index]->head;
+        rx_ring[index].addr = (uint32_t)rx_mbufs[index]->header_end;
         rx_ring[index].status = 0;
 
         // current index
