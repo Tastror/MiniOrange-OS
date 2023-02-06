@@ -1,4 +1,5 @@
 #include <kernel/memman.h>
+#include <kernlib/assert.h>
 #include <kernlib/mbuf.h>
 #include <kernlib/stdio.h>
 #include <kernlib/string.h>
@@ -7,9 +8,9 @@ char *mbufstart = NULL;
 char *mbufpointer = NULL;
 char *mbufend = NULL;
 
-#define MAX_TOTAL_MBUF (512 * KB)
+#define MAX_TOTAL_MBUF (128 * MBUF_SIZE)  // 512 KB
 
-// 保证所有 mbuf 获得的区块是连续的
+// 预先分配，防止问题出在 do_kmalloc 上面
 void mbuf_init()
 {
     mbufstart = NULL;
@@ -29,13 +30,13 @@ void mbuf_end()
 
 /**
  * 使用空间减小
-*/
+ */
 char *mbufpull(struct mbuf *m, unsigned int len)
 {
     char *tmp = m->head;
     // error when the len of mbuf less than the required length
     if (m->len < len)
-        return 0;
+        panic("mbufpull overflow");
     m->len -= len;
     m->head += len;
     return tmp;
@@ -43,24 +44,21 @@ char *mbufpull(struct mbuf *m, unsigned int len)
 
 /**
  * 使用空间增大
-*/
+ */
 char *mbufpush(struct mbuf *m, unsigned int len)
 {
     char *tmp = m->head - len;
     m->head -= len;
-    if (m->head < m->buf) {
-        // TODO : panic
-        return 0;
-    }
+    if (m->head < m->buf)
+        panic("mbufpush overflow");
     m->len += len;
     return tmp;
 }
 
 char *mbuftrim(struct mbuf *m, unsigned int len)
 {
-
     if (len > m->len)
-        return 0;
+        panic("mbuftrim overflow");
     m->len -= len;
     return m->head + m->len;
 }
@@ -68,10 +66,8 @@ char *mbuftrim(struct mbuf *m, unsigned int len)
 char *mbufput(struct mbuf *m, unsigned int len)
 {
     char *tmp = m->head + m->len;
-    if (m->len + len > MBUF_SIZE) {
-        // TODO : panic
-        return 0;
-    }
+    if (m->len + len > MBUF_SIZE)
+        panic("mbufput overflow");
     m->len += len;
     return tmp;
 }
@@ -80,25 +76,29 @@ struct mbuf *mbufalloc(unsigned int hdr_size)
 {
     struct mbuf *m;
 
+    if (MBUF_SIZE + (u32)mbufpointer > (u32)mbufend)
+        panic("mbufalloc overflow");
+    mbufpointer += MBUF_SIZE;
+
     if (hdr_size > MBUF_SIZE)
-        return 0;
-    if (hdr_size + (u32)mbufpointer > (u32)mbufend)
-        return 0;
+        return NULL;
+
     m = (struct mbuf *)mbufpointer;
-    mbufpointer += hdr_size;
 
     if (m == NULL)
         return 0;
 
     m->next = 0;
-    m->head = (char *)((u32)m->buf + (u32)hdr_size); 
+    m->head = (char *)((u32)m->buf + (u32)hdr_size);
     m->len = 0;
     return m;
 }
 
 void mbuffree(struct mbuf *m)
 {
-    mbufpointer = mbufpointer - ((uint32_t)m->head - (uint32_t)m->buf);
+    if (mbufpointer <= mbufstart)
+        panic("mbuffree overflow");
+    mbufpointer -= MBUF_SIZE;
     return;
 }
 

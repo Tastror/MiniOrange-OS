@@ -10,7 +10,7 @@ struct mbuf {
     char*        head;
     uint8_t      len;
     char         buf[MBUF_SIZE];
-};
+}__attribute__((__packed__));
 
 void mbuf_init();
 void mbuf_end();
@@ -33,7 +33,6 @@ char *mbuftrim(struct mbuf* m, unsigned int len);
 
 
 // memory operation
-
 struct mbuf* mbufalloc(unsigned int hdr_size);
 void mbuffree(struct mbuf* m);
 
