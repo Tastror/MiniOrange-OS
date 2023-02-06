@@ -160,12 +160,10 @@ run: $(IMAGE)
 	@qemu-system-i386 \
 	-boot order=a \
 	-drive file=$<,format=raw \
+	$(QEMU_NET_OPTS) \
 
-net: $(IMAGE)
-	@qemu-system-i386 \
-	-boot order=a \
-	-drive file=$<,format=raw \
-	$(QEMU_NET_OPTS)
+net:
+	@tcpdump -XXnr dump.pcap
 
 gdb: $(IMAGE)
 	@qemu-system-i386 \
