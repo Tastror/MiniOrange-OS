@@ -80,6 +80,7 @@ struct mbuf *mbufalloc(unsigned int hdr_size)
     if (m == NULL)
         return 0;
 
+    memset(m, 0, MBUF_SIZE);
     m->next = 0;
     m->header_end = (char *)((u32)m->all_buf + (u32)hdr_size);
     m->buffer_len = 0;
