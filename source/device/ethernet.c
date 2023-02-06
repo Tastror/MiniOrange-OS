@@ -31,7 +31,7 @@ void eth_tx(struct mbuf *m, uint16_t ethType)
     kprintf("buffer: ");
     char *test = (char *)m->header_end;
     for (int i = 0; i < m->buffer_len; ++i, ++test)
-        kprintf("%d", *(u8 *)test);
+        kprintf("%d ", *(u8 *)test);
     kprintf("\n");
 
     struct ip_hdr *iphdr;
