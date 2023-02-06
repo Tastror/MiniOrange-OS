@@ -4,7 +4,7 @@
 #include <kernlib/string.h>
 
 char *mbufstart = NULL;
-char *mbufhead = NULL;
+char *mbufpointer = NULL;
 char *mbufend = NULL;
 
 #define MAX_TOTAL_MBUF (512 * KB)
@@ -13,10 +13,10 @@ char *mbufend = NULL;
 void mbuf_init()
 {
     mbufstart = NULL;
-    mbufhead = NULL;
+    mbufpointer = NULL;
     mbufend = NULL;
     mbufstart = (char *)do_kmalloc(MAX_TOTAL_MBUF);
-    mbufhead = mbufstart;
+    mbufpointer = mbufstart;
     mbufend = mbufstart + MAX_TOTAL_MBUF;
     return;
 }
@@ -82,10 +82,10 @@ struct mbuf *mbufalloc(unsigned int hdr_size)
 
     if (hdr_size > MBUF_SIZE)
         return 0;
-    if (hdr_size + (u32)mbufhead > (u32)mbufend)
+    if (hdr_size + (u32)mbufpointer > (u32)mbufend)
         return 0;
-    m = (struct mbuf *)mbufhead;
-    mbufhead += hdr_size;
+    m = (struct mbuf *)mbufpointer;
+    mbufpointer += hdr_size;
 
     if (m == NULL)
         return 0;
@@ -98,7 +98,7 @@ struct mbuf *mbufalloc(unsigned int hdr_size)
 
 void mbuffree(struct mbuf *m)
 {
-    mbufhead = mbufhead - ((uint32_t)m->head - (uint32_t)m->buf);
+    mbufpointer = mbufpointer - ((uint32_t)m->head - (uint32_t)m->buf);
     return;
 }
 
