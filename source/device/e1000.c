@@ -137,8 +137,6 @@ int e1000_transmit(struct mbuf *m)
     kprintf("- index %d ", e1000_regs[E1000_TDT]);
     kcheck(e1000_regs[E1000_TDT] < TX_RING_SIZE);
 
-    tx_ring[index].status &= (~E1000_TXD_STAT_DD); // E1000 告诉我们已经收到 Descriptor，我们关掉 Descriptor Done
-
     e1000_regs[E1000_TDT] = (index + 1) % TX_RING_SIZE;
     __sync_synchronize();
     release(&e1000_lock);
