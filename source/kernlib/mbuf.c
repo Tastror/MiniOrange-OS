@@ -4,30 +4,6 @@
 #include <kernlib/stdio.h>
 #include <kernlib/string.h>
 
-char *mbufstart = NULL;
-char *mbufpointer = NULL;
-char *mbufend = NULL;
-
-#define MAX_TOTAL_MBUF (128 * MBUF_SIZE)  // 512 KB
-
-// 预先分配，防止问题出在 do_kmalloc 上面
-void mbuf_init()
-{
-    mbufstart = NULL;
-    mbufpointer = NULL;
-    mbufend = NULL;
-    mbufstart = (char *)K_PHY2LIN(do_kmalloc(MAX_TOTAL_MBUF));
-    mbufpointer = mbufstart;
-    mbufend = mbufstart + MAX_TOTAL_MBUF;
-    return;
-}
-
-void mbuf_end()
-{
-    do_free((u32)mbufstart, MAX_TOTAL_MBUF);
-    return;
-}
-
 char *mbufpull(struct mbuf *m, unsigned int len)
 {
     char *tmp = m->header_end;
@@ -66,19 +42,15 @@ char *mbufput(struct mbuf *m, unsigned int len)
 
 struct mbuf *mbufalloc(unsigned int hdr_size)
 {
-    struct mbuf *m;
-
-    if (MBUF_SIZE + (u32)mbufpointer > (u32)mbufend)
-        panic("mbufalloc overflow");
-    mbufpointer += MBUF_SIZE;
-
     if (hdr_size > MBUF_SIZE)
         return NULL;
 
-    m = (struct mbuf *)mbufpointer;
+    u32 alloc = do_kmalloc(MBUF_SIZE);
+    if (alloc == -1)
+        panic("mbufalloc overflow");
+    alloc = K_PHY2LIN(alloc);
 
-    if (m == NULL)
-        return 0;
+    struct mbuf *m = (struct mbuf *)alloc;
 
     memset(m, 0, MBUF_SIZE);
     m->next = 0;
@@ -89,9 +61,9 @@ struct mbuf *mbufalloc(unsigned int hdr_size)
 
 void mbuffree(struct mbuf *m)
 {
-    if (mbufpointer <= mbufstart)
+    u32 res = do_free((u32)m, MBUF_SIZE);
+    if (res == -1)
         panic("mbuffree overflow");
-    mbufpointer -= MBUF_SIZE;
     return;
 }
 

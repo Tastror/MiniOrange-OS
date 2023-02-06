@@ -71,16 +71,16 @@ void e1000_init()
 
     // transmitter control bits.
     e1000_regs[E1000_TCTL] = E1000_TCTL_EN |                  // enable
-                       E1000_TCTL_PSP |                 // pad short packets
-                       (0x10 << E1000_TCTL_CT_SHIFT) |  // collision stuff
-                       (0x40 << E1000_TCTL_COLD_SHIFT);
+                             E1000_TCTL_PSP |                 // pad short packets
+                             (0x10 << E1000_TCTL_CT_SHIFT) |  // collision stuff
+                             (0x40 << E1000_TCTL_COLD_SHIFT);
     e1000_regs[E1000_TIPG] = 10 | (8 << 10) | (6 << 20);  // inter-pkt gap
 
     // receiver control bits.
     e1000_regs[E1000_RCTL] = E1000_RCTL_EN |       // enable receiver
-                       E1000_RCTL_BAM |      // enable broadcast
-                       E1000_RCTL_SZ_2048 |  // 2048-byte rx buffers
-                       E1000_RCTL_SECRC;     // strip CRC
+                             E1000_RCTL_BAM |      // enable broadcast
+                             E1000_RCTL_SZ_2048 |  // 2048-byte rx buffers
+                             E1000_RCTL_SECRC;     // strip CRC
 
     // ask e1000 for receive interrupts.
     e1000_regs[E1000_RDTR] = 0;        // interrupt after every received packet (no timer)
@@ -117,24 +117,26 @@ int e1000_transmit(struct mbuf *m)
         return -1;
     }
 
-
     // use mbuffree() to free the last mbuf that
     // was transmitted from that descriptor (if there was one).
     if (tx_mbufs[index])
         mbuffree(tx_mbufs[index]);
 
-    // tx_ring[index].addr = (uint32_t)m->header_end; // 这个地址是虚拟地址，但是我们应该给物理地址
-    tx_ring[index].addr = K_LIN2PHY((uint32_t)m->header_end); 
+    // DMA 的地址要为物理地址
+    // 在这几句后，mbuf 的 m 的结构体意义就彻底消失了
+    // 因为全部的重要信息 (header_end ~ header_end + buffer_len)
+    // 已经移动到了这个块的开头，以供后面发送使用
+    tx_ring[index].addr = K_LIN2PHY((uint32_t)m);
     tx_ring[index].length = m->buffer_len;
     tx_ring[index].cmd = E1000_TXD_CMD_RS | E1000_TXD_CMD_EOP;
-    // tx_mbufs[index] = m;
-    // memcpy(tx_mbufs[index], m->header_end, m->buffer_len);
+    tx_mbufs[index] = m;
+    memcpy(tx_mbufs[index], m->header_end, m->buffer_len);
 
     kprintf("::test:: E1000 tx right?\n");
     kprintf("- status %x ", tx_ring[index].status);
     kcheck(tx_ring[index].status == E1000_TXD_STAT_DD);
     kprintf("- addr 0x%x ", tx_ring[index].addr);
-    kcheck(tx_ring[index].addr < 128 * MB); // DMA 的地址要为物理地址
+    kcheck(tx_ring[index].addr < 128 * MB);
     kprintf("- index %d ", e1000_regs[E1000_TDT]);
     kcheck(e1000_regs[E1000_TDT] < TX_RING_SIZE);
 

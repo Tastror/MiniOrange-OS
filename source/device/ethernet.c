@@ -22,15 +22,19 @@ void eth_tx(struct mbuf *m, uint16_t ethType)
     }
     ethhdr->type = htons(ethType);  // 变为小端模式
 
-    kprintf("%s \n", "ethernet tx ready");
+    kprintf("device control: %08x, ", e1000_regs[E1000_CTL]);
+    kprintf("device status: %08x\n", e1000_regs[E1000_STATUS]);
+    kprintf("all_buf = 0x%x, ", m->all_buf);
+    kprintf("header_end = 0x%x, ", m->header_end);
     kprintf("buffer_len = %u\n", m->buffer_len);
-    kprintf("header_end = 0x%x, all_buf = 0x%x\n", m->header_end, m->all_buf);
 
+    kern_set_color(BLUE);
     kprintf("mbuf: ");
     char *test = (char *)m->header_end;
     for (int i = 0; i < m->buffer_len; ++i, ++test)
         kprintf("%d ", *(u8 *)test);
     kprintf("\n");
+    kern_set_color(WHITE);
 
     struct ip_hdr *iphdr;
     iphdr = (struct ip_hdr *)(m->all_buf + sizeof(struct eth_hdr));
@@ -38,7 +42,7 @@ void eth_tx(struct mbuf *m, uint16_t ethType)
 
     int n = e1000_transmit(m);
 
-    mbuffree(m);
+    // mbuffree(m);
     kprintf("%s %d\n", "finished net write", n);
 }
 

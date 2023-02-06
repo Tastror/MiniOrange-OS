@@ -36,7 +36,6 @@ int kernel_main()
     // 内存管理模块的初始化  add by liang
     memory_manual_init();  
     
-    mbuf_init();
     mmio_init();
 
     kern_set_color(CYAN);

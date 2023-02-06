@@ -17,9 +17,6 @@ struct mbuf {
     char         all_buf[MBUF_SIZE];
 }__attribute__((__packed__));
 
-void mbuf_init();
-void mbuf_end();
-
 // add len to the header size
 // start: [header][   buffer   ][tail] 
 // end  : [header   ][buffer   ][tail]
