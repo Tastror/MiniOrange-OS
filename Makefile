@@ -163,7 +163,7 @@ run: $(IMAGE)
 	@qemu-system-i386 \
 	-boot order=a \
 	-drive file=$<,format=raw \
-	$(QEMU_OPTS) \
+	$(QEMUOPTS) \
 
 gdb: $(IMAGE)
 	@qemu-system-i386 \
