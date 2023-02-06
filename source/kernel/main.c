@@ -33,7 +33,9 @@ int kernel_main()
     kprintf("-----Kernel Initialization Begins-----\n");
     kernel_initial = 1;  // kernel is in initial state. added by xw, 18/5/31
 
-    memory_manual_init();  // 内存管理模块的初始化  add by liang
+    // 内存管理模块的初始化  add by liang
+    memory_manual_init();  
+    
     mbuf_init();
     mmio_init();
 
@@ -52,29 +54,25 @@ int kernel_main()
         return error;
 
     k_reenter = 0;  // record nest level of only interruption! it's different from Orange's.
-                    // usage modified by xw
     ticks = 0;      // initialize system-wide ticks
     p_proc_current = cpu_table;
 
-    /**
-     * device initialization
-     * added by xw, 18/6/4
-     */
-    /* initialize 8253 PIT */
+    // initialize 8253 PIT
     outb(TIMER_MODE, RATE_GENERATOR);
     outb(TIMER0, (u8)(TIMER_FREQ / HZ));
     outb(TIMER0, (u8)((TIMER_FREQ / HZ) >> 8));
 
-    /* initialize clock-irq */
-    put_irq_handler(CLOCK_IRQ, clock_handler); /* 设定时钟中断处理程序 */
-    enable_irq(CLOCK_IRQ);                     /* 让8259A可以接收时钟中断 */
+    // initialize clock-irq
+    put_irq_handler(CLOCK_IRQ, clock_handler);  // 设定时钟中断处理程序
+    enable_irq(CLOCK_IRQ);                      // 让 8259A 可以接收时钟中断
 
-    init_kb();  // added by mingxuan 2019-5-19
+    // initialize keyboard
+    init_kb();
 
-    /* initialize hd-irq and hd rdwt queue */
+    // initialize hd-irq and hd rdwt queue
     init_hd();
 
-    /* enable interrupt, we should read information of some devices by interrupt.
+    /**
      * Note that you must have initialized all devices ready before you enable
      * interrupt. added by xw
      */
@@ -113,7 +111,6 @@ int kernel_main()
     restart_initial();   // modified by xw, 18/4/19
 
     assert(0);
-    while (1) {}
 }
 
 /**
@@ -400,13 +397,12 @@ static int initialize_processes()
         p_proc++;
         selector_ldt += 1 << 3;
     }
-    pid++;
 
 
     // 4> 对后 NR_K_PCBS ~ NR_PCBS 的 PCB 表部分初始化
     // (名称, pid, stat, LDT 选择子)，状态为 IDLE
     // 这里是 5~11 号进程
-    for (; pid < NR_PCBS; pid++) {
+    for (pid = NR_K_PCBS + 1; pid < NR_PCBS; pid++) {
         // 基本信息
         strcpy(p_proc->task.p_name, "USER");  // 名称
         p_proc->task.pid = pid;               // pid

@@ -13,7 +13,18 @@
 u32 cr3_ready;
 u32 cr2_save;
 u32 cr2_count = 0;
+
+#define MMIO_SAVE_REGION_MAX_NUM 128
 u32 mmio_save_region_num = 0;
+static struct mmio_save_data {
+    uintptr_t va;
+    size_t    size;
+    uint32_t  pa;
+    int       perm;
+} mmio_save_region_data[MMIO_SAVE_REGION_MAX_NUM];
+
+// 保存当前 MMIO 分配的最高地址，随着每次分配都会增长
+static uintptr_t mmio_base = MMIOBASE;
 
 void mmio_init()
 {
@@ -74,6 +85,9 @@ u32 init_page_pte(u32 pid)
 
     // 恢复 mmio 的页表
     mmio_recover_pagetable(pid);
+
+    // test whether mmio_base can be mapped or not
+    // kprintf("mmio_base = %x  <-  phy = %x\n", mmio_base, get_page_phy_addr(pid, mmio_base));
 
     return 0;
 }
@@ -513,18 +527,13 @@ static void boot_map_region(pde_t *pgdir, uintptr_t va, size_t size, uint32_t pa
     }
 }
 
-static struct mmio_save_data {
-    uintptr_t va;
-    size_t    size;
-    uint32_t  pa;
-    int       perm;
-} mmio_save_region_data[128];
-
 /**
  * 保存一下曾有过的 mmio 信息
  */
 void mmio_save_region(uintptr_t va, size_t size, uint32_t pa, int perm)
 {
+    if (mmio_save_region_num >= MMIO_SAVE_REGION_MAX_NUM)
+        panic("mmio save region overflow");
     mmio_save_region_data[mmio_save_region_num].va = va;
     mmio_save_region_data[mmio_save_region_num].size = size;
     mmio_save_region_data[mmio_save_region_num].pa = pa;
@@ -542,18 +551,15 @@ void mmio_recover_pagetable(int pid)
     for (int i = 0; i < mmio_save_region_num; ++i) {
         for (int j = 0; j < mmio_save_region_data[i].size; j += num_4K) {
             lin_mapping_phy(
-                mmio_save_region_data[i].va + j,   // 线性地址
-                mmio_save_region_data[i].pa + j,   // 物理地址
-                pid,                           // 进程 pid
-                PG_P | PG_USU | PG_RWW,        // 页目录的属性位（用户权限）
-                mmio_save_region_data[i].perm  // 页表的属性位（系统权限）
+                mmio_save_region_data[i].va + j,  // 线性地址
+                mmio_save_region_data[i].pa + j,  // 物理地址
+                pid,                              // 进程 pid
+                PG_P | PG_USU | PG_RWW,           // 页目录的属性位（用户权限）
+                mmio_save_region_data[i].perm     // 页表的属性位（系统权限）
             );
         }
     }
 }
-
-// 保存当前 MMIO 分配的最高地址，随着每次分配都会增长
-static uintptr_t mmio_base = MMIOBASE;
 
 /**
  * MMIO 区域为 [MMIOBASE, MMIOLIM]
