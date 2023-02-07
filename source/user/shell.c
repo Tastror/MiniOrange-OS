@@ -34,7 +34,7 @@ int main(int arg, char *argv[])
                 set_color(WHITE);
                 printf("to execute a user file\nuse ");
                 set_color(YELLOW);
-                printf("net / arp");
+                printf("net / arp ");
                 set_color(WHITE);
                 printf("to try the net / arp\n\n");
             
@@ -58,7 +58,7 @@ int main(int arg, char *argv[])
             // error
             } else if (exec(buf) != 0) {
                 set_color(RED);
-                printf("exec failed: file not found!\n");
+                printf("file or order name not found\n");
                 printf("you can try ");
                 set_color(YELLOW);
                 printf("help ");
