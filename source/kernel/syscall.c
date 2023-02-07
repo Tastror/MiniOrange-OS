@@ -37,7 +37,9 @@ system_call syscall_table[NR_SYS_CALL] = {
     [26] = sys_createdir,    // added by mingxuan 2019-5-17
     [27] = sys_deletedir,    // added by mingxuan 2019-5-17
     [28] = sys_set_color,    // added by tastror 2023-1-10
-    [29] = sys_net_test      // added by tastror 2023-1-10
+    [29] = sys_net_test,
+    [30] = sys_net_arp,
+    [31] = sys_net_receive
 };
 
 struct memfree *memarg = 0;
@@ -177,4 +179,15 @@ void sys_net_test(u8 *args)
 {
     kern_net_test(args);
     return;
+}
+
+void sys_net_arp()
+{
+    kern_net_arp();
+    return;
+}
+
+char *sys_net_receive()
+{
+    return kern_net_receive();
 }

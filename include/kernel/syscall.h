@@ -27,5 +27,7 @@ int   sys_fork();            // fork.c, add by visual 2016.5.25
 void  sys_print_E();         // testfunc.c
 void  sys_print_F();         // testfunc.c
 void  sys_net_test(u8 *args);
+void  sys_net_arp();
+char *sys_net_receive();
 
 #endif

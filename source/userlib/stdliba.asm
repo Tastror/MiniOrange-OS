@@ -43,7 +43,9 @@ _NR_deletedir           equ 27          ; added by mingxuan 2019-5-17
 
 _NR_set_color           equ 28          ; added by tastror 2022-12
 
-_NR_net_test            equ 29          ; added by tastror 2023-1
+_NR_net_test            equ 29
+_NR_net_arp             equ 30
+_NR_net_receive         equ 31
 
 INT_VECTOR_SYS_CALL    equ 0x90
 
@@ -81,7 +83,10 @@ global    createdir        ; added by mingxuan 2019-5-17
 global    deletedir        ; added by mingxuan 2019-5-17
 
 global    set_color     ; added by tastror 2022-12
-global    net_test      ; added by tastror 2023-1
+
+global    net_test
+global    net_arp
+global    net_receive
 
 bits 32
 [section .text]
@@ -387,4 +392,16 @@ net_test:
     mov     eax, _NR_net_test
     int     INT_VECTOR_SYS_CALL
     pop     ebx
+    ret
+
+
+net_arp:
+    mov     eax, _NR_net_arp
+    int     INT_VECTOR_SYS_CALL
+    ret
+
+
+net_receive:
+    mov     eax, _NR_net_receive
+    int     INT_VECTOR_SYS_CALL
     ret

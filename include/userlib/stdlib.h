@@ -22,7 +22,9 @@ void  yield();
 void  sleep(int n);
 void  print_E();
 void  print_F();
-void  net_test(u8 *args);
 void  net_test_shell(u16 len, u8 *data);
+void  net_test(u8 *args);
+void  net_arp();
+char *net_receive();
 
 #endif

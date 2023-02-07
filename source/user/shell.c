@@ -22,6 +22,8 @@ int main(int arg, char *argv[])
         printf(" $ ");
         set_color(WHITE);
         if (gets(buf) && strlen(buf) != 0) {
+
+            // help
             if (strcmp(buf, "help") == 0) {
                 set_color(CYAN);
                 printf("HELP MENU\n");
@@ -35,13 +37,25 @@ int main(int arg, char *argv[])
                 printf("net ");
                 set_color(WHITE);
                 printf("to try the net\n\n");
+            
+            // net test
             } else if (strcmp(buf, "net") == 0) {
                 printf("trying net now...\n");
                 net_test_shell(6, (u8 *)"hello");
                 printf("\n");
+            
+            // arp
+            } else if (strcmp(buf, "arp") == 0) {
+                printf("trying arp now...\n");
+                net_arp();
+                printf("\n");
+            
+            // exit
             } else if (strcmp(buf, "exit") == 0) {
                 printf("exiting now.\n");
                 return 0;
+            
+            // error
             } else if (exec(buf) != 0) {
                 set_color(RED);
                 printf("exec failed: file not found!\n");
