@@ -85,7 +85,9 @@ void e1000_init()
     // ask e1000 for receive interrupts.
     e1000_regs[E1000_RDTR] = 0;        // interrupt after every received packet (no timer)
     e1000_regs[E1000_RADV] = 0;        // interrupt after every packet (no timer)
-    e1000_regs[E1000_IMS] = (1 << 7);  // RXDW -- Receiver Descriptor Write Back
+
+    // 12: phy interrutp
+    e1000_regs[E1000_IMS] = (1 << 7) + (1 << 12);  // RXDW -- Receiver Descriptor Write Back
 
     kprintf("e1000 init succeed\n");
 }
@@ -180,6 +182,7 @@ void e1000_receive(void)
 // 接收中断处理函数
 void e1000_receive_pack_handler()
 {
+    e1000_regs[E1000_ICS] = 0;
     kern_set_color(RED);
     kprintf("begin to receive e1000's pack now...\n");
     kern_set_color(WHITE);
@@ -211,6 +214,9 @@ int pci_e1000_attach(struct pci_func *pcif)
     e1000_init();
     kprintf("device control: %08x, ", e1000_regs[E1000_CTL]);
     kprintf("device status: %08x\n", e1000_regs[E1000_STATUS]);
+
+    // E1000_ICS 手动触发中断
+    // e1000_regs[E1000_ICS] = (1 << 12);
 
     // while (1) {}
     return 0;

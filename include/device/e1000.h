@@ -58,6 +58,7 @@ struct rx_desc {
 #define E1000_LEDCTL   (0x00E00 >> 2) /* LED Control - RW */
 #define E1000_PBA      (0x01000 >> 2) /* Packet Buffer Allocation - RW */
 #define E1000_ICR      (0x000C0 >> 2) /* Interrupt Cause Read - R */
+#define E1000_ICS      (0x000C8 >> 2) /* Interrupt Cause Set - W */
 #define E1000_IMS      (0x000D0 >> 2) /* Interrupt Mask Set - RW */
 #define E1000_RCTL     (0x00100 >> 2) /* RX Control - RW */
 #define E1000_TCTL     (0x00400 >> 2) /* TX Control - RW */

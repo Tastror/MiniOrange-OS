@@ -4,9 +4,6 @@
 #include <kernlib/stdio.h>
 #include <kernlib/string.h>
 
-u8 *e1000_save_buff[E1000_PACK_BUFF_SAVE_SIZE];
-u16 e1000_save_len;
-
 /**
  * syscall 向量表跳转函数 sys_net_test 的处理函数（内核调用）
  * args 前两个字节 (u16) 用来存大小
@@ -21,8 +18,17 @@ void kern_net_test(u8 *args)
     kprintf("This is for net test: %u, %s\n", len, (char *)data);
     kern_set_color(WHITE);
 
-    memcpy((void *)e1000_save_buff, (void *)data, len);
-    e1000_save_len = len;
+    // struct mbuf *m;
+
+    // m = mbufalloc(sizeof(struct eth_hdr) + len);
+
+    // memmove(hdr->arp_sha, local_mac, ETHADDR_LEN);
+    // hdr->arp_sip = htonl(local_ip);
+
+    // memmove(hdr->arp_tha, desmac, ETHADDR_LEN);
+    // hdr->arp_tip = htonl(tip);
+    
+    // eth_tx(m, ETHTYPE_ARP);
 
     return;
 }
