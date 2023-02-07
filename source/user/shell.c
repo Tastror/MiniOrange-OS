@@ -34,9 +34,9 @@ int main(int arg, char *argv[])
                 set_color(WHITE);
                 printf("to execute a user file\nuse ");
                 set_color(YELLOW);
-                printf("net ");
+                printf("net / arp");
                 set_color(WHITE);
-                printf("to try the net\n\n");
+                printf("to try the net / arp\n\n");
             
             // net test
             } else if (strcmp(buf, "net") == 0) {
