@@ -6,7 +6,22 @@
 
 #include <device/pci.h>
 #include <device/x86.h>
-#include <kernel/all_head.h>
+#include <kernel/console.h>
+#include <kernel/elf.h>
+#include <kernel/fat32.h>
+#include <kernel/fs.h>
+#include <kernel/hd.h>
+#include <kernel/interrupt.h>
+#include <kernel/kernel.h>
+#include <kernel/keyboard.h>
+#include <kernel/memman.h>
+#include <kernel/pagepte.h>
+#include <kernel/proc.h>
+#include <kernel/protect.h>
+#include <kernel/spinlock.h>
+#include <kernel/syscall.h>
+#include <kernel/tty.h>
+#include <kernel/vfs.h>
 #include <kernlib/assert.h>
 #include <kernlib/mbuf.h>
 #include <kernlib/stdio.h>
@@ -34,8 +49,8 @@ int kernel_main()
     kernel_initial = 1;  // kernel is in initial state. added by xw, 18/5/31
 
     // 内存管理模块的初始化  add by liang
-    memory_manual_init();  
-    
+    memory_manual_init();
+
     mmio_init();
 
     kern_set_color(CYAN);
