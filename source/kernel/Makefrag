@@ -33,7 +33,6 @@ KERN_SRCFILES := kernel/core.asm \
 		kernel/initproc.c \
 		kernel/base.c \
 		kernel/start.c \
-		kernel/i8259.c \
 		kernel/testfunc.c \
 		kernel/protect.c \
 

@@ -1,6 +1,6 @@
 #include <device/e1000.h>
 #include <device/ethernet.h>
-#include <device/interrupt_register.h>
+#include <device/interrupt.h>
 #include <device/pci.h>
 #include <kernel/memman.h>
 #include <kernel/pagepte.h>
@@ -194,7 +194,8 @@ int pci_e1000_attach(struct pci_func *pcif)
     // TODO: 改为 MSI 中断
     // TODO: 由于将 init_pci_device 移到了 main 中，需要完善中断注册函数
     // 这样做的原因是 mmio 需要在内核的页表被映射后才能使用
-    register_device_interrupt(pcif->irq_line, DA_386IGate, e1000_receive_pack_handler, PRIVILEGE_KRNL);
+    put_irq_handler(pcif->irq_line, e1000_receive_pack_handler);
+    enable_irq(pcif->irq_line);
 
     // E1000 初始化
     e1000_init();

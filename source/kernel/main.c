@@ -11,7 +11,7 @@
 #include <kernel/fat32.h>
 #include <kernel/fs.h>
 #include <kernel/hd.h>
-#include <kernel/interrupt.h>
+#include <device/interrupt.h>
 #include <kernel/kernel.h>
 #include <kernel/keyboard.h>
 #include <kernel/memman.h>

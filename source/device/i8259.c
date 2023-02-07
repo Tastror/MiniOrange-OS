@@ -5,8 +5,7 @@
  * @date 2005
  */
 
-#include <kernel/interrupt.h>
-
+#include <device/interrupt.h>
 #include <device/x86.h>
 #include <kernlib/stdio.h>
 

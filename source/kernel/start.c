@@ -4,7 +4,6 @@
  * @date 2005
  */
 
-#include <device/interrupt_register.h>
 #include <device/pci.h>
 #include <kernel/kernel.h>
 #include <kernel/protect.h>
@@ -33,7 +32,6 @@ void cstart()
     *p_idt_limit = IDT_SIZE * sizeof(GATE) - 1;
     *p_idt_base = (u32)&idt;
 
-    device_interrupt_num = 0;
     init_pci_msi();
     init_prot();
 

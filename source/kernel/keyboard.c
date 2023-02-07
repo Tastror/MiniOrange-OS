@@ -1,10 +1,10 @@
 #include <kernel/keyboard.h>
 
-#include <kernel/interrupt.h>
+#include <device/interrupt.h>
+#include <device/keymap.h>
+#include <device/x86.h>
 #include <kernel/console.h>
 #include <kernel/tty.h>
-#include <device/x86.h>
-#include <device/keymap.h>
 #include <kernlib/string.h>
 
 static KB_INPUT    kb_in;

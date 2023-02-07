@@ -4,17 +4,17 @@
  * The `device nr' in this file means minor device nr.
  * @author Forrest Y. Yu
  * @date   2005~2008
- * 
+ *
  * zcr copy whole file from Orange's and the file was modified.
  */
 
 #include <kernel/hd.h>
 
-#include <kernel/interrupt.h>
+#include <device/interrupt.h>
+#include <device/x86.h>
 #include <kernel/kernel.h>
 #include <kernel/proc.h>
 #include <kernel/syscall.h>
-#include <device/x86.h>
 #include <kernlib/assert.h>
 #include <kernlib/stdio.h>
 #include <kernlib/string.h>
