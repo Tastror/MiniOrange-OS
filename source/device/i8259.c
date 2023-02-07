@@ -1,4 +1,3 @@
-
 /**
  * @file i8259.c
  * @author Forrest Yu
@@ -52,17 +51,11 @@ void enable_irq(int irq)
         outb(INT_S_CTLMASK, inb(INT_S_CTLMASK) & ~mask);
 }
 
-/*======================================================================*
-                           spurious_irq
- *======================================================================*/
 void spurious_irq(int irq)
 {
     kprintf("spurious_irq: %d\n", irq);
 }
 
-/*======================================================================*
-                           put_irq_handler
- *======================================================================*/
 void put_irq_handler(int irq, irq_handler handler)
 {
     disable_irq(irq);

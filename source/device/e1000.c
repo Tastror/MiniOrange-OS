@@ -177,6 +177,15 @@ void e1000_receive(void)
     }
 }
 
+// 接收中断处理函数
+void e1000_receive_pack_handler()
+{
+    kern_set_color(RED);
+    kprintf("begin to receive e1000's pack now...\n");
+    kern_set_color(WHITE);
+    e1000_receive();
+}
+
 int pci_e1000_attach(struct pci_func *pcif)
 {
     kprintf("ready to start e1000...\n");
@@ -192,9 +201,10 @@ int pci_e1000_attach(struct pci_func *pcif)
 
     // 注册一下 receive 的中断
     // TODO: 改为 MSI 中断
-    // TODO: 由于将 init_pci_device 移到了 main 中，需要完善中断注册函数
-    // 这样做的原因是 mmio 需要在内核的页表被映射后才能使用
     put_irq_handler(pcif->irq_line, e1000_receive_pack_handler);
+    // 从片需要先启用主从连接的 irq
+    if (pcif->irq_line >= 8)
+        enable_irq(CASCADE_IRQ);
     enable_irq(pcif->irq_line);
 
     // E1000 初始化
@@ -204,23 +214,4 @@ int pci_e1000_attach(struct pci_func *pcif)
 
     // while (1) {}
     return 0;
-}
-
-// 接收中断处理函数
-// 将网卡的 pack 保存到数组里
-void e1000_receive_pack_handler()
-{
-    // use int INT_VECTOR_E1000_RECEIVE_PACK
-    // and put your data in pack
-
-    __asm__ __volatile__(
-        "pushfl\n\tpushal\n\t"
-    );
-
-    kprintf("begin to receive e1000's pack now...\n");
-    e1000_receive();
-
-    __asm__ __volatile__(
-        "popal\n\tpopfl\n\t"
-    );
 }

@@ -155,6 +155,5 @@ extern uint32_t *e1000_regs;
 int  pci_e1000_attach(struct pci_func *pcif);
 int  e1000_transmit(struct mbuf *m);
 void e1000_receive(void);
-void e1000_receive_pack_handler();
 
 #endif  // SOL >= 6
