@@ -8,6 +8,7 @@
 #include <kernel/protect.h>
 
 #include <device/interrupt_register.h>
+#include <device/e1000.h>
 #include <kernel/interrupt.h>
 #include <kernel/kernel.h>
 #include <kernel/proc.h>
@@ -102,6 +103,7 @@ void init_prot()
     init_idt_desc(INT_VECTOR_IRQ8 + 6, DA_386IGate, hwint14, PRIVILEGE_KRNL);
     init_idt_desc(INT_VECTOR_IRQ8 + 7, DA_386IGate, hwint15, PRIVILEGE_KRNL);
     init_idt_desc(INT_VECTOR_SYS_CALL, DA_386IGate, syscall_handler, PRIVILEGE_USER);
+    init_idt_desc(INT_VECTOR_E1000, DA_386IGate, e1000_receive_pack_handler, PRIVILEGE_KRNL);
 
     /* 修改显存描述符 */  // add by visual 2016.5.12
     init_descriptor(&gdt[INDEX_VIDEO], K_PHY2LIN(0x0B8000), 0x0ffff, DA_DRW | DA_DPL3);
