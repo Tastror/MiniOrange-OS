@@ -182,11 +182,14 @@ void e1000_receive(void)
 // 接收中断处理函数
 void e1000_receive_pack_handler()
 {
-    e1000_regs[E1000_ICS] = 0;
-    kern_set_color(RED);
-    kprintf("begin to receive e1000's pack now...\n");
+    e1000_regs[E1000_IMC] = 0xFFFF;
+    // ICS will be 0 when read ICR
+    u32 icr_res = e1000_regs[E1000_ICR];
+    kern_set_color(BLUE);
+    kprintf("e1000 receive interrupt occurred\n");
     kern_set_color(WHITE);
     e1000_receive();
+    e1000_regs[E1000_IMS] = (1 << 7) + (1 << 12);
 }
 
 int pci_e1000_attach(struct pci_func *pcif)
@@ -216,7 +219,8 @@ int pci_e1000_attach(struct pci_func *pcif)
     kprintf("device status: %08x\n", e1000_regs[E1000_STATUS]);
 
     // E1000_ICS 手动触发中断
-    // e1000_regs[E1000_ICS] = (1 << 12);
+    kprintf("e1000 interrupt test: ");
+    e1000_regs[E1000_ICS] = (1 << 12);
 
     // while (1) {}
     return 0;
