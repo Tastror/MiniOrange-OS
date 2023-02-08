@@ -20,7 +20,7 @@ static struct mbuf   *tx_mbufs[TX_RING_SIZE];
 static struct rx_desc rx_ring[RX_RING_SIZE] __attribute__((aligned(16)));
 static struct mbuf   *rx_mbufs[RX_RING_SIZE];
 
-#define IMS_INTERRUPT_VALUE (1 + (1 << 7) + (1 << 12))
+#define IMS_INTERRUPT_VALUE ((1 << 7) + (1 << 12))
 
 // called by pci_init().
 // xregs is the memory address at which the

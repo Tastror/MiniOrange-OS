@@ -47,9 +47,9 @@ void init_screen(TTY *tty)
      *   in WORDs, but not in BYTEs.
      */
     int v_mem_size = V_MEM_SIZE >> 1; /* size of Video Memory */
-    int size_per_con = (v_mem_size / NR_CONSOLES) / 80 * 80;
+    int size_per_con = v_mem_size / NR_CONSOLES;
     tty->console->orig = nr_tty * size_per_con;
-    tty->console->con_size = size_per_con / SCR_WIDTH * SCR_WIDTH;
+    tty->console->con_size = size_per_con;
     tty->console->cursor = tty->console->crtc_start = tty->console->orig;
     tty->console->is_full = 0;
     tty->console->current_line = 0;

@@ -10,9 +10,6 @@
 
 #include <common/type.h>
 
-/* TTY */
-#define NR_CONSOLES 3 /* consoles */
-
 /* macros for messages */
 #define FD       u.m3.m3i1
 #define PATHNAME u.m3.m3p1

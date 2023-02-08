@@ -71,30 +71,30 @@
 
 /* TTY */
 // added by mingxuan 2019-5-19
-#define NR_CONSOLES 3 /* consoles */
+#define NR_CONSOLES 1 /* consoles */
 
 /* 页表相关 */
 #define PageTblNumAddr    0x500     // 页表数量放在这个位置,必须与 load.inc 中一致  // add by visual 2016.5.11
 #define KernelPageTblAddr 0x200000  // 内核页表物理地址，必须与 load.inc 中一致  // add by visual 2016.5.17
 // Page directory and page table constants.
-#define NPDENTRIES	1024		// page directory entries per page directory
-#define NPTENTRIES	1024		// page table entries per page table
+#define NPDENTRIES 1024  // page directory entries per page directory
+#define NPTENTRIES 1024  // page table entries per page table
 
-#define PGSIZE		4096		// bytes mapped by a page
-#define PGSHIFT		12		    // log2(PGSIZE)
+#define PGSIZE  4096  // bytes mapped by a page
+#define PGSHIFT 12    // log2(PGSIZE)
 
-#define PTSIZE		(PGSIZE*NPTENTRIES) // bytes mapped by a page directory entry
-#define PTSHIFT		22		    // log2(PTSIZE)
+#define PTSIZE  (PGSIZE * NPTENTRIES)  // bytes mapped by a page directory entry
+#define PTSHIFT 22                     // log2(PTSIZE)
 
-#define PTXSHIFT	12		    // offset of PTX in a linear address
-#define PDXSHIFT	22		    // offset of PDX in a linear address
+#define PTXSHIFT 12  // offset of PTX in a linear address
+#define PDXSHIFT 22  // offset of PDX in a linear address
 /**
  * 线性地址描述
  * // edit by visual 2016.5.25
  */
 #define KernelSize        0x800000                             // 内核的大小  // add by visual 2016.5.10
 #define K_PHY2LIN(x)      ((x) + 0xC0000000)                   // 内核中物理地址转线性地址  // add by visual 2016.5.10
-#define K_LIN2PHY(x)      ((x) - 0xC0000000)                   // added by xw, 18/8/27
+#define K_LIN2PHY(x)      ((x)-0xC0000000)                     // added by xw, 18/8/27
 #define num_4B            0x4                                  // 4B 大小
 #define num_1K            0x400                                // 1k 大小
 #define num_4K            0x1000                               // 4k 大小
@@ -113,14 +113,14 @@
 #define KernelLinBase     0xC0000000                           // 内核线性起始地址（有 0x30400 的偏移）
 #define ArgLinBase        (KernelLinBase - 0x1000)             // 参数存放位置起始地址，放在 3G 前，暂时还没没用到
 #define ArgLinLimitMAX    KernelLinBase                        // = (ArgLinBase + 0x1000)，大小：4K
-#define MMIOLIM           (ArgLinBase)                         // add by network 2023.1.17 
-#define MMIOBASE          (MMIOLIM - PTSIZE)                   // add by network 2023.1.17 
+#define MMIOLIM           (ArgLinBase)                         // add by network 2023.1.17
+#define MMIOBASE          (MMIOLIM - PTSIZE)                   // add by network 2023.1.17
 #define StackLinBase      (MMIOBASE - num_4B)                  // = (StackLinLimitMAX + 1G - 128M - 4K - 4B)，栈的起始地址，放在参数位置之前（注意堆栈的增长方向） // edit by network 2023.1.17
 #define KernelLinLimitMAX (KernelLinBase + 0x40000000)         // 大小：1G
 // #define ShareTblLinAddr     (KernelLinLimitMAX - 0x1000)        // 公共临时共享页，放在内核最后一个页表的最后一项上
 
 /*
- * 目前线性地址布局  // edit by visual 2016.5.25 
+ * 目前线性地址布局  // edit by visual 2016.5.25
  *
  * 进程代码                 0 ~ 512M ,限制大小为 512M
  * 进程数据                 512M ~ 1G，限制大小为 512M
@@ -133,14 +133,14 @@
  */
 
 /* 分页机制常量的定义，必须与 load.inc 中一致 */  // add by visual 2016.4.5
-#define PG_P   0x001                                // 页存在属性位
-#define PG_RWR 0x000                                // R/W 属性位值，读/执行
-#define PG_RWW 0x002                                // R/W 属性位值，读/写/执行
-#define PG_USS 0x000                                // U/S 属性位值，系统级
-#define PG_USU 0x004                                // U/S 属性位值，用户级
-#define PG_PS  0x040                                // PS 属性位值，4K 页
-#define PG_PWT 0x008	                            // Write-Through
-#define PG_PCD 0x010	                            // Cache-Disable
+#define PG_P   0x001                              // 页存在属性位
+#define PG_RWR 0x000                              // R/W 属性位值，读/执行
+#define PG_RWW 0x002                              // R/W 属性位值，读/写/执行
+#define PG_USS 0x000                              // U/S 属性位值，系统级
+#define PG_USU 0x004                              // U/S 属性位值，用户级
+#define PG_PS  0x040                              // PS 属性位值，4K 页
+#define PG_PWT 0x008                              // Write-Through
+#define PG_PCD 0x010                              // Cache-Disable
 
 /* AT keyboard */
 /* 8042 ports */
@@ -187,7 +187,7 @@
 #define CURSOR_H      0xE     /* reg index of cursor position (MSB) */
 #define CURSOR_L      0xF     /* reg index of cursor position (LSB) */
 #define V_MEM_BASE    0xB8000 /* base of color video memory */
-#define V_MEM_SIZE    0x8000  /* 32K: B8000H -> BFFFFH */
+#define V_MEM_SIZE    0x8000 /* 64K: B8000H -> BFFFFH */
 
 #define STD_IN  0
 #define STD_OUT 1

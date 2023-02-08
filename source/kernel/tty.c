@@ -36,7 +36,8 @@ void in_process(TTY *p_tty, u32 key)
             put_key(p_tty, '\b');
             break;
         case UP:
-            if (p_tty->console->current_line < 43) {
+            // 怎么写死了，草，这里一开始不知道谁写的 43
+            if (p_tty->console->current_line < p_tty->console->con_size / SCR_WIDTH) {
                 disable_int();
                 p_tty->console->current_line++;
                 outb(CRTC_ADDR_REG, START_ADDR_H);
