@@ -205,7 +205,7 @@ void e1000_receive(void)
         rx_ring[index].status = 0;
 
         // current index
-        e1000_regs[E1000_RDT] = index
+        e1000_regs[E1000_RDT] = index;
     }
 }
 
