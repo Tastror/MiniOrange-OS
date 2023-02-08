@@ -177,6 +177,13 @@ void e1000_receive(void)
     // Create and deliver an mbuf for each packet (using net_rx()).
     //
 
+    kern_set_color(CYAN);
+    for (u32 i = 0; i < RX_RING_SIZE; i++) {
+        if ((rx_ring[i].status & E1000_RXD_STAT_DD) != 0) {
+            kprintf("found packet %d\n", i);
+        }
+    }
+
     int num = 0;
     while (true) {
 
