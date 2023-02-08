@@ -65,6 +65,7 @@ struct rx_desc {
 #define E1000_TCTL     (0x00400 >> 2) /* TX Control - RW */
 #define E1000_TIPG     (0x00410 >> 2) /* TX Inter-packet gap -RW */
 #define E1000_RDBAL    (0x02800 >> 2) /* RX Descriptor Base Address Low - RW */
+#define E1000_RDBAH    (0x02804 >> 2) /* RX Descriptor Base Address High - RW */
 #define E1000_RDTR     (0x02820 >> 2) /* RX Delay Timer */
 #define E1000_RADV     (0x0282C >> 2) /* RX Interrupt Absolute Delay Timer */
 #define E1000_RDH      (0x02810 >> 2) /* RX Descriptor Head - RW */
@@ -72,6 +73,7 @@ struct rx_desc {
 #define E1000_RDLEN    (0x02808 >> 2) /* RX Descriptor Length - RW */
 #define E1000_RSRPD    (0x02C00 >> 2) /* RX Small Packet Detect Interrupt */
 #define E1000_TDBAL    (0x03800 >> 2) /* TX Descriptor Base Address Low - RW */
+#define E1000_TDBAH    (0x03804 >> 2) /* TX Descriptor Base Address High - RW */
 #define E1000_TDLEN    (0x03808 >> 2) /* TX Descriptor Length - RW */
 #define E1000_TDH      (0x03810 >> 2) /* TX Descriptor Head - RW */
 #define E1000_TDT      (0x03818 >> 2) /* TX Descripotr Tail - RW */

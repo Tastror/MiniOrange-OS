@@ -64,9 +64,10 @@ void e1000_init()
         tx_mbufs[i] = 0;
     }
     e1000_regs[E1000_TDBAL] = K_LIN2PHY((uint32_t)tx_ring);
+    e1000_regs[E1000_TDBAH] = 0;
     if (sizeof(tx_ring) % 128 != 0)
         panic("e1000");
-    e1000_regs[E1000_TDLEN] = sizeof(tx_ring);
+    e1000_regs[E1000_TDLEN] = TX_RING_SIZE * sizeof(struct tx_desc);
     e1000_regs[E1000_TDH] = e1000_regs[E1000_TDT] = 0;
 
     // [E1000 14.4] Receive initialization
@@ -75,14 +76,15 @@ void e1000_init()
         rx_mbufs[i] = mbufalloc(0);
         if (!rx_mbufs[i])
             panic("e1000");
-        rx_ring[i].addr = (uint32_t)rx_mbufs[i]->header_end;
+        rx_ring[i].addr = K_LIN2PHY((uint32_t)rx_mbufs[i]->header_end);
     }
-    e1000_regs[E1000_RDBAL] = (uint32_t)rx_ring;
+    e1000_regs[E1000_RDBAL] = K_LIN2PHY((uint32_t)rx_ring);
+    e1000_regs[E1000_RDBAH] = 0;
     if (sizeof(rx_ring) % 128 != 0)
         panic("e1000");
     e1000_regs[E1000_RDH] = 0;
     e1000_regs[E1000_RDT] = RX_RING_SIZE - 1;
-    e1000_regs[E1000_RDLEN] = sizeof(rx_ring);
+    e1000_regs[E1000_RDLEN] = RX_RING_SIZE * sizeof(struct rx_desc);
 
     // filter by qemu's MAC address, 52:54:00:12:34:56
     // e1000_regs[E1000_RA] = 0x12005452;
@@ -101,7 +103,11 @@ void e1000_init()
 
     // receiver control bits.
     e1000_regs[E1000_RCTL] = E1000_RCTL_EN |       // enable receiver
-                             E1000_RCTL_BAM |      // enable broadcast
+                             E1000_RCTL_SBP |      /* store bad packet */
+                             E1000_RCTL_UPE |      /* unicast promiscuous enable */
+                             E1000_RCTL_MPE |      /* multicast promiscuous enab */
+                             E1000_RCTL_LPE |      /* long packet enable */
+                             E1000_RCTL_BAM |      /* broadcast enable */
                              E1000_RCTL_SZ_2048 |  // 2048-byte rx buffers
                              E1000_RCTL_SECRC;     // strip CRC
 
