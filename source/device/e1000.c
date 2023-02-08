@@ -20,6 +20,8 @@ static struct mbuf   *tx_mbufs[TX_RING_SIZE];
 static struct rx_desc rx_ring[RX_RING_SIZE] __attribute__((aligned(16)));
 static struct mbuf   *rx_mbufs[RX_RING_SIZE];
 
+#define IMS_INTERRUPT_VALUE (1 + (1 << 7) + (1 << 12))
+
 // called by pci_init().
 // xregs is the memory address at which the
 // e1000's registers are mapped.
@@ -87,7 +89,7 @@ void e1000_init()
     e1000_regs[E1000_RADV] = 0;        // interrupt after every packet (no timer)
 
     // 12: phy interrutp
-    e1000_regs[E1000_IMS] = (1 << 7) + (1 << 12);  // RXDW -- Receiver Descriptor Write Back
+    e1000_regs[E1000_IMS] = IMS_INTERRUPT_VALUE;  // RXDW -- Receiver Descriptor Write Back
 
     kprintf("e1000 init succeed\n");
 }
@@ -189,7 +191,7 @@ void e1000_receive_pack_handler()
     kprintf("e1000 receive interrupt occurred\n");
     kern_set_color(WHITE);
     e1000_receive();
-    e1000_regs[E1000_IMS] = (1 << 7) + (1 << 12);
+    e1000_regs[E1000_IMS] = IMS_INTERRUPT_VALUE;
 }
 
 int pci_e1000_attach(struct pci_func *pcif)
