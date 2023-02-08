@@ -23,8 +23,10 @@ int main(int arg, char *argv[])
         set_color(WHITE);
         if (gets(buf) && strlen(buf) != 0) {
 
+            char* head = strtok(buf, " ");
+
             // help
-            if (strcmp(buf, "help") == 0) {
+            if (strcmp(head, "help") == 0) {
                 set_color(CYAN);
                 printf("HELP MENU\n");
                 set_color(WHITE);
@@ -39,24 +41,25 @@ int main(int arg, char *argv[])
                 printf("to try the net / arp\n\n");
             
             // net test
-            } else if (strcmp(buf, "net") == 0) {
+            } else if (strcmp(head, "net") == 0) {
                 printf("trying net now...\n");
-                net_test_shell(6, (u8 *)"hello");
+                char* res = strtok(NULL, " ");
+                net_test_shell(strlen(res), (u8 *)res);
                 printf("\n");
             
             // arp
-            } else if (strcmp(buf, "arp") == 0) {
+            } else if (strcmp(head, "arp") == 0) {
                 printf("trying arp now...\n");
                 net_arp();
                 printf("\n");
             
             // exit
-            } else if (strcmp(buf, "exit") == 0) {
+            } else if (strcmp(head, "exit") == 0) {
                 printf("exiting now.\n");
                 return 0;
             
             // error
-            } else if (exec(buf) != 0) {
+            } else if (exec(head) != 0) {
                 set_color(RED);
                 printf("file or order name not found\n");
                 printf("you can try ");

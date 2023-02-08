@@ -13,22 +13,19 @@ void kern_net_test(u8 *args)
 {
     u16 len = *(u16 *)args;
     u8 *data = args + 2;
+    ((char *)data)[len] = 0;
 
     kern_set_color(CYAN);
     kprintf("This is for net test: %u, %s\n", len, (char *)data);
     kern_set_color(WHITE);
 
-    // struct mbuf *m;
+    struct mbuf *m;
 
-    // m = mbufalloc(sizeof(struct eth_hdr) + len);
+    m = mbufalloc(sizeof(struct eth_hdr) + len);
+    u8 *buff = (u8 *)mbufpush(m, len);
+    memmove(buff, data, len);
 
-    // memmove(hdr->arp_sha, local_mac, ETHADDR_LEN);
-    // hdr->arp_sip = htonl(local_ip);
-
-    // memmove(hdr->arp_tha, desmac, ETHADDR_LEN);
-    // hdr->arp_tip = htonl(tip);
-    
-    // eth_tx(m, ETHTYPE_ARP);
+    eth_tx(m, ETHTYPE_ARP);
 
     return;
 }

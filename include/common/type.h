@@ -10,7 +10,8 @@
 #endif
 
 typedef _Bool bool;
-enum { false, true };
+enum { false,
+       true };
 
 #define TRUE  1
 #define FALSE 0
@@ -109,5 +110,15 @@ typedef uint32_t pde_t;
 
 // Address in page table or page directory entry
 #define PTE_ADDR(pte) ((phyaddr_t)(pte) & ~0xFFF)
+
+#define __ALIGN_KERNEL_MASK(x, mask) (((x) + (mask)) & ~(mask))
+#define __ALIGN_KERNEL(x, a)         __ALIGN_KERNEL_MASK(x, (typeof(x))(a)-1)
+
+#define ALIGN(x, a)           __ALIGN_KERNEL((x), (a))
+#define ALIGN_DOWN(x, a)      __ALIGN_KERNEL((x) - ((a)-1), (a))
+#define __ALIGN_MASK(x, mask) __ALIGN_KERNEL_MASK((x), (mask))
+#define PTR_ALIGN(p, a)       ((typeof(p))ALIGN((unsigned long)(p), (a)))
+#define PTR_ALIGN_DOWN(p, a)  ((typeof(p))ALIGN_DOWN((unsigned long)(p), (a)))
+#define IS_ALIGNED(x, a)      (((x) & ((typeof(x))(a)-1)) == 0)
 
 #endif /* _ORANGES_TYPE_H_ */

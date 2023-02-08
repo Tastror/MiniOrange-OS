@@ -4,17 +4,22 @@
 #include <common/type.h>
 #include <define/define.h>
 
-int   strlen(const char *s);
-int   strnlen(const char *s, size_t size);
-char *strcpy(char *dst, const char *src);
-char *strncpy(char *dst, const char *src, size_t size);
-char *strcat(char *dst, const char *src);
-int   strcmp(const char *s1, const char *s2);
-int   strncmp(const char *s1, const char *s2, size_t size);
-long  strtol(const char *cp, char **endp, unsigned int base);
-char *itoa(char *str, int num);
-void *memset(void *v, int c, size_t n);
-void *memcpy(void *dst, const void *src, size_t n);
-void* memmove(void *dst, const void *src, uint32_t n);
+int    strlen(const char *s);
+int    strnlen(const char *s, size_t size);
+char  *strcpy(char *dst, const char *src);
+char  *strncpy(char *dst, const char *src, size_t size);
+char  *strcat(char *dst, const char *src);
+int    strcmp(const char *s1, const char *s2);
+int    strncmp(const char *s1, const char *s2, size_t size);
+char  *strchr(register const char *s, int c);
+char  *strchrnul(const char *s, int c_in);
+size_t strspn(const char *str, const char *accept);
+size_t strcspn(const char *str, const char *reject);
+char  *strtok(char *s, const char *delim);
+long   strtol(const char *cp, char **endp, unsigned int base);
+char  *itoa(char *str, int num);
+void  *memset(void *v, int c, size_t n);
+void  *memcpy(void *dst, const void *src, size_t n);
+void  *memmove(void *dst, const void *src, uint32_t n);
 
 #endif /* _MINIOS_STRING_H_ */
