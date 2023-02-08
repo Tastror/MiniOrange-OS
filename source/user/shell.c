@@ -42,7 +42,7 @@ int main(int arg, char *argv[])
             
             // net test
             } else if (strcmp(head, "net") == 0) {
-                char* res = strtok(NULL, " ");
+                char* res = strtok(NULL, "");
                 if (res)
                     net_test_shell(strlen(res), (u8 *)res);
                 else {
