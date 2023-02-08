@@ -60,7 +60,7 @@ void eth_rx(struct mbuf *m)
         return;
     }
     ethtype = ntohs(ethhdr->type);
-    kprintf("%s %d\n", "ethtype", ethtype);
+    kprintf("%s 0x%04x\n", "ethtype", ethtype);
 
     if (ethtype == ETHTYPE_IP)
         // e1000 not support ip
