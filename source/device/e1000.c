@@ -162,7 +162,7 @@ int e1000_transmit(struct mbuf *m)
     tx_mbufs[index] = m;
     memcpy(tx_mbufs[index], m->header_end, m->buffer_len);
 
-    kprintf("::test:: E1000 tx right?\n");
+    kprintf("::test:: E1000 tx\n");
     kprintf("- status %x ", tx_ring[index].status);
     kcheck(tx_ring[index].status == E1000_TXD_STAT_DD);
     kprintf("- addr 0x%x ", tx_ring[index].addr);
@@ -181,14 +181,13 @@ void e1000_receive(void)
 {
     // Check for packets that have arrived from the e1000
     // Create and deliver an mbuf for each packet (using net_rx()).
-    //
 
-    kern_set_color(CYAN);
-    for (u32 i = 0; i < RX_RING_SIZE; i++) {
-        if ((rx_ring[i].status & E1000_RXD_STAT_DD) != 0) {
-            kprintf("found packet %d\n", i);
-        }
-    }
+    // kern_set_color(CYAN);
+    // for (u32 i = 0; i < RX_RING_SIZE; i++) {
+    //     if ((rx_ring[i].status & E1000_RXD_STAT_DD) != 0) {
+    //         kprintf("found packet %d\n", i);
+    //     }
+    // }
 
     int num = 0;
     while (true) {
@@ -202,8 +201,12 @@ void e1000_receive(void)
         kern_set_color(WHITE);
 
         // check status, if not set we will return
-        if ((rx_ring[index].status & E1000_RXD_STAT_DD) == 0)
+        if ((rx_ring[index].status & E1000_RXD_STAT_DD) == 0) {
+            kern_set_color(YELLOW);
+            kprintf("no package left\n");
+            kern_set_color(WHITE);
             break;
+        }
 
         // deliver to network stack
         rx_mbufs[index]->buffer_len = rx_ring[index].length;
@@ -263,8 +266,7 @@ int pci_e1000_attach(struct pci_func *pcif)
     kprintf("device status: %08x\n", e1000_regs[E1000_STATUS]);
 
     // E1000_ICS 手动触发中断
-    kern_set_color(WHITE);
-    kprintf("e1000 interrupt test: ");
+    kprintf("e1000 interrupt testing...\n");
     e1000_regs[E1000_ICS] = (1 << 7);
 
     return 0;

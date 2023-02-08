@@ -36,7 +36,7 @@ void eth_tx(struct mbuf *m, uint16_t ethType)
 
     struct ip_hdr *iphdr;
     iphdr = (struct ip_hdr *)(m->all_buf + sizeof(struct eth_hdr));
-    kprintf("%s %u\n", "ttl test", iphdr->ttl);
+    // kprintf("%s %u\n", "ttl test", iphdr->ttl);
 
     int n = e1000_transmit(m);
 
