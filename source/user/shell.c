@@ -53,7 +53,7 @@ int main(int arg, char *argv[])
                 printf("\n");
             
             // arp
-            } else if (strcmp(buf, "arp") == 0) {
+            } else if (strcmp(head, "arp") == 0) {
                 // printf("trying arp now...\n");
                 net_arp();
                 printf("\n");
