@@ -1,10 +1,10 @@
 #!/bin/sh
 
-# 设置允许转发
-iptables -t filter -A FORWARD -i br0 -j ACCEPT
-iptables -t filter -A FORWARD -o br0 -j ACCEPT
 # 创建网桥
 sudo brctl addbr br0
+# 设置允许转发
+sudo iptables -t filter -A FORWARD -i br0 -j ACCEPT
+sudo iptables -t filter -A FORWARD -o br0 -j ACCEPT
 # 创建tap0设备，让当前用户可以使用
 sudo tunctl -t tap0 -u `whoami`
 # # 清空网卡ip地址
