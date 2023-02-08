@@ -7,6 +7,7 @@
 #include <device/interrupt.h>
 #include <device/x86.h>
 #include <kernlib/stdio.h>
+#include <kernlib/assert.h>
 
 irq_handler irq_table[NR_IRQ];
 
@@ -58,6 +59,7 @@ void spurious_irq(int irq)
 
 void put_irq_handler(int irq, irq_handler handler)
 {
+    assert(irq < NR_IRQ);
     disable_irq(irq);
     irq_table[irq] = handler;
 }
