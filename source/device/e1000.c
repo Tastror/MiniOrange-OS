@@ -20,25 +20,26 @@ static struct mbuf   *tx_mbufs[TX_RING_SIZE];
 static struct rx_desc rx_ring[RX_RING_SIZE] __attribute__((aligned(16)));
 static struct mbuf   *rx_mbufs[RX_RING_SIZE];
 
-// 1: 发送中断, 7: 读取断断, 12: 硬中断
-#define IMS_INTERRUPT_VALUE (1 + (1 << 7) + (1 << 12))
+// 1: 发送中断, 7: 读取断断, 12: 物理中断
+#define IMS_INTERRUPT_VALUE (1 | (1 << 7))
 
-static void 
+static void
 e1000_set_mac_addr(uint8_t mac[])
 {
-	uint8_t low = 0, high = 0;
-	int i;
+    uint8_t low = 0, high = 0;
 
-	for (i = 0; i < 4; i++) {
-		low |= mac[i] << (8 * i);
-	}
+    int i;
 
-	for (i = 4; i < 6; i++) {
-		high |= mac[i] << (8 * i);
-	}
+    for (i = 0; i < 4; i++) {
+        low |= mac[i] << (8 * i);
+    }
 
-	e1000_regs[E1000_RA] = low;
-	e1000_regs[E1000_RA + 1] = high | E1000_RAH_AV;
+    for (i = 4; i < 6; i++) {
+        high |= mac[i] << (8 * i);
+    }
+
+    e1000_regs[E1000_RA] = low;
+    e1000_regs[E1000_RA + 1] = high | E1000_RAH_AV;
 }
 
 // called by pci_init().
@@ -105,8 +106,8 @@ void e1000_init()
                              E1000_RCTL_SECRC;     // strip CRC
 
     // ask e1000 for receive interrupts.
-    e1000_regs[E1000_RDTR] = 0;        // interrupt after every received packet (no timer)
-    e1000_regs[E1000_RADV] = 0;        // interrupt after every packet (no timer)
+    e1000_regs[E1000_RDTR] = 0;  // interrupt after every received packet (no timer)
+    e1000_regs[E1000_RADV] = 0;  // interrupt after every packet (no timer)
 
     // 12: phy interrutp
     e1000_regs[E1000_IMS] = IMS_INTERRUPT_VALUE;  // RXDW -- Receiver Descriptor Write Back
@@ -177,8 +178,8 @@ void e1000_receive(void)
     //
 
     int num = 0;
-    for (;;) {
-        
+    while (true) {
+
         kern_set_color(CYAN);
         kprintf("receiving package num: %d, ", num++);
 
@@ -250,8 +251,7 @@ int pci_e1000_attach(struct pci_func *pcif)
 
     // E1000_ICS 手动触发中断
     kprintf("e1000 interrupt test: ");
-    e1000_regs[E1000_ICS] = (1 << 12);
+    e1000_regs[E1000_ICS] = (1 << 7);
 
-    // while (1) {}
     return 0;
 }
