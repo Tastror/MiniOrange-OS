@@ -112,8 +112,8 @@ DUMP_FILENAME = dump.pcap
 # 网络相关内容
 QEMUOPTS :=
 # 使用 SLIRP 后端
-QEMUOPTS += -netdev user,id=mynet0,hostfwd=tcp::5555-:22,net=192.168.76.0/24,dhcpstart=192.168.76.15
-# QEMUOPTS += -netdev tap,ifname=tap0,script=no,downscript=no,id=mynet0
+# QEMUOPTS += -netdev user,id=mynet0,hostfwd=tcp::5555-:22,net=192.168.76.0/24,dhcpstart=192.168.76.15
+QEMUOPTS += -netdev tap,ifname=tap0,script=no,downscript=no,id=mynet0
 # 设置虚拟机使用的网卡 e1000
 QEMUOPTS += -device e1000,netdev=mynet0,mac=52:54:00:12:34:56
 # 设置网络通信监听文件存储
