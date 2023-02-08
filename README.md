@@ -71,6 +71,9 @@ MiniOS 当前从软盘中启动，启动流程为：
 # 编译 MiniOS 所有内容
 make all
 # 编译 MiniOS 所有内容，并在 qume 中运行 MiniOS
+make notap
+# 编译 MiniOS 所有内容，并在 qume 中运行 MiniOS，需要开启桥接
+# （桥接方式见 tap-bridge.md）
 make run
 # 清除所有编译文件
 make clean
