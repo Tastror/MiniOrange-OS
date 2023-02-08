@@ -178,13 +178,12 @@ void e1000_receive(void)
 
     int num = 0;
     for (;;) {
-
         kern_set_color(CYAN);
-        kprintf("receiving package num: %d\n", num++);
-        kern_set_color(WHITE);
+        kprintf("receiving package num: %d, ", num++);
 
         // next index
         uint32_t index = (e1000_regs[E1000_RDT] + 1) % RX_RING_SIZE;
+        kprintf("index: %d\n", index);
 
         // check status, if not set we will return
         if ((rx_ring[index].status & E1000_RXD_STAT_DD) == 0)
@@ -205,6 +204,7 @@ void e1000_receive(void)
 
         // current index
         e1000_regs[E1000_RDT] = index;
+        kern_set_color(WHITE);
     }
 }
 
