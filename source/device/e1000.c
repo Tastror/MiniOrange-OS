@@ -75,9 +75,9 @@ void e1000_init()
         rx_mbufs[i] = mbufalloc(0);
         if (!rx_mbufs[i])
             panic("e1000");
-        rx_ring[i].addr = (uint32_t)rx_mbufs[i]->header_end;
+        rx_ring[i].addr = K_LIN2PHY((uint32_t)rx_mbufs[i]->header_end);
     }
-    e1000_regs[E1000_RDBAL] = (uint32_t)rx_ring;
+    e1000_regs[E1000_RDBAL] = K_LIN2PHY((uint32_t)rx_ring);
     if (sizeof(rx_ring) % 128 != 0)
         panic("e1000");
     e1000_regs[E1000_RDH] = 0;
