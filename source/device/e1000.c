@@ -20,7 +20,8 @@ static struct mbuf   *tx_mbufs[TX_RING_SIZE];
 static struct rx_desc rx_ring[RX_RING_SIZE] __attribute__((aligned(16)));
 static struct mbuf   *rx_mbufs[RX_RING_SIZE];
 
-#define IMS_INTERRUPT_VALUE ((1 << 7) + (1 << 12))
+// 1: 发送中断, 7: 读取断断, 12: 硬中断
+#define IMS_INTERRUPT_VALUE (1 + (1 << 7) + (1 << 12))
 
 static void 
 e1000_set_mac_addr(uint8_t mac[])
@@ -174,7 +175,14 @@ void e1000_receive(void)
     // Check for packets that have arrived from the e1000
     // Create and deliver an mbuf for each packet (using net_rx()).
     //
+
+    int num = 0;
     for (;;) {
+
+        kern_set_color(CYAN);
+        kprintf("receiving package num: %d\n", num++);
+        kern_set_color(WHITE);
+
         // next index
         uint32_t index = (e1000_regs[E1000_RDT] + 1) % RX_RING_SIZE;
 
