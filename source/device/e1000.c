@@ -21,7 +21,7 @@ static struct rx_desc rx_ring[RX_RING_SIZE] __attribute__((aligned(16)));
 static struct mbuf   *rx_mbufs[RX_RING_SIZE];
 
 // 1: 发送中断, 7: 读取断断, 12: 物理中断
-#define IMS_INTERRUPT_VALUE (1 | (1 << 7))
+#define IMS_INTERRUPT_VALUE ((1 << 7))
 
 static void
 e1000_set_mac_addr(uint8_t mac[])
