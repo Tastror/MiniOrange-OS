@@ -3,6 +3,9 @@
 # 在这填写网卡名称 
 nic="eth0"
 
+# 设置允许转发
+iptables -t filter -A FORWARD -i br0 -j ACCEPT
+iptables -t filter -A FORWARD -o br0 -j ACCEPT
 # 创建网桥
 brctl addbr br0
 # 清空网卡ip地址
@@ -17,3 +20,5 @@ brctl addif br0 tap0
 ifconfig ${nic} up
 ifconfig tap0 up
 ifconfig br0 up
+# 设置网桥ip
+ifconfig br0 10.0.2.2/24
