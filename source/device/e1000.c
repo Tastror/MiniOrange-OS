@@ -103,10 +103,10 @@ void e1000_init()
 
     // receiver control bits.
     e1000_regs[E1000_RCTL] = E1000_RCTL_EN |       // enable receiver
-                             E1000_RCTL_SBP |      /* store bad packet */
+                            //  E1000_RCTL_SBP |      /* store bad packet */
                              E1000_RCTL_UPE |      /* unicast promiscuous enable */
-                             E1000_RCTL_MPE |      /* multicast promiscuous enab */
-                             E1000_RCTL_LPE |      /* long packet enable */
+                             E1000_RCTL_MPE |      /* multicast promiscuous enable */
+                            //  E1000_RCTL_LPE |      /* long packet enable */
                              E1000_RCTL_BAM |      /* broadcast enable */
                              E1000_RCTL_SZ_2048 |  // 2048-byte rx buffers
                              E1000_RCTL_SECRC;     // strip CRC
