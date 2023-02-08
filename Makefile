@@ -109,16 +109,19 @@ INSTALL_FILENAME = app.tar
 
 DUMP_FILENAME = dump.pcap
 
-# 网络相关内容
+# 网络相关内容，tap 后端
 QEMUOPTS :=
-# 使用 SLIRP 后端
-# QEMUOPTS += -netdev user,id=mynet0,hostfwd=tcp::5555-:22,net=192.168.76.0/24,dhcpstart=192.168.76.15
 QEMUOPTS += -netdev tap,ifname=tap0,script=no,downscript=no,id=mynet0
 # 设置虚拟机使用的网卡 e1000
 QEMUOPTS += -device e1000,netdev=mynet0,mac=52:54:00:12:34:56
 # 设置网络通信监听文件存储
 QEMUOPTS += -object filter-dump,id=myfile1,netdev=mynet0,file=$(DUMP_FILENAME)
 
+# SLIRP 后端
+QEMUOPTS_NOTAP :=
+QEMUOPTS_NOTAP += -netdev user,id=mynet0,hostfwd=tcp::5555-:22,net=192.168.76.0/24,dhcpstart=192.168.76.15
+QEMUOPTS_NOTAP += -device e1000,netdev=mynet0,mac=52:54:00:12:34:56
+QEMUOPTS_NOTAP += -object filter-dump,id=myfile1,netdev=mynet0,file=$(DUMP_FILENAME)
 
 # 第一个命令。如果你想要仅编译，换成 all 就好
 all:
@@ -155,7 +158,7 @@ $(IMAGE): $(OBJDIR)/boot/mbr.bin \
 	@sudo dd if=$(OBJDIR)/fs_flags/fat32_flag.bin of=$@ bs=1 count=11 seek=$(FAT32_FS_START_OFFSET) conv=notrunc
 	@sudo chmod 777 $(IMAGE)
 
-.PHONY: FORCE all run gdb gdb-no-graphic monitor disassemble clean
+.PHONY: FORCE all run notap gdb gdb-no-graphic monitor disassemble clean
 
 
 all: $(IMAGE)
@@ -165,6 +168,12 @@ run: $(IMAGE)
 	-boot order=a \
 	-drive file=$<,format=raw \
 	$(QEMUOPTS) \
+
+notap: $(IMAGE)
+	@qemu-system-i386 \
+	-boot order=a \
+	-drive file=$<,format=raw \
+	$(QEMUOPTS_NOTAP) \
 
 gdb: $(IMAGE)
 	@qemu-system-i386 \
