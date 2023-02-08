@@ -229,7 +229,7 @@ void e1000_receive_pack_handler()
     e1000_regs[E1000_IMC] = 0xFFFF;
     // ICS will be 0 when read ICR
     u32 icr_res = e1000_regs[E1000_ICR];
-    kern_set_color(BLUE);
+    kern_set_color(YELLOW);
     kprintf("e1000 receive interrupt occurred\n");
     kern_set_color(WHITE);
     e1000_receive();
@@ -263,6 +263,7 @@ int pci_e1000_attach(struct pci_func *pcif)
     kprintf("device status: %08x\n", e1000_regs[E1000_STATUS]);
 
     // E1000_ICS 手动触发中断
+    kern_set_color(WHITE);
     kprintf("e1000 interrupt test: ");
     e1000_regs[E1000_ICS] = (1 << 7);
 
