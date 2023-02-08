@@ -17,6 +17,6 @@ struct ip_hdr {
 };
 
 #define local_ip MAKE_IP_ADDR(192, 168, 76, 15)
-#define dst_ip MAKE_IP_ADDR(192, 168, 76, 2)
+#define dst_ip MAKE_IP_ADDR(10, 0, 2, 2)
 
 #endif
