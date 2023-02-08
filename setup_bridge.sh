@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# 设置允许转发
+iptables -t filter -A FORWARD -i br0 -j ACCEPT
+iptables -t filter -A FORWARD -o br0 -j ACCEPT
 # 创建网桥
 sudo brctl addbr br0
 # 创建tap0设备，让当前用户可以使用
