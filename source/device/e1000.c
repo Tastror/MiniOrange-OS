@@ -22,6 +22,24 @@ static struct mbuf   *rx_mbufs[RX_RING_SIZE];
 
 #define IMS_INTERRUPT_VALUE ((1 << 7) + (1 << 12))
 
+static void 
+e1000_set_mac_addr(uint8_t mac[])
+{
+	uint8_t low = 0, high = 0;
+	int i;
+
+	for (i = 0; i < 4; i++) {
+		low |= mac[i] << (8 * i);
+	}
+
+	for (i = 4; i < 6; i++) {
+		high |= mac[i] << (8 * i);
+	}
+
+	e1000_regs[E1000_RA] = low;
+	e1000_regs[E1000_RA + 1] = high | E1000_RAH_AV;
+}
+
 // called by pci_init().
 // xregs is the memory address at which the
 // e1000's registers are mapped.
@@ -65,8 +83,9 @@ void e1000_init()
     e1000_regs[E1000_RDLEN] = sizeof(rx_ring);
 
     // filter by qemu's MAC address, 52:54:00:12:34:56
-    e1000_regs[E1000_RA] = 0x12005452;
-    e1000_regs[E1000_RA + 1] = 0x5634 | (1 << 31);
+    // e1000_regs[E1000_RA] = 0x12005452;
+    // e1000_regs[E1000_RA + 1] = 0x5634 | (1 << 31);
+    e1000_set_mac_addr(local_mac);
     // multicast table
     for (int i = 0; i < 4096 / 32; i++)
         e1000_regs[E1000_MTA + i] = 0;

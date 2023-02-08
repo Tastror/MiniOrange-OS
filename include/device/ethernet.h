@@ -19,6 +19,7 @@ struct eth_hdr {
     uint16_t type;
 }__attribute__((packed));
 
+extern uint8_t local_mac[ETHADDR_LEN];
 
 void eth_tx(struct mbuf *m, uint16_t ethType);
 
