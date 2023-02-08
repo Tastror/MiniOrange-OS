@@ -162,7 +162,7 @@ int e1000_transmit(struct mbuf *m)
     tx_mbufs[index] = m;
     memcpy(tx_mbufs[index], m->header_end, m->buffer_len);
 
-    kprintf("::test:: E1000 tx\n");
+    kprintf("e1000 check tx\n");
     kprintf("- status %x ", tx_ring[index].status);
     kcheck(tx_ring[index].status == E1000_TXD_STAT_DD);
     kprintf("- addr 0x%x ", tx_ring[index].addr);
@@ -191,19 +191,17 @@ void e1000_receive(void)
 
     int num = 0;
     while (true) {
-
-        kern_set_color(CYAN);
-        kprintf("receiving package num: %d, ", num++);
+        
+        num++;
 
         // next index
         uint32_t index = (e1000_regs[E1000_RDT] + 1) % RX_RING_SIZE;
-        kprintf("index: %d\n", index);
-        kern_set_color(WHITE);
+        kprintf("e1000 receiving package index: %d\n", index);
 
         // check status, if not set we will return
         if ((rx_ring[index].status & E1000_RXD_STAT_DD) == 0) {
             kern_set_color(YELLOW);
-            kprintf("no package left\n");
+            kprintf("IR-handler: e1000 no package left\n");
             kern_set_color(WHITE);
             break;
         }
@@ -233,7 +231,7 @@ void e1000_receive_pack_handler()
     // ICS will be 0 when read ICR
     u32 icr_res = e1000_regs[E1000_ICR];
     kern_set_color(YELLOW);
-    kprintf("e1000 receive interrupt occurred\n");
+    kprintf("IR-handler: receive interrupt occurred\n");
     kern_set_color(WHITE);
     e1000_receive();
     e1000_regs[E1000_IMS] = IMS_INTERRUPT_VALUE;

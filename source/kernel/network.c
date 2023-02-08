@@ -35,7 +35,7 @@ void kern_net_test(u8 *args)
 
 void kern_net_arp()
 {
-    kprintf("e1000 begin to send pack now...\n");
+    // kprintf("e1000 begin to send pack now...\n");
     uint32_t tip = dst_ip;
     uint8_t  broadcast_mac[ETHADDR_LEN] = {0xFF, 0XFF, 0XFF, 0XFF, 0XFF, 0XFF};
     arp_tx(ARP_OP_REQUEST, broadcast_mac, dst_ip);

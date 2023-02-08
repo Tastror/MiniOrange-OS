@@ -46,7 +46,7 @@ int main(int arg, char *argv[])
             
             // arp
             } else if (strcmp(buf, "arp") == 0) {
-                printf("trying arp now...\n");
+                // printf("trying arp now...\n");
                 net_arp();
                 printf("\n");
             
