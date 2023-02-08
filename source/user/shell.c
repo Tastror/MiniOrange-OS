@@ -42,9 +42,14 @@ int main(int arg, char *argv[])
             
             // net test
             } else if (strcmp(head, "net") == 0) {
-                printf("trying net now...\n");
                 char* res = strtok(NULL, " ");
-                net_test_shell(strlen(res), (u8 *)res);
+                if (res)
+                    net_test_shell(strlen(res), (u8 *)res);
+                else {
+                    set_color(YELLOW);
+                    printf("missing argument: please use \"net message\" to send message\n");
+                    set_color(WHITE);
+                }
                 printf("\n");
             
             // arp
