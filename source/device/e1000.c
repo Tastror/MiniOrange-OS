@@ -118,7 +118,7 @@ void e1000_init()
     // 12: phy interrutp
     e1000_regs[E1000_IMS] = IMS_INTERRUPT_VALUE;  // RXDW -- Receiver Descriptor Write Back
 
-    kprintf("e1000 init succeed\n");
+    kprintf("e1000 regs set done\n");
 }
 
 int e1000_transmit(struct mbuf *m)
@@ -251,7 +251,7 @@ int pci_e1000_attach(struct pci_func *pcif)
     for (int reg_num = 0; reg_num < 6; ++reg_num) {
         if (pcif->reg_type[reg_num] == PCI_MEMORY_BAR) {
             e1000_regs = mmio_map_region(pcif->reg_base[reg_num], pcif->reg_size[reg_num]);
-            kprintf("phy %08x -> logi %08x\n", pcif->reg_base[reg_num], e1000_regs);
+            kprintf("mmio: phy %08x -> logi %08x\n", pcif->reg_base[reg_num], e1000_regs);
         }   
     }
 
@@ -265,13 +265,16 @@ int pci_e1000_attach(struct pci_func *pcif)
 
     // E1000 初始化
     e1000_init();
-    kprintf("device control: %08x, ", e1000_regs[E1000_CTL]);
+    kprintf("  device control: %08x, ", e1000_regs[E1000_CTL]);
     kprintf("device status: %08x\n", e1000_regs[E1000_STATUS]);
 
-    // E1000_ICS 手动触发中断
-    kprintf("e1000 interrupt testing...\n");
-    e1000_regs[E1000_ICS] = (1 << 7);
+    // // E1000_ICS 手动触发中断
+    // kprintf("e1000 interrupt testing...\n");
+    // e1000_regs[E1000_ICS] = (1 << 7);
+
+    kprintf("e1000 init finished\n");
 
     kern_set_color(WHITE);
+    
     return 0;
 }
