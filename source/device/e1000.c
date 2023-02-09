@@ -52,9 +52,9 @@ void e1000_init()
     initlock(&e1000_lock, "e1000");
 
     // Reset the device
-    e1000_regs[E1000_IMS] = 0;  // disable interrupts
+    e1000_regs[E1000_IMC] = 0xFFFF;  // disable interrupts
     e1000_regs[E1000_CTL] |= E1000_CTL_RST;
-    e1000_regs[E1000_IMS] = 0;  // redisable interrupts
+    e1000_regs[E1000_IMC] = 0xFFFF;  // redisable interrupts
     __sync_synchronize();
 
     // [E1000 14.5] Transmit initialization
@@ -273,8 +273,5 @@ int pci_e1000_attach(struct pci_func *pcif)
     e1000_regs[E1000_ICS] = (1 << 7);
 
     kern_set_color(WHITE);
-    
-    panic("e1000 init");
-
     return 0;
 }
