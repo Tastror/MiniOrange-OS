@@ -239,6 +239,7 @@ void e1000_receive_pack_handler()
 
 int pci_e1000_attach(struct pci_func *pcif)
 {
+    kern_set_color(YELLOW);
     kprintf("ready to start e1000...\n");
 
     // 使能改设备，并读取 bar 的相关信息
@@ -270,6 +271,9 @@ int pci_e1000_attach(struct pci_func *pcif)
     // E1000_ICS 手动触发中断
     kprintf("e1000 interrupt testing...\n");
     e1000_regs[E1000_ICS] = (1 << 7);
+
+    kern_set_color(WHITE);
+    panic("e1000 init");
 
     return 0;
 }
