@@ -441,7 +441,7 @@ int lin_mapping_phy(
                 phy_addr = do_malloc_4k();  // 从用户物理地址空间申请一页
             }
         } else {
-            // 有物理页，什么也不做,直接返回，必须返回
+            // 有物理页，什么也不做, 直接返回，必须返回
             return 0;
         }
     } else {  // 指定填写phy_addr
@@ -451,7 +451,7 @@ int lin_mapping_phy(
     if (phy_addr < 0 || (phy_addr & 0x3FF) != 0) {
         kern_set_color(MAKE_COLOR(GREY, RED));
         kern_set_color(WHITE);
-        ("lin_mapping_phy:phy_addr ERROR");
+        kern_display_string("lin_mapping_phy:phy_addr ERROR");
         kern_set_color(WHITE);
         return -1;
     }
@@ -529,14 +529,14 @@ pte_t *pgdir_walk(pde_t *pgdir, const void *va, const int create)
     // kprintf("%x ", *pde);
 
     if (*pde & PG_P) {
-        // 如果页目录项存在
+        // 如果页表存在
         pte = (pte_t *)K_PHY2LIN(*pde & ~0xFFF);
     } else {
-        // 页目录项不存在
+        // 如果页表不存在
         if (!create) {
             return NULL;
         } else {
-            // 为页目录申请一页
+            // 为页表申请一页
             uint32_t pte_phy = do_kmalloc_4k();
             if (!pte_phy) {
                 // 分配失败
@@ -629,7 +629,6 @@ uint32_t *mmio_map_region(uint32_t pa, uint32_t size)
     uint32_t kern_cr3 = read_cr3();
     pde_t *pde_addr_phy = (pde_t *)(K_PHY2LIN(kern_cr3 & 0xFFFFF000));
     boot_map_region(pde_addr_phy, mmio_base, size, pa, PG_RWW | PG_PCD | PG_PWT);
-    mmio_base += size;
 
     // 3. 注意，这个页表只会储存在 loader 的 cr3 里，进入第一个进程以后就消失了
     // 我们需要在 kern_map 中保存这个信息
