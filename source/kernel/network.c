@@ -35,9 +35,9 @@ void kern_net_arp()
     // kprintf("e1000 begin to send pack now...\n");
     uint8_t  broadcast_mac[ETHADDR_LEN] = {0xFF, 0XFF, 0XFF, 0XFF, 0XFF, 0XFF};
     uint32_t tip;
-    tip = MAKE_IP_ADDR(10, 0, 2, 1);
+    tip = MAKE_IP_ADDR(192, 168, 76, 2);
     arp_tx(ARP_OP_REQUEST, broadcast_mac, tip);
-    tip = MAKE_IP_ADDR(10, 0, 2, 2);
+    tip = MAKE_IP_ADDR(10, 0, 2, 1);
     arp_tx(ARP_OP_REQUEST, broadcast_mac, tip);
     return;
 }

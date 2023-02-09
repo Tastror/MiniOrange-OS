@@ -14,12 +14,11 @@ sudo ip addr flush dev tap0
 sudo brctl addif br0 $1 
 sudo brctl addif br0 tap0
 # 启用三个设备
-sudo ifconfig $1 up
-sudo ifconfig tap0 up
-sudo ifconfig br0 up
+sudo ifconfig $1 promisc up
+sudo ifconfig tap0 promisc up
+sudo ifconfig br0 promisc up
 # 设置ip地址
-sudo ifconfig br0 10.0.2.2/24
-sudo ifconfig tap0 10.0.2.1/24
-sudo ifconfig $1 0.0.0.0 promisc up
+# serve as gateway
+sudo ifconfig br0 10.0.2.1/24 
 # optional
-sudo dhclient br0 
+# sudo dhclient br0 
