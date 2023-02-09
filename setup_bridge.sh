@@ -19,6 +19,7 @@ sudo ifconfig tap0 up
 sudo ifconfig br0 up
 # 设置ip地址
 sudo ifconfig br0 10.0.2.2/24
+sudo ifconfig tap0 10.0.2.1/24
 sudo ifconfig $1 0.0.0.0 promisc up
 # optional
 sudo dhclient br0 
