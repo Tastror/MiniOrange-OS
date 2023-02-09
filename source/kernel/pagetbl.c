@@ -634,5 +634,8 @@ uint32_t *mmio_map_region(uint32_t pa, uint32_t size)
     // 我们需要在 kern_map 中保存这个信息
     mmio_save_region(mmio_base, size, pa, PG_RWW | PG_PCD | PG_PWT);
 
+    // 4. 得到下一个设备映射空间的起始地址
+    mmio_base += size;
+
     return ret;
 }
