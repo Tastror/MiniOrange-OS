@@ -28,6 +28,7 @@ struct pci_func {
     // 6 bars
     uint32_t reg_base[6];
     uint32_t reg_size[6];
+    enum {PCI_NOT_MEMORY_BAR = 0, PCI_MEMORY_BAR = 1} reg_type[6];
 
     uint8_t irq_line;  // read from device by PCI_INTERRUPT_REG
 };

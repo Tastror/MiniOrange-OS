@@ -245,6 +245,7 @@ void pci_bar_read(struct pci_func *f)
                 bar_width = 8;
             base = PCI_MAPREG_MEM_ADDR(reset_bar_data);
             size = PCI_MAPREG_MEM_SIZE(ones_fill_bar_data);
+            f->reg_type[regnum] = PCI_MEMORY_BAR;
             if (pci_show_addrs)
                 kprintf(
                     "  [%d] mem region: %d bytes(%d) at 0x%08x\n",
@@ -256,6 +257,7 @@ void pci_bar_read(struct pci_func *f)
         else {
             base = PCI_MAPREG_IO_ADDR(reset_bar_data);
             size = PCI_MAPREG_IO_SIZE(ones_fill_bar_data);
+            f->reg_type[regnum] = PCI_NOT_MEMORY_BAR;
             if (pci_show_addrs)
                 kprintf(
                     "  [%d] io region: %d bytes(%d) at 0x%08x\n",

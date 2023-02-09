@@ -244,11 +244,15 @@ int pci_e1000_attach(struct pci_func *pcif)
     // 使能改设备，并读取 bar 的相关信息
     pci_func_enable(pcif);
 
-    // 由于 e1000 只用到第一个 bar（第二个是 io bar），这一段可以根据设备硬编码
+    // 由于 e1000 只用到第一个 bar（第二个是 io bar），这一段其实可以根据设备硬编码，没必要这样写
     // 直接 mmio_map 到虚拟内存里就好
     // 这一步之后，就不用走 inl 和 outl 了，直接读写内存即可
-    e1000_regs = mmio_map_region(pcif->reg_base[0], pcif->reg_size[0]);
-    kprintf("phy %08x -> logi %08x\n", pcif->reg_base[0], e1000_regs);
+    for (int reg_num = 0; reg_num < 6; ++reg_num) {
+        if (pcif->reg_type[reg_num] == PCI_MEMORY_BAR) {
+            e1000_regs = mmio_map_region(pcif->reg_base[reg_num], pcif->reg_size[reg_num]);
+            kprintf("phy %08x -> logi %08x\n", pcif->reg_base[reg_num], e1000_regs);
+        }   
+    }
 
     // 注册一下 receive 的中断
     // TODO: 改为 MSI 中断
