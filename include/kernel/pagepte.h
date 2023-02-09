@@ -6,6 +6,7 @@
 
 /* core.asm */
 u32  read_cr2();            // add by visual 2016.5.9
+u32  read_cr3();            // add by network 2023.2.9
 void refresh_page_cache();  // add by visual 2016.5.12
 
 /* pagepte.c */

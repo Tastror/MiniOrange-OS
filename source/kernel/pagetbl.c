@@ -570,7 +570,7 @@ static void boot_map_region(pde_t *pgdir, uintptr_t va, size_t size, uint32_t pa
         if (pte == NULL) {
             panic("boot_map_region out of memory\n");
         }
-        *pte = pa | PG_P | perm;  // ERROR HERE
+        *pte = pa | PG_P | perm;
         va += PGSIZE;
         pa += PGSIZE;
     }
@@ -624,17 +624,12 @@ uint32_t *mmio_map_region(uint32_t pa, uint32_t size)
     if (mmio_base + size > MMIOLIM || mmio_base + size < mmio_base) {
         panic("mmio_map_region reservation overflow\n");
     }
+
     // 2. 将 [base, base+size) 线性地址映射到 [pa, pa+size)
-    uint32_t kern_cr3;
-    __asm__ __volatile__(
-        "mov %%cr3, %%eax\n\t"
-        "mov %%eax, %0\n\t"
-        : "=m"(kern_cr3)
-        : /* no input */
-        : "%eax"
-    );
+    uint32_t kern_cr3 = read_cr3();
     pde_t *pde_addr_phy = (pde_t *)(K_PHY2LIN(kern_cr3 & 0xFFFFF000));
     boot_map_region(pde_addr_phy, mmio_base, size, pa, PG_RWW | PG_PCD | PG_PWT);
+    mmio_base += size;
 
     // 3. 注意，这个页表只会储存在 loader 的 cr3 里，进入第一个进程以后就消失了
     // 我们需要在 kern_map 中保存这个信息
