@@ -118,7 +118,7 @@
 #define ArgLinBase        (KernelLinBase - num_4K)             // 3G - 4K, 参数存放位置起始地址，放在 3G 前，暂时还没没用到
 #define MMIOLIM           (ArgLinBase)                         // 3G - 4K, add by network 2023.1.17
 #define MMIOBASE          (MMIOLIM - PTSIZE)                   // 3G - 4M - 4K, add by network 2023.1.17
-#define StackLinBase      (MMIOBASE - num_4B)                  // 3G - 4M - 4K - 4B, = (StackLinLimitMAX + 1G - 128M - 4M - 4K - 4B)，栈的起始地址，放在参数位置之前（注意堆栈的增长方向） // edit by network 2023.1.17
+#define StackLinBase      (MMIOBASE - num_4B)                  // 3G - 4M - 4K - 4B, 栈的起始地址，放在参数位置之前（注意堆栈的增长方向） // edit by network 2023.1.17
 // #define ShareTblLinAddr     (KernelLinLimitMAX - 0x1000)        // 公共临时共享页，放在内核最后一个页表的最后一项上
 
 /*
