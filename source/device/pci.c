@@ -193,10 +193,10 @@ static int pci_scan_bus(struct pci_bus *bus)
                 pci_print_func(&ssrf);
             
             // 在这里开始连接 e1000，其他连接按照序号来就可
-            // pci_attach(&ssrf, 0);
+            pci_attach(&ssrf, 0);
         }
     }
-    panic("pci search finished");
+    
     return totaldev;
 }
 
