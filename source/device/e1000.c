@@ -265,7 +265,8 @@ int pci_e1000_attach(struct pci_func *pcif)
 
     // E1000 初始化
     e1000_init();
-    kprintf("  device control: %08x, ", e1000_regs[E1000_CTL]);
+    kprintf("  ");
+    kprintf("device control: %08x, ", e1000_regs[E1000_CTL]);
     kprintf("device status: %08x\n", e1000_regs[E1000_STATUS]);
 
     // // E1000_ICS 手动触发中断
@@ -275,6 +276,6 @@ int pci_e1000_attach(struct pci_func *pcif)
     kprintf("e1000 init finished\n");
 
     kern_set_color(WHITE);
-    
+
     return 0;
 }
