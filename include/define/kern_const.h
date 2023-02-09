@@ -94,29 +94,31 @@
  */
 #define KernelSize        0x800000                             // 内核的大小  // add by visual 2016.5.10
 #define K_PHY2LIN(x)      ((x) + 0xC0000000)                   // 内核中物理地址转线性地址  // add by visual 2016.5.10
-#define K_LIN2PHY(x)      ((x)-0xC0000000)                     // added by xw, 18/8/27
+#define K_LIN2PHY(x)      ((x) - 0xC0000000)                   // added by xw, 18/8/27
 #define num_4B            0x4                                  // 4B 大小
 #define num_1K            0x400                                // 1k 大小
 #define num_4K            0x1000                               // 4k 大小
 #define num_4M            0x400000                             // 4M 大小
-#define TextLinBase       ((u32)0x0)                           // 进程代码的起始地址，这是参考值，具体以 elf 描述为准
-#define TextLinLimitMAX   (TextLinBase + 0x20000000)           // 大小：512M，这是参考值，具体以 elf 描述为准，
-#define DataLinBase       TextLinLimitMAX                      // 进程数据的起始地址，这是参考值，具体以 elf 描述为准
-#define DataLinLimitMAX   (DataLinBase + 0x20000000)           // 大小：512M，这是参考值，具体以 elf 描述为准，但是代码和数据长度总和不能超过这个值
-#define VpageLinBase      DataLinLimitMAX                      // 保留内存起始地址
-#define VpageLinLimitMAX  (VpageLinBase + 0x8000000 - num_4K)  // 大小：128M - 4k
-#define SharePageBase     VpageLinLimitMAX                     // 共享页线性地址，执行 fork\pthread 的时候用，共享页必须 4K 对齐
-#define SharePageLimit    (SharePageBase + num_4K)             // 大小：4k
-#define HeapLinBase       SharePageLimit                       // 堆的起始地址
-#define HeapLinLimitMAX   (HeapLinBase + 0x40000000)           // 大小：1G
-#define StackLinLimitMAX  HeapLinLimitMAX - PTSIZE             // 栈的大小：1G - 128M - 4M - 4K（注意栈的基址和界限方向）// edit by network 2023.1.17
-#define KernelLinBase     0xC0000000                           // 内核线性起始地址（有 0x30400 的偏移）
-#define ArgLinBase        (KernelLinBase - 0x1000)             // 参数存放位置起始地址，放在 3G 前，暂时还没没用到
-#define ArgLinLimitMAX    KernelLinBase                        // = (ArgLinBase + 0x1000)，大小：4K
-#define MMIOLIM           (ArgLinBase)                         // add by network 2023.1.17
-#define MMIOBASE          (MMIOLIM - PTSIZE)                   // add by network 2023.1.17
-#define StackLinBase      (MMIOBASE - num_4B)                  // = (StackLinLimitMAX + 1G - 128M - 4K - 4B)，栈的起始地址，放在参数位置之前（注意堆栈的增长方向） // edit by network 2023.1.17
-#define KernelLinLimitMAX (KernelLinBase + 0x40000000)         // 大小：1G
+
+#define TextLinBase       ((u32)0x0)                           // 0, 进程代码的起始地址，这是参考值，具体以 elf 描述为准
+#define TextLinLimitMAX   (TextLinBase + 0x20000000)           // 521M, 大小：512M，这是参考值，具体以 elf 描述为准，
+#define DataLinBase       TextLinLimitMAX                      // 521M, 进程数据的起始地址，这是参考值，具体以 elf 描述为准
+#define DataLinLimitMAX   (DataLinBase + 0x20000000)           // 1G, 大小：512M，这是参考值，具体以 elf 描述为准，但是代码和数据长度总和不能超过这个值
+#define VpageLinBase      DataLinLimitMAX                      // 1G, 保留内存起始地址
+#define VpageLinLimitMAX  (VpageLinBase + 0x8000000 - num_4K)  // 1G + 128M - 4K, 大小：128M - 4k
+#define SharePageBase     VpageLinLimitMAX                     // 1G + 128M - 4K, 共享页线性地址，执行 fork\pthread 的时候用，共享页必须 4K 对齐
+#define SharePageLimit    (SharePageBase + num_4K)             // 1G + 128M, 大小：4k
+#define HeapLinBase       SharePageLimit                       // 1G + 128M, 堆的起始地址
+#define HeapLinLimitMAX   (HeapLinBase + 0x40000000)           // 2G + 128M, 大小：1G
+#define StackLinLimitMAX  HeapLinLimitMAX                      // 2G + 128M, 栈的大小：1G - 128M - 4M - 4K - 4B（注意栈的基址和界限方向）// edit by network 2023.1.17
+// 3G 是一个分割点，从这开始自上向下的定义空间，剩下的空间留给进程栈使用
+#define KernelLinBase     0xC0000000                           // 3G, 内核线性起始地址（有 0x30400 的偏移）
+#define KernelLinLimitMAX (KernelLinBase + 0x40000000)         // 4G, 大小：1G
+#define ArgLinLimitMAX    KernelLinBase                        // 3G, = (ArgLinBase + 0x1000)，大小：4K
+#define ArgLinBase        (KernelLinBase - num_4K)             // 3G - 4K, 参数存放位置起始地址，放在 3G 前，暂时还没没用到
+#define MMIOLIM           (ArgLinBase)                         // 3G - 4K, add by network 2023.1.17
+#define MMIOBASE          (MMIOLIM - PTSIZE)                   // 3G - 4M - 4K, add by network 2023.1.17
+#define StackLinBase      (MMIOBASE - num_4B)                  // 3G - 4M - 4K - 4B, 栈的起始地址，放在参数位置之前（注意堆栈的增长方向） // edit by network 2023.1.17
 // #define ShareTblLinAddr     (KernelLinLimitMAX - 0x1000)        // 公共临时共享页，放在内核最后一个页表的最后一项上
 
 /*
@@ -124,11 +126,12 @@
  *
  * 进程代码                 0 ~ 512M ,限制大小为 512M
  * 进程数据                 512M ~ 1G，限制大小为 512M
- * 进程保留内存（以后可能存放虚页表和其他一些信息）  1G ~ 1G + 128M，限制大小为 128M,共享页放在这个位置
- * 进程堆                   1G + 128M ~ 2G + 128M，限制大小为 1G
- * 进程栈                   2G + 124M ~ 3G - 4M - 4K，限制大小为 1G - 128M -4M - 4K // edit by network 2023.1.17
- * MMIO设备寄存器映射区域     3G - 4M - 4K ~ 3G - 4K，限制大小为 4M // edit by network 2023.1.17
- * 进程参数                 3G - 4K ~ 3G，限制大小为 4K
+ * 进程保留内存（以后可能存放虚页表和其他一些信息）  1G ~ (1G + 128M)，限制大小为 128M,共享页放在这个位置
+ * 进程堆                   (1G + 128M) ~ (2G + 128M)，限制大小为 1G
+ * 进程栈                   (2G + 128M) ~ (3G - 4M - 4K - 4B)，限制大小为 1G - 128M - 4M - 4K - 4B // edit by network 2023.1.17
+ * 空白区域                 (3G - 4M - 4K - 4B) ~ (3G - 4M - 4K) // edit by network 2023.1.17
+ * MMIO设备寄存器映射区域     (3G - 4M - 4K) ~ (3G - 4K)，限制大小为 4M // edit by network 2023.1.17
+ * 进程参数                 (3G - 4K) ~ 3G，限制大小为 4K
  * 内核                    3G ~ 4G，限制大小为 1G
  */
 

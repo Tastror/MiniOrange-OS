@@ -441,7 +441,7 @@ int lin_mapping_phy(
                 phy_addr = do_malloc_4k();  // 从用户物理地址空间申请一页
             }
         } else {
-            // 有物理页，什么也不做,直接返回，必须返回
+            // 有物理页，什么也不做, 直接返回，必须返回
             return 0;
         }
     } else {  // 指定填写phy_addr
@@ -451,7 +451,7 @@ int lin_mapping_phy(
     if (phy_addr < 0 || (phy_addr & 0x3FF) != 0) {
         kern_set_color(MAKE_COLOR(GREY, RED));
         kern_set_color(WHITE);
-        ("lin_mapping_phy:phy_addr ERROR");
+        kern_display_string("lin_mapping_phy:phy_addr ERROR");
         kern_set_color(WHITE);
         return -1;
     }
@@ -514,17 +514,6 @@ static void lin_mapping_phy_boot(u32 cr3, uintptr_t laddr, phyaddr_t paddr, u32 
     pte_ptr[PTX(laddr)] = page_phy | pte_flag;
 }
 
-/*
- * 初始化进程页表的内核部分
- * 将 3GB ~ 3GB + 128MB 的线性地址映射到 0 ~ 128MB 的物理地址
- */
-void map_kern(u32 cr3)
-{
-    for (phyaddr_t paddr = 0; paddr < KernelSize; paddr += PGSIZE) {
-        lin_mapping_phy_boot(cr3, K_PHY2LIN(paddr), paddr, PG_P | PG_RWW | PG_USU);
-    }
-}
-
 /**
  * 找到 pgdir 中对应虚拟地址的页表项，返回其虚拟地址
  */
@@ -540,14 +529,14 @@ pte_t *pgdir_walk(pde_t *pgdir, const void *va, const int create)
     // kprintf("%x ", *pde);
 
     if (*pde & PG_P) {
-        // 如果页目录项存在
+        // 如果页表存在
         pte = (pte_t *)K_PHY2LIN(*pde & ~0xFFF);
     } else {
-        // 页目录项不存在
+        // 如果页表不存在
         if (!create) {
             return NULL;
         } else {
-            // 为页目录申请一页
+            // 为页表申请一页
             uint32_t pte_phy = do_kmalloc_4k();
             if (!pte_phy) {
                 // 分配失败
@@ -581,7 +570,7 @@ static void boot_map_region(pde_t *pgdir, uintptr_t va, size_t size, uint32_t pa
         if (pte == NULL) {
             panic("boot_map_region out of memory\n");
         }
-        *pte = pa | PG_P | perm;  // ERROR HERE
+        *pte = pa | PG_P | perm;
         va += PGSIZE;
         pa += PGSIZE;
     }
@@ -635,21 +624,18 @@ uint32_t *mmio_map_region(uint32_t pa, uint32_t size)
     if (mmio_base + size > MMIOLIM || mmio_base + size < mmio_base) {
         panic("mmio_map_region reservation overflow\n");
     }
+
     // 2. 将 [base, base+size) 线性地址映射到 [pa, pa+size)
-    uint32_t kern_cr3;
-    __asm__ __volatile__(
-        "mov %%cr3, %%eax\n\t"
-        "mov %%eax, %0\n\t"
-        : "=m"(kern_cr3)
-        : /* no input */
-        : "%eax"
-    );
+    uint32_t kern_cr3 = read_cr3();
     pde_t *pde_addr_phy = (pde_t *)(K_PHY2LIN(kern_cr3 & 0xFFFFF000));
     boot_map_region(pde_addr_phy, mmio_base, size, pa, PG_RWW | PG_PCD | PG_PWT);
 
     // 3. 注意，这个页表只会储存在 loader 的 cr3 里，进入第一个进程以后就消失了
     // 我们需要在 kern_map 中保存这个信息
     mmio_save_region(mmio_base, size, pa, PG_RWW | PG_PCD | PG_PWT);
+
+    // 4. 得到下一个设备映射空间的起始地址
+    mmio_base += size;
 
     return ret;
 }

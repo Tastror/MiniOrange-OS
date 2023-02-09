@@ -17,10 +17,10 @@
 struct tx_desc {
     uint64_t addr;     // mbuf的地址
     uint16_t length;   // mbuf的大小
-    uint8_t  cso;      // no use
+    uint8_t  cso;      // checksum offset
     uint8_t  cmd;      // e1000执行的指令
     uint8_t  status;   // 使用状态
-    uint8_t  css;      // no use
+    uint8_t  css;      // checksum start
     uint16_t special;  // no use
 };
 
@@ -144,8 +144,9 @@ struct rx_desc {
 #define E1000_RCTL_FLXBUF_SHIFT 27         /* Flexible buffer shift */
 
 /* Transmit Descriptor command definitions [E1000 3.3.3.1] */
-#define E1000_TXD_CMD_EOP 0x01 /* End of Packet */
-#define E1000_TXD_CMD_RS  0x08 /* Report Status */
+#define E1000_TXD_CMD_EOP (1) /* End of Packet */
+#define E1000_TXD_CMD_RS  (1 << 3) /* Report Status */
+#define E1000_TXD_CMD_IC (1 << 2) /* Insert Checksum */
 
 /* Transmit Descriptor status definitions [E1000 3.3.3.2] */
 #define E1000_TXD_STAT_DD 0x00000001 /* Descriptor Done */
