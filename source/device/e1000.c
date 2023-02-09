@@ -273,6 +273,7 @@ int pci_e1000_attach(struct pci_func *pcif)
     e1000_regs[E1000_ICS] = (1 << 7);
 
     kern_set_color(WHITE);
+    
     panic("e1000 init");
 
     return 0;

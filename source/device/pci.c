@@ -216,7 +216,7 @@ void pci_bar_read(struct pci_func *f)
         bar_width = 4;
         int regnum = PCI_MAPREG_NUM(bar);
 
-        // 用全 1 填充，可以获得 PCI 设备使用的 BAR 空间的长度
+        // 用全 1 填充，可以获得 PCI 设备使用的 BAR 空间的长度信息
         pci_conf_write(f, bar, 0xffffffff);
         uint32_t ones_fill_bar_data = pci_conf_read(f, bar);
         if (ones_fill_bar_data == 0) {
@@ -248,7 +248,7 @@ void pci_bar_read(struct pci_func *f)
             f->reg_type[regnum] = PCI_MEMORY_BAR;
             if (pci_show_addrs)
                 kprintf(
-                    "  [%d] mem region: %d bytes(%d) at 0x%08x\n",
+                    "  [%d] mem region: 0x%08x bytes(2^%d) at 0x%08x\n",
                     regnum, size, log2(size), base
                 );
         }
@@ -260,7 +260,7 @@ void pci_bar_read(struct pci_func *f)
             f->reg_type[regnum] = PCI_NOT_MEMORY_BAR;
             if (pci_show_addrs)
                 kprintf(
-                    "  [%d] io region: %d bytes(%d) at 0x%08x\n",
+                    "  [%d] io region: 0x%08x bytes(2^%d) at 0x%08x\n",
                     regnum, size, log2(size), base
                 );
         }

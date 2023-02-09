@@ -379,15 +379,16 @@ typedef uint8_t pci_revision_t;
 // 若 t 为 0，s 为 1
 // 0b_mnop_qr10 & 0b_~m~n~o~p_~q~r01 + 1 = 0b_0000_0010（~r & r == 0）
 // 若 t 为 0，s 为 0，r 为 1
-// 0b_mnop_q100 & 0b_~m~n~o~p_~q011 + 1 = 0b_0000_0010（~q & q == 0）
+// 0b_mnop_q100 & 0b_~m~n~o~p_~q011 + 1 = 0b_0000_0100（~q & q == 0）
 // 依次类推
 //
 // 故这个操作是在计算这个数 k 从右往左第一次不为 0 的位置，形成一个数字 0b00...010...00
 // 也即 2^n，n 是从右往左数第一次不为 0 的位置（位置从 0 开始数）
 // 换句话说，也就是计算 2^n | k 的最大的 2^n
-
 // 计算 2^n | PCI_MAPREG_MEM_ADDR(mr) 的最大的 2^n
 // log2(this) = 后缀 0 的个数
+
+// 确保结果是 0b00...010...00 的格式
 #define PCI_MAPREG_MEM_SIZE(mr)  (PCI_MAPREG_MEM_ADDR(mr) & -PCI_MAPREG_MEM_ADDR(mr))
 
 #define PCI_MAPREG_MEM64_ADDR_MASK 0xfffffffffffffff0ULL
