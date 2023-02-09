@@ -25,15 +25,15 @@ struct pci_driver {
 };
 
 
-// 这两个数组里添加需要注册的各种设备，这样编码会稍微软一点
+// 这两个数组里添加需要注册的各种设备
 
 // pci_attach_class matches the class and subclass of a PCI device
 struct pci_driver pci_attach_class[] = {
     {PCI_CLASS_BRIDGE, PCI_SUBCLASS_BRIDGE_PCI, &pci_bridge_attach},
     {0, 0, 0},
 };
-// pci_attach_vendor matches the vendor ID and device ID of a PCI device. key1
-// and key2 should be the vendor ID and device ID respectively
+// pci_attach_vendor matches the vendor ID and device ID of a PCI device. 
+// key1 and key2 should be the vendor ID and device ID respectively
 struct pci_driver pci_attach_vendor[] = {
     {PCI_E1000_VENDER_ID, PCI_E1000_DEVICE_ID, &pci_e1000_attach},
     {0, 0, 0},
@@ -117,9 +117,9 @@ pci_attach_match(
 static int pci_attach(struct pci_func *f, uint32_t attach_num)
 {
     return (
-        // pci_attach_match(
-        //     PCI_CLASS(f->dev_class), PCI_SUBCLASS(f->dev_class), &pci_attach_class[attach_num], f
-        // ) ||
+        pci_attach_match(
+            PCI_CLASS(f->dev_class), PCI_SUBCLASS(f->dev_class), &pci_attach_class[attach_num], f
+        ) ||
         pci_attach_match(
             PCI_VENDOR(f->dev_id), PCI_PRODUCT(f->dev_id), &pci_attach_vendor[attach_num], f
         )
@@ -163,21 +163,21 @@ static int pci_scan_bus(struct pci_bus *bus)
 {
     int32_t totaldev = 0;  // total count of device
 
-    struct pci_func rf;  // root node of bus
+    struct pci_func rf;  // root function
     memset(&rf, 0, sizeof(rf));
     rf.bus = bus;
 
     for (rf.dev = 0; rf.dev < 32; rf.dev++) {
-        // BIST/Header Type/Latency Timer/Cache Line Size Register
+        // (BIST - Header Type - Latency Timer - Cache Line Size) Register
         uint32_t bhlcr = pci_conf_read(&rf, PCI_BHLC_REG);
         if (PCI_HDRTYPE_TYPE(bhlcr) > 1)  // Unsupported or No device
             continue;
 
         totaldev++;
 
-        struct pci_func srf = rf;  // son of root node
+        struct pci_func srf = rf;  // son of root function
         for (srf.func = 0; srf.func < (PCI_HDRTYPE_MULTIFN(bhlcr) ? 8 : 1); srf.func++) {
-            struct pci_func ssrf = srf;  // son of son of root note
+            struct pci_func ssrf = srf;  // son of son of root function
 
             ssrf.dev_id = pci_conf_read(&srf, PCI_ID_REG);
             // vendor is the inventor of the device,
@@ -193,10 +193,10 @@ static int pci_scan_bus(struct pci_bus *bus)
                 pci_print_func(&ssrf);
             
             // 在这里开始连接 e1000，其他连接按照序号来就可
-            pci_attach(&ssrf, 0);
+            // pci_attach(&ssrf, 0);
         }
     }
-
+    panic("pci search finished");
     return totaldev;
 }
 
@@ -300,14 +300,6 @@ int init_pci_msi(void)
     return 0;
 }
 
-int init_pci_device(void)
-{
-    static struct pci_bus root_bus;
-    memset(&root_bus, 0, sizeof(root_bus));
-
-    return pci_scan_bus(&root_bus);
-}
-
 static int pci_bridge_attach(struct pci_func *pcif)
 {
     uint32_t ioreg = pci_conf_read(pcif, PCI_BRIDGE_STATIO_REG);
@@ -328,4 +320,12 @@ static int pci_bridge_attach(struct pci_func *pcif)
 
     pci_scan_bus(&nbus);
     return 1;
+}
+
+int init_pci_device(void)
+{
+    static struct pci_bus root_bus;
+    memset(&root_bus, 0, sizeof(root_bus));
+
+    return pci_scan_bus(&root_bus);
 }

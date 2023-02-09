@@ -12,24 +12,15 @@ enum {
     pci_res_max
 };
 
-// PCI: pci_bus -{ pci_func(count < 8)
-
-struct pci_bus;
-
 struct pci_func {
-    struct pci_bus *bus;  // Primary bus for bridges
-
-    uint32_t dev;   // device
-    uint32_t func;  // function
-
-    uint32_t dev_id;     // read from device by PCI_ID_REG
-    uint32_t dev_class;  // read from device by PCI_CLASS_REG
-
-    // 6 bars
-    uint32_t reg_base[6];
-    uint32_t reg_size[6];
-
-    uint8_t irq_line;  // read from device by PCI_INTERRUPT_REG
+    struct pci_bus *bus;          // Primary bus for bridges
+    uint32_t        dev;          // device
+    uint32_t        func;         // function
+    uint32_t        dev_id;       // read from device by PCI_ID_REG
+    uint32_t        dev_class;    // read from device by PCI_CLASS_REG
+    uint32_t        reg_base[6];  // bar base
+    uint32_t        reg_size[6];  // bar size
+    uint8_t         irq_line;     // read from device by PCI_INTERRUPT_REG
 };
 
 struct pci_bus {
@@ -37,7 +28,6 @@ struct pci_bus {
     uint32_t         busno;
 };
 
-// scan the pci bus
 int  init_pci_msi(void);
 int  init_pci_device(void);
 void pci_func_enable(struct pci_func *f);

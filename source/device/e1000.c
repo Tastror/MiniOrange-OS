@@ -247,6 +247,8 @@ int pci_e1000_attach(struct pci_func *pcif)
     // 由于 e1000 只用到第一个 bar（第二个是 io bar），这一段可以根据设备硬编码
     // 直接 mmio_map 到虚拟内存里就好
     // 这一步之后，就不用走 inl 和 outl 了，直接读写内存即可
+    // TODO: 这里有一个 bug，映射几个 bar 是根据占用寄存器大小来决定的，
+    // 只映射第一个会造成 mmio 空间有缺失，有安全隐患
     e1000_regs = mmio_map_region(pcif->reg_base[0], pcif->reg_size[0]);
     kprintf("phy %08x -> logi %08x\n", pcif->reg_base[0], e1000_regs);
 
