@@ -3,7 +3,7 @@
 
 #include <common/type.h>
 
-#define MBUF_SIZE 4096
+#define MBUF_SIZE 2048
 #define MBUF_DEFAULT_HEADROOM  128
 
 // [mbuf struct][ header ][    buffer     ][ tail ]
