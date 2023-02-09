@@ -25,7 +25,7 @@ void kern_net_test(u8 *args)
     u8 *buff = (u8 *)mbufpush(m, len);
     memmove(buff, data, len);
 
-    eth_tx(m, ETHTYPE_ARP);
+    eth_tx(m, 0);
 
     return;
 }
