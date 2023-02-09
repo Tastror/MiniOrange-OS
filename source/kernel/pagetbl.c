@@ -514,17 +514,6 @@ static void lin_mapping_phy_boot(u32 cr3, uintptr_t laddr, phyaddr_t paddr, u32 
     pte_ptr[PTX(laddr)] = page_phy | pte_flag;
 }
 
-/*
- * 初始化进程页表的内核部分
- * 将 3GB ~ 3GB + 128MB 的线性地址映射到 0 ~ 128MB 的物理地址
- */
-void map_kern(u32 cr3)
-{
-    for (phyaddr_t paddr = 0; paddr < KernelSize; paddr += PGSIZE) {
-        lin_mapping_phy_boot(cr3, K_PHY2LIN(paddr), paddr, PG_P | PG_RWW | PG_USU);
-    }
-}
-
 /**
  * 找到 pgdir 中对应虚拟地址的页表项，返回其虚拟地址
  */
