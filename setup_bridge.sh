@@ -24,5 +24,3 @@ sudo ifconfig br0 promisc up
 # serve as gateway
 sudo ifconfig br0 192.168.76.2/24
 echo "- done" 
-# optional
-# sudo dhclient br0 
