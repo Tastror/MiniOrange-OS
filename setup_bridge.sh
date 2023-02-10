@@ -22,7 +22,7 @@ sudo ifconfig tap0 promisc up
 sudo ifconfig br0 promisc up
 # 设置ip地址
 # serve as gateway
-sudo ifconfig br0 10.0.2.1/24
+sudo ifconfig br0 192.168.76.2/24
 echo "- done" 
 # optional
 # sudo dhclient br0 
