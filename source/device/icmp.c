@@ -50,7 +50,7 @@ void icmp_tx(struct mbuf *m, uint32_t ip, uint8_t type, uint8_t code)
     icmphdr->code = code;
     icmphdr->cksum = checksum((unsigned char*)icmphdr, m->buffer_len);
 
-    ip_tx(m, IPPROTO_ICMP, dst_ip);
+    ip_tx(m, IPPROTO_ICMP, ip);
 }
 
 void icmp_rx(struct mbuf *m, uint16_t len, struct ip_hdr *iphdr)
