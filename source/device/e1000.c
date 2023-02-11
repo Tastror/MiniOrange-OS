@@ -233,7 +233,10 @@ void e1000_receive_pack_handler()
     kern_set_color(YELLOW);
     kprintf("IR-handler: receive interrupt occurred\n");
     kern_set_color(WHITE);
-    e1000_receive();
+    if (icr_res == 1 << 7)
+        e1000_receive();
+    else if (0)
+        ;
     e1000_regs[E1000_IMS] = IMS_INTERRUPT_VALUE;
 }
 
