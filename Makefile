@@ -119,7 +119,7 @@ QEMUOPTS += -object filter-dump,id=myfile1,netdev=mynet0,file=$(DUMP_FILENAME)
 
 # SLIRP 后端
 QEMUOPTS_NOTAP :=
-QEMUOPTS_NOTAP += -netdev user,id=mynet0,hostfwd=tcp::5555-:22,net=192.168.76.0/24,dhcpstart=192.168.76.15
+QEMUOPTS_NOTAP += -netdev user,id=mynet0,net=192.168.76.0/24,dhcpstart=192.168.76.15
 QEMUOPTS_NOTAP += -device e1000,netdev=mynet0,mac=52:54:00:12:34:56
 QEMUOPTS_NOTAP += -object filter-dump,id=myfile1,netdev=mynet0,file=$(DUMP_FILENAME)
 
