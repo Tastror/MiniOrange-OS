@@ -259,7 +259,6 @@ int pci_e1000_attach(struct pci_func *pcif)
     }
 
     // 注册一下 receive 的中断
-    // TODO: 改为 MSI 中断
     put_irq_handler(pcif->irq_line, e1000_receive_pack_handler);
     // 从片需要先启用主从连接的 irq
     if (pcif->irq_line >= 8)

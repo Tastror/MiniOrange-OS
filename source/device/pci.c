@@ -67,7 +67,7 @@ static void pci_conf1_set_addr(
     //
     //   31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00
     //    1  (     nothing     )  [        bus         ]  [    dev    ]  [funct]  [      reg     ]  0  0
-    // enable     reseones_fill_bar_dataed              bus number         dev number  function num    reg num
+    // enable                           bus number         dev number  function num    reg num
     //
     // 前面是总线、设备、功能的编号，都好理解，但是 reg num 是什么呢？
     // 答案是 16 个不同的寄存器，分别保存了如下信息（着重看第一个、最后一个和 04 ~ 09）
